@@ -14,6 +14,12 @@ var originalRightBrd = 50;
 
 var selectedSquare = -1;
 var selectedSquareTab;
+var currColorDiv;
+var slidersDiv;
+var slider1;
+var slider2;
+var slider3;
+var newColorDiv;
 function setup(){
    w = window.innerWidth;
    h = window.innerHeight;
@@ -36,8 +42,50 @@ function setup(){
 
    selectedSquareTab = createDiv('');
    selectedSquareTab.position(w, topBrd);
-   selectedSquareTab.size(squishedRightBrd-2*gap-originalRightBrd, h-topBrd-botBrd);
+   selectedSquareTab.size(squishedRightBrd-gap-originalRightBrd, h-topBrd-botBrd);
    selectedSquareTab.class('selectedSquareTab');
+
+   currColorDiv = createDiv('');
+   currColorDiv.position(gap/2, gap/2);
+   currColorDiv.size(squishedRightBrd-gap-originalRightBrd, (h-topBrd-botBrd)/gy-gap);
+   currColorDiv.class('currColorDiv');
+   selectedSquareTab.child(currColorDiv);
+
+   slidersDiv = createDiv('');
+   slidersDiv.position(gap/2, gap/2+(h-topBrd-botBrd)/gy);
+   slidersDiv.size(squishedRightBrd-gap-originalRightBrd, (h-topBrd-botBrd)/gy-gap);
+   slidersDiv.class('slidersDiv');
+
+   slider1 = createSlider(0, 100, 50);
+   slider2 = createSlider(0, 100, 50);
+   slider3 = createSlider(0, 100, 50);
+
+   slider1.id("slider1");
+   slider2.id("slider2");
+   slider3.id("slider3");
+
+   slider1.addClass("slider");
+   slider2.addClass("slider");
+   slider3.addClass("slider");
+
+   slider1.size(squishedRightBrd-originalRightBrd-4*gap, (((h-topBrd-botBrd)/gy))/8);
+   slider2.size(squishedRightBrd-originalRightBrd-4*gap, (((h-topBrd-botBrd)/gy))/8);
+   slider3.size(squishedRightBrd-originalRightBrd-4*gap, (((h-topBrd-botBrd)/gy))/8);
+
+   slider1.position(2*gap, (((h-topBrd-botBrd)/gy))/4-(((h-topBrd-botBrd)/gy))/16);
+   slider2.position(2*gap, (((h-topBrd-botBrd)/gy))/2-(((h-topBrd-botBrd)/gy))/16);
+   slider3.position(2*gap, 3*(((h-topBrd-botBrd)/gy))/4-(((h-topBrd-botBrd)/gy))/16);
+
+   selectedSquareTab.child(slidersDiv);
+   slidersDiv.child(slider1);
+   slidersDiv.child(slider2);
+   slidersDiv.child(slider3);
+
+   newColorDiv = createDiv('');
+   newColorDiv.position(gap/2, gap/2+2*(h-topBrd-botBrd)/gy);
+   newColorDiv.size(squishedRightBrd-gap-originalRightBrd, (h-topBrd-botBrd)/gy-gap);
+   newColorDiv.class('newColorDiv');
+   selectedSquareTab.child(newColorDiv);
 }
 
 function AddNewColorRGB(name, r, g, b){
@@ -71,9 +119,11 @@ function AddNewColorHex(name,hex){
          if(selectedSquare!=-1){
             myColors[selectedSquare].square.removeClass('selectedSquare');
          }
-         selectedSquareTab.position(w+gap-squishedRightBrd, topBrd);
+         selectedSquareTab.position(w+gap-squishedRightBrd+originalRightBrd/2, topBrd);
          selectedSquare = myInd;
-         selectedSquareTab.style('background-color', color(myColors[myInd].r,myColors[myInd].g,myColors[myInd].b) );
+         currColorDiv.style('background-color', color(myColors[myInd].r,myColors[myInd].g,myColors[myInd].b));
+         currColorDiv.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />${myColors[myInd].hex}`);
+         newColorDiv.style('background-color', color(myColors[myInd].r,myColors[myInd].g,myColors[myInd].b));
          nsq.addClass('selectedSquare');
       }
       redrawSquares();
@@ -117,27 +167,27 @@ function redrawSquares(){
    }
 }
 
-// function invertColor(hex) {
-//     if (hex.indexOf('#') === 0) {
-//         hex = hex.slice(1);
-//     }
-//     // convert 3-digit hex to 6-digits.
-//     if (hex.length === 3) {
-//         hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-//     }
-//     if (hex.length !== 6) {
-//         throw new Error('Invalid HEX color.');
-//     }
-//     // invert color components
-//     var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
-//         g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
-//         b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
-//     // pad each with zeros and return
-//     return '#' + padZero(r) + padZero(g) + padZero(b);
-// }
-//
-// function padZero(str, len) {
-//     len = len || 2;
-//     var zeros = new Array(len).join('0');
-//     return (zeros + str).slice(-len);
-// }
+function invertColor(hex) {
+    if (hex.indexOf('#') === 0) {
+        hex = hex.slice(1);
+    }
+    // convert 3-digit hex to 6-digits.
+    if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    }
+    if (hex.length !== 6) {
+        throw new Error('Invalid HEX color.');
+    }
+    // invert color components
+    var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
+        g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
+        b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
+    // pad each with zeros and return
+    return '#' + padZero(r) + padZero(g) + padZero(b);
+}
+
+function padZero(str, len) {
+    len = len || 2;
+    var zeros = new Array(len).join('0');
+    return (zeros + str).slice(-len);
+}

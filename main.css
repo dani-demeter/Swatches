@@ -1,0 +1,98 @@
+:root {
+   --whitesmoke:#F5F0F6;
+   --eerieblack:#1C1D20;
+   --grey:#C4C8D3;
+   --ballblue:#2AB7CA;
+   --spacecadet:#241E4E;
+   --raspberry:#9E0031;
+   --tangerine:#FAA916;
+   --grape-light:#662AAF;
+   --purple-dark:#330036;
+   --gold: #FFC700;
+   --steelblue: #4A7AB4;
+   --ceil: #8FB2CE;
+   --bubbles: #E5F8FF;
+   --cerulean: #007BA7;
+   --ghostwhite: #F9FDFF;
+   --gunmetal: #2C363F;
+   --vermilion: #D64933;
+   --grape: #533A7B;
+   --firebrick: #BA1C1A;
+   --metallicseaweed: #028090;
+   --richblack: #090821;
+   --bdazzledblue: #26547C;
+   --orangeyellow: #FFD166;
+   --infrared: #EF476F;
+   --caribbeangreen: #06D6A0;
+}
+@font-face {
+    font-family: 'montserrat';
+    /* src: url('fonts/montserrat-extralight-webfont.woff2') format('woff2'),
+         url("fonts/Montserrat-ExtraLight.otf") format("opentype"),
+         url('fonts/montserrat-extralight-webfont.woff') format('woff'); */
+   src: url('fonts/Montserrat-Regular.woff2') format('woff2'),
+        url("fonts/Montserrat-Regular.otf") format("opentype"),
+        url('fonts/Montserrat-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body{
+   overflow: hidden;
+   font-family: montserrat;
+}
+
+.colorSquare{
+   box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+   display: table;
+   border-radius: 5px;
+   text-align: center;
+   -webkit-transition : -webkit-filter 0.4s ease-in-out;
+   transition: all 0.4s ease-in-out;
+   transform-origin: center center;
+}
+.colorSquareText{
+   display: table-cell;
+   vertical-align: middle;
+   color: var(--ghostwhite);
+   font-size: 1.5em;
+   opacity: 0.0;
+   transition: opacity 0.4s ease-in-out;
+   transform-origin: center center;
+   -webkit-user-select: none; /* Safari */
+   -moz-user-select: none; /* Firefox */
+   -ms-user-select: none; /* IE10+/Edge */
+   user-select: none; /* Standard */
+}
+
+.colorSquare:hover{
+   box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+   /* background-color: rgba(9,8,33, 0.5); */
+   animation: jelly 0.5s;
+}
+
+@keyframes jelly {
+  0%,
+  100% {
+    transform: scale(1, 1);
+  }
+  25% {
+    transform: scale(0.98, 1.02);
+  }
+  50% {
+    transform: scale(1.02, 0.98);
+  }
+  75% {
+    transform: scale(0.99, 1.01);
+  }
+}
+
+.colorSquare:hover > .colorSquareText{
+   /* color: var(--ghostwhite); */
+   opacity: 1.0;
+   background-color: rgba(9,8,33, 0.5);
+}

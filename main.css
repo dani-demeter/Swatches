@@ -58,6 +58,7 @@ body{
    -webkit-transition : -webkit-filter 0.3s ease-in-out;
    transition: all 0.3s ease-in-out;
    transform-origin: center center;
+   cursor: pointer;
 }
 .colorSquareText{
    display: table-cell;
@@ -122,15 +123,19 @@ body{
 
 .slidersDiv{
    background-color: var(--ghostwhite);
-   border-radius: 5px;
+   /* box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+   border: 3px solid var(--richblack); */
+   border-radius: 10px;
 }
 
 .currColorDiv{
-   border-radius: 5px;
+   border-radius: 10px;
    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-   border: 2px solid var(--ghostwhite);
+   border: 3px solid var(--ghostwhite);
    display: table;
    text-align: center;
 }
@@ -176,11 +181,11 @@ body{
    vertical-align: middle;
 } */
 .newColorDiv{
-   border-radius: 5px;
+   border-radius: 10px;
    box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-   border: 2px solid var(--ghostwhite);
+   border: 3px solid var(--ghostwhite);
    display: table;
    text-align: center;
 }

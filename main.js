@@ -6,12 +6,12 @@ var gy = 4;
 var myColors = [];
 
 var gap = 4;
-var topBrd = 50;
-var leftBrd = 50;
-var rightBrd = 50;
-var botBrd = 50;
-var squishedRightBrd = 250;
-var originalRightBrd = 50;
+var topP = 0.1;
+var leftP = 0.02;
+var rightP = 0.02;
+var botP = 0.1;
+var squishedrightP = 0.2;
+var originalrightP = 0.02;
 
 var selectedSquare = -1;
 var selectedSquareTab;
@@ -55,13 +55,13 @@ function setup(){
    AddNewColorHex("cerulean", "007BA7");
 
    selectedSquareTab = createDiv('');
-   selectedSquareTab.position(w, topBrd);
-   selectedSquareTab.size(squishedRightBrd-gap-originalRightBrd, h-topBrd-botBrd);
+   selectedSquareTab.position(w, topP*h);
+   selectedSquareTab.size(squishedrightP*w-gap-originalrightP*w, h-topP*h-botP*h);
    selectedSquareTab.class('selectedSquareTab');
 
    currColorDiv = createDiv('');
    currColorDiv.position(0, 0);
-   currColorDiv.size(squishedRightBrd-2*gap-originalRightBrd, (h-topBrd-botBrd)/3-gap);
+   currColorDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-gap);
    currColorDiv.class('currColorDiv');
    selectedSquareTab.child(currColorDiv);
 
@@ -86,8 +86,8 @@ function setup(){
    currColorText3.id('currColorText3');
 
    slidersDiv = createDiv('');
-   slidersDiv.position(0, (h-topBrd-botBrd)/3);
-   slidersDiv.size(squishedRightBrd-2*gap-originalRightBrd, (h-topBrd-botBrd)/3-gap);
+   slidersDiv.position(0, (h-topP*h-botP*h)/3);
+   slidersDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-gap);
    slidersDiv.class('slidersDiv');
 
    slider1 = createSlider(0, 255, 50);
@@ -106,13 +106,13 @@ function setup(){
    slider2.addClass("slider");
    slider3.addClass("slider");
 
-   slider1.size(squishedRightBrd-originalRightBrd-4*gap, (((h-topBrd-botBrd)/3))/8);
-   slider2.size(squishedRightBrd-originalRightBrd-4*gap, (((h-topBrd-botBrd)/3))/8);
-   slider3.size(squishedRightBrd-originalRightBrd-4*gap, (((h-topBrd-botBrd)/3))/8);
+   slider1.size(squishedrightP*w-originalrightP*w-4*gap, (((h-topP*h-botP*h)/3))/8);
+   slider2.size(squishedrightP*w-originalrightP*w-4*gap, (((h-topP*h-botP*h)/3))/8);
+   slider3.size(squishedrightP*w-originalrightP*w-4*gap, (((h-topP*h-botP*h)/3))/8);
 
-   slider1.position(gap, (((h-topBrd-botBrd)/3))/4-(((h-topBrd-botBrd)/3))/16);
-   slider2.position(gap, (((h-topBrd-botBrd)/3))/2-(((h-topBrd-botBrd)/3))/16);
-   slider3.position(gap, 3*(((h-topBrd-botBrd)/3))/4-(((h-topBrd-botBrd)/3))/16);
+   slider1.position(gap, (((h-topP*h-botP*h)/3))/4-(((h-topP*h-botP*h)/3))/16);
+   slider2.position(gap, (((h-topP*h-botP*h)/3))/2-(((h-topP*h-botP*h)/3))/16);
+   slider3.position(gap, 3*(((h-topP*h-botP*h)/3))/4-(((h-topP*h-botP*h)/3))/16);
 
    selectedSquareTab.child(slidersDiv);
    slidersDiv.child(slider1);
@@ -120,8 +120,8 @@ function setup(){
    slidersDiv.child(slider3);
 
    newColorDiv = createDiv('');
-   newColorDiv.position(0, 2*(h-topBrd-botBrd)/3);
-   newColorDiv.size(squishedRightBrd-2*gap-originalRightBrd, (h-topBrd-botBrd)/3-gap);
+   newColorDiv.position(0, 2*(h-topP*h-botP*h)/3);
+   newColorDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-gap);
    newColorDiv.class('newColorDiv');
    selectedSquareTab.child(newColorDiv);
 
@@ -151,7 +151,7 @@ function setup(){
 
    // currColorDiv = createDiv('');
    // currColorDiv.position(0, 0);
-   // currColorDiv.size(squishedRightBrd-2*gap-originalRightBrd, (h-topBrd-botBrd)/3-gap);
+   // currColorDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-gap);
    // currColorDiv.class('currColorDiv');
    // selectedSquareTab.child(currColorDiv);
    //
@@ -192,34 +192,34 @@ function AddNewColorHex(name,hex){
    nsqText.class('colorSquareText');
    var fs;
    if(name.length<10){
-      fs = (((w-leftBrd-rightBrd)/gx)-gap)/10;
+      fs = (((w-leftP*w-rightP*w)/gx)-gap)/10;
    }else{
-      fs = (((w-leftBrd-rightBrd)/gx)-gap)/name.length;
+      fs = (((w-leftP*w-rightP*w)/gx)-gap)/name.length;
    }
    nsqText.style('font-size', fs + "px");
    nsq.child(nsqText);
-   nsq.size(((w-leftBrd-rightBrd)/gx)-gap, ((h-topBrd-botBrd)/gy)-gap);
+   nsq.size(((w-leftP*w-rightP*w)/gx)-gap, ((h-topP*h-botP*h)/gy)-gap);
    let myInd = myColors.length;
-   nsq.position(myInd%gx*((w-leftBrd-rightBrd)/gx)+gap/2+leftBrd, Math.floor(myInd/gx)*(((h-topBrd-botBrd)/gy))+gap/2+topBrd);
+   nsq.position(myInd%gx*((w-leftP*w-rightP*w)/gx)+gap/2+leftP*w, Math.floor(myInd/gx)*(((h-topP*h-botP*h)/gy))+gap/2+topP*h);
    nsq.style('background-color', c);
    nsq.mousePressed(()=>{
-      rightBrd = squishedRightBrd;
+      rightP = squishedrightP;
       if(selectedSquare==myInd){
          selectedSquare = -1;
-         rightBrd = originalRightBrd;
+         rightP = originalrightP;
          nsq.removeClass('selectedSquare');
-         selectedSquareTab.position(w, topBrd);
+         selectedSquareTab.position(w, topP*h);
       }else{
          if(selectedSquare!=-1){
             myColors[selectedSquare].square.removeClass('selectedSquare');
          }
-         selectedSquareTab.position(w+gap/2-squishedRightBrd+originalRightBrd/2, topBrd);
+         selectedSquareTab.position(w+gap/2-squishedrightP*w+originalrightP*w/2, topP*h);
          selectedSquare = myInd;
          var fs;
          if(myColors[myInd].name.length<10){
-            fs = (squishedRightBrd-gap-originalRightBrd)/10;
+            fs = (squishedrightP*w-gap-originalrightP*w)/10;
          }else{
-            fs = (squishedRightBrd-gap-originalRightBrd)/myColors[myInd].name.length;
+            fs = (squishedrightP*w-gap-originalrightP*w)/myColors[myInd].name.length;
          }
          currColorText1.style('font-size', fs + "px");
          currColorText2.style('font-size', fs + "px");
@@ -284,13 +284,13 @@ function rgb2Hex(r,g,b) {
 
 function redrawSquares(){
    for(var i = 0; i<myColors.length; i++){
-      myColors[i].square.size(((w-leftBrd-rightBrd)/gx)-gap, ((h-topBrd-botBrd)/gy)-gap);
-      myColors[i].square.position(i%gx*((w-leftBrd-rightBrd)/gx)+gap/2+leftBrd, Math.floor(i/gx)*(((h-topBrd-botBrd)/gy))+gap/2+topBrd);
+      myColors[i].square.size(((w-leftP*w-rightP*w)/gx)-gap, ((h-topP*h-botP*h)/gy)-gap);
+      myColors[i].square.position(i%gx*((w-leftP*w-rightP*w)/gx)+gap/2+leftP*w, Math.floor(i/gx)*(((h-topP*h-botP*h)/gy))+gap/2+topP*h);
       var fs;
       if(myColors[i].name.length<10){
-         fs = (((w-leftBrd-rightBrd)/gx)-gap)/10;
+         fs = (((w-leftP*w-rightP*w)/gx)-gap)/10;
       }else{
-         fs = (((w-leftBrd-rightBrd)/gx)-gap)/myColors[i].name.length;
+         fs = (((w-leftP*w-rightP*w)/gx)-gap)/myColors[i].name.length;
       }
       myColors[i].text.style('font-size', fs + "px");
    }
@@ -314,14 +314,14 @@ function updateNewColor(){
       // newColorText.html(`${myColors[colorNamed].name}<br />(${r}, ${g}, ${b})<br />#${hex}`);
       newColorText1.html(`${myColors[colorNamed].name}`);
       if(myColors[colorNamed].name.length<10){
-         fs = (squishedRightBrd-gap-originalRightBrd)/10;
+         fs = (squishedrightP*w-gap-originalrightP*w)/10;
       }else{
-         fs = (squishedRightBrd-gap-originalRightBrd)/myColors[colorNamed].name.length;
+         fs = (squishedrightP*w-gap-originalrightP*w)/myColors[colorNamed].name.length;
       }
    }else{
       // newColorText.html(`Unnamed Color <br />(${r}, ${g}, ${b})<br />#${hex}`);
       newColorText1.html(`New Color`);
-      fs = (((w-leftBrd-rightBrd)/gx)-gap)/9;
+      fs = (((w-leftP*w-rightP*w)/gx)-gap)/9;
    }
    currColorText1.style('font-size', fs + "px");
    currColorText2.style('font-size', fs + "px");
@@ -351,9 +351,9 @@ function windowResized() {
    // resizeCanvas(w, h);
    redrawSquares();
    if(selectedSquare==-1){
-      selectedSquareTab.position(w, topBrd);
+      selectedSquareTab.position(w, topP*h);
    }else{
-      selectedSquareTab.position(w+gap/2-squishedRightBrd+originalRightBrd/2, topBrd);
+      selectedSquareTab.position(w+gap/2-squishedrightP*w+originalrightP*w/2, topP*h);
    }
    background(color('#090821'));
 }

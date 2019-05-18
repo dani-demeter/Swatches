@@ -135,19 +135,39 @@ body{
    text-align: center;
 }
 
-#currColorText1{
-   display: inline-block;
+#currColorText1W{
+   display: table;
    vertical-align: top;
+   height: 33%;
    width: 100%;
 }
+#currColorText2W{
+   display: table;
+   vertical-align: middle;
+   height: 33%;
+   width: 100%;
+}
+#currColorText3W{
+   display: table;
+   vertical-align: bottom;
+   height: 33%;
+   width: 100%;
+}
+
+#currColorText1{
+   display: table-cell;
+   vertical-align: middle;
+   width: 100%;
+   height: 100%;
+}
 #currColorText2{
-   display: inline-block;
-   vertical-align: center;
+   display: table-cell;
+   vertical-align: middle;
    width: 100%;
 }
 #currColorText3{
-   display: inline-block;
-   vertical-align: bottom;
+   display: table-cell;
+   vertical-align: middle;
    width: 100%;
 }
 
@@ -165,10 +185,46 @@ body{
    text-align: center;
 }
 
-.newColorText{
+#newColorText1W{
+   display: table;
+   vertical-align: top;
+   height: 33%;
+   width: 100%;
+}
+#newColorText2W{
+   display: table;
+   vertical-align: middle;
+   height: 33%;
+   width: 100%;
+}
+#newColorText3W{
+   display: table;
+   vertical-align: bottom;
+   height: 33%;
+   width: 100%;
+}
+
+#newColorText1{
    display: table-cell;
    vertical-align: middle;
+   width: 100%;
+   height: 100%;
 }
+#newColorText2{
+   display: table-cell;
+   vertical-align: middle;
+   width: 100%;
+}
+#newColorText3{
+   display: table-cell;
+   vertical-align: middle;
+   width: 100%;
+}
+
+/* .newColorText{
+   display: table-cell;
+   vertical-align: middle;
+} */
 
 input[type=range]#slider1::-webkit-slider-runnable-track{
    background-image: -webkit-linear-gradient(left, var(--slider1Left), var(--slider1Right));

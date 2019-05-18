@@ -16,6 +16,9 @@ var originalRightBrd = 50;
 var selectedSquare = -1;
 var selectedSquareTab;
 var currColorDiv;
+var currColorText1W;
+var currColorText2W;
+var currColorText3W;
 var currColorText1;
 var currColorText2;
 var currColorText3;
@@ -24,6 +27,9 @@ var slider1;
 var slider2;
 var slider3;
 var newColorDiv;
+var newColorText1W;
+var newColorText2W;
+var newColorText3W;
 var newColorText1;
 var newColorText2;
 var newColorText3;
@@ -59,15 +65,25 @@ function setup(){
    currColorDiv.class('currColorDiv');
    selectedSquareTab.child(currColorDiv);
 
+   currColorText1W = createDiv('');
+   currColorDiv.child(currColorText1W);
+   currColorText1W.id('currColorText1W');
+   currColorText2W = createDiv('');
+   currColorDiv.child(currColorText2W);
+   currColorText2W.id('currColorText2W');
+   currColorText3W = createDiv('');
+   currColorDiv.child(currColorText3W);
+   currColorText3W.id('currColorText3W');
+
    currColorText1 = createDiv('');
+   currColorText1W.child(currColorText1);
    currColorText1.id('currColorText1');
-   currColorDiv.child(currColorText1);
    currColorText2 = createDiv('');
+   currColorText2W.child(currColorText2);
    currColorText2.id('currColorText2');
-   currColorDiv.child(currColorText2);
    currColorText3 = createDiv('');
+   currColorText3W.child(currColorText3);
    currColorText3.id('currColorText3');
-   currColorDiv.child(currColorText3);
 
    slidersDiv = createDiv('');
    slidersDiv.position(0, (h-topBrd-botBrd)/3);
@@ -109,9 +125,55 @@ function setup(){
    newColorDiv.class('newColorDiv');
    selectedSquareTab.child(newColorDiv);
 
-   newColorText = createDiv('');
-   newColorText.class('newColorText');
-   newColorDiv.child(newColorText);
+   // newColorText = createDiv('');
+   // newColorText.class('newColorText');
+   // newColorDiv.child(newColorText);
+
+   newColorText1W = createDiv('');
+   newColorDiv.child(newColorText1W);
+   newColorText1W.id('newColorText1W');
+   newColorText2W = createDiv('');
+   newColorDiv.child(newColorText2W);
+   newColorText2W.id('newColorText2W');
+   newColorText3W = createDiv('');
+   newColorDiv.child(newColorText3W);
+   newColorText3W.id('newColorText3W');
+
+   newColorText1 = createDiv('');
+   newColorText1W.child(newColorText1);
+   newColorText1.id('newColorText1');
+   newColorText2 = createDiv('');
+   newColorText2W.child(newColorText2);
+   newColorText2.id('newColorText2');
+   newColorText3 = createDiv('');
+   newColorText3W.child(newColorText3);
+   newColorText3.id('newColorText3');
+
+   // currColorDiv = createDiv('');
+   // currColorDiv.position(0, 0);
+   // currColorDiv.size(squishedRightBrd-2*gap-originalRightBrd, (h-topBrd-botBrd)/3-gap);
+   // currColorDiv.class('currColorDiv');
+   // selectedSquareTab.child(currColorDiv);
+   //
+   // currColorText1W = createDiv('');
+   // currColorDiv.child(currColorText1W);
+   // currColorText1W.id('currColorText1W');
+   // currColorText2W = createDiv('');
+   // currColorDiv.child(currColorText2W);
+   // currColorText2W.id('currColorText2W');
+   // currColorText3W = createDiv('');
+   // currColorDiv.child(currColorText3W);
+   // currColorText3W.id('currColorText3W');
+   //
+   // currColorText1 = createDiv('');
+   // currColorText1W.child(currColorText1);
+   // currColorText1.id('currColorText1');
+   // currColorText2 = createDiv('');
+   // currColorText2W.child(currColorText2);
+   // currColorText2.id('currColorText2');
+   // currColorText3 = createDiv('');
+   // currColorText3W.child(currColorText3);
+   // currColorText3.id('currColorText3');
 }
 
 function AddNewColorRGB(name, r, g, b){
@@ -153,6 +215,18 @@ function AddNewColorHex(name,hex){
          }
          selectedSquareTab.position(w+gap/2-squishedRightBrd+originalRightBrd/2, topBrd);
          selectedSquare = myInd;
+         var fs;
+         if(myColors[myInd].name.length<10){
+            fs = (squishedRightBrd-gap-originalRightBrd)/10;
+         }else{
+            fs = (squishedRightBrd-gap-originalRightBrd)/myColors[myInd].name.length;
+         }
+         currColorText1.style('font-size', fs + "px");
+         currColorText2.style('font-size', fs + "px");
+         currColorText3.style('font-size', fs + "px");
+         newColorText1.style('font-size', fs + "px");
+         newColorText2.style('font-size', fs + "px");
+         newColorText3.style('font-size', fs + "px");
          currColorDiv.style('background-color', color(myColors[myInd].r,myColors[myInd].g,myColors[myInd].b));
          currColorText1.style('color', color(invertColor(myColors[myInd].hex)));
          currColorText2.style('color', color(invertColor(myColors[myInd].hex)));
@@ -162,7 +236,10 @@ function AddNewColorHex(name,hex){
          currColorText2.html(`(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})`);
          currColorText3.html(`#${myColors[myInd].hex}`);
          newColorDiv.style('background-color', color(myColors[myInd].r,myColors[myInd].g,myColors[myInd].b));
-         newColorText.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />#${myColors[myInd].hex}`);
+         // newColorText.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />#${myColors[myInd].hex}`);
+         newColorText1.html(`${myColors[myInd].name}`);
+         newColorText2.html(`(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})`);
+         newColorText3.html(`#${myColors[myInd].hex}`);
          slider1.value(myColors[myInd].r);
          slider2.value(myColors[myInd].g);
          slider3.value(myColors[myInd].b);
@@ -232,18 +309,40 @@ function updateNewColor(){
          colorNamed = i;
       }
    }
+   var fs;
    if(colorNamed!=-1){
-      newColorText.html(`${myColors[colorNamed].name}<br />(${r}, ${g}, ${b})<br />#${hex}`);
+      // newColorText.html(`${myColors[colorNamed].name}<br />(${r}, ${g}, ${b})<br />#${hex}`);
+      newColorText1.html(`${myColors[colorNamed].name}`);
+      if(myColors[colorNamed].name.length<10){
+         fs = (squishedRightBrd-gap-originalRightBrd)/10;
+      }else{
+         fs = (squishedRightBrd-gap-originalRightBrd)/myColors[colorNamed].name.length;
+      }
    }else{
-      newColorText.html(`Unnamed Color <br />(${r}, ${g}, ${b})<br />#${hex}`);
+      // newColorText.html(`Unnamed Color <br />(${r}, ${g}, ${b})<br />#${hex}`);
+      newColorText1.html(`New Color`);
+      fs = (((w-leftBrd-rightBrd)/gx)-gap)/9;
    }
+   currColorText1.style('font-size', fs + "px");
+   currColorText2.style('font-size', fs + "px");
+   currColorText3.style('font-size', fs + "px");
+   newColorText1.style('font-size', fs + "px");
+   newColorText2.style('font-size', fs + "px");
+   newColorText3.style('font-size', fs + "px");
+   newColorText2.html(`(${r}, ${g}, ${b})`);
+   newColorText3.html(`#${hex}`);
    root.style.setProperty('--slider1Left', "#"+rgb2Hex(0, g, b).toUpperCase());
    root.style.setProperty('--slider1Right', "#"+rgb2Hex(255, g, b).toUpperCase());
    root.style.setProperty('--slider2Left', "#"+rgb2Hex(r, 0, b).toUpperCase());
    root.style.setProperty('--slider2Right', "#"+rgb2Hex(r, 255, b).toUpperCase());
    root.style.setProperty('--slider3Left', "#"+rgb2Hex(r, g, 0).toUpperCase());
    root.style.setProperty('--slider3Right', "#"+rgb2Hex(r, g, 255).toUpperCase());
-   newColorText.style('color', invertColor(hex));
+   // newColorText.style('color', invertColor(hex));
+   newColorText1.style('color', invertColor(hex));
+   newColorText2.style('color', invertColor(hex));
+   newColorText3.style('color', invertColor(hex));
+
+
 }
 
 function windowResized() {

@@ -63,9 +63,10 @@ body{
    display: table-cell;
    vertical-align: middle;
    color: var(--ghostwhite);
-   font-size: 1.5em;
+   /* font-size: 1.5em; */
+   /* width: 100%; */
    opacity: 0.0;
-   transition: opacity 0.3s ease-in-out;
+   transition: all 0.3s ease-in-out;
    transform-origin: center center;
    -webkit-user-select: none; /* Safari */
    -moz-user-select: none; /* Firefox */
@@ -134,10 +135,26 @@ body{
    text-align: center;
 }
 
-.currColorText{
+#currColorText1{
+   display: inline-block;
+   vertical-align: top;
+   width: 100%;
+}
+#currColorText2{
+   display: inline-block;
+   vertical-align: center;
+   width: 100%;
+}
+#currColorText3{
+   display: inline-block;
+   vertical-align: bottom;
+   width: 100%;
+}
+
+/* .currColorText{
    display: table-cell;
    vertical-align: middle;
-}
+} */
 .newColorDiv{
    border-radius: 5px;
    box-sizing: border-box;

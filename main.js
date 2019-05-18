@@ -16,20 +16,24 @@ var originalRightBrd = 50;
 var selectedSquare = -1;
 var selectedSquareTab;
 var currColorDiv;
-var currColorText;
+var currColorText1;
+var currColorText2;
+var currColorText3;
 var slidersDiv;
 var slider1;
 var slider2;
 var slider3;
 var newColorDiv;
-var newColorText;
+var newColorText1;
+var newColorText2;
+var newColorText3;
 var sliderMode = 'rgb';
 function setup(){
    w = window.innerWidth;
    h = window.innerHeight;
    cnv = createCanvas(w, h);
    cnv.position(0,0);
-   cnv.background(color('#090821'));
+   background(color('#090821'));
 
    AddNewColorHex("whitesmoke", "F5F0F6");
    AddNewColorHex("ballblue", "2AB7CA");
@@ -55,9 +59,15 @@ function setup(){
    currColorDiv.class('currColorDiv');
    selectedSquareTab.child(currColorDiv);
 
-   currColorText = createDiv('');
-   currColorText.class('currColorText');
-   currColorDiv.child(currColorText);
+   currColorText1 = createDiv('');
+   currColorText1.id('currColorText1');
+   currColorDiv.child(currColorText1);
+   currColorText2 = createDiv('');
+   currColorText2.id('currColorText2');
+   currColorDiv.child(currColorText2);
+   currColorText3 = createDiv('');
+   currColorText3.id('currColorText3');
+   currColorDiv.child(currColorText3);
 
    slidersDiv = createDiv('');
    slidersDiv.position(0, (h-topBrd-botBrd)/3);
@@ -118,12 +128,18 @@ function AddNewColorHex(name,hex){
    let nsqText = createDiv(name);
    nsq.class('colorSquare');
    nsqText.class('colorSquareText');
+   var fs;
+   if(name.length<10){
+      fs = (((w-leftBrd-rightBrd)/gx)-gap)/10;
+   }else{
+      fs = (((w-leftBrd-rightBrd)/gx)-gap)/name.length;
+   }
+   nsqText.style('font-size', fs + "px");
    nsq.child(nsqText);
    nsq.size(((w-leftBrd-rightBrd)/gx)-gap, ((h-topBrd-botBrd)/gy)-gap);
    let myInd = myColors.length;
    nsq.position(myInd%gx*((w-leftBrd-rightBrd)/gx)+gap/2+leftBrd, Math.floor(myInd/gx)*(((h-topBrd-botBrd)/gy))+gap/2+topBrd);
    nsq.style('background-color', c);
-
    nsq.mousePressed(()=>{
       rightBrd = squishedRightBrd;
       if(selectedSquare==myInd){
@@ -138,8 +154,13 @@ function AddNewColorHex(name,hex){
          selectedSquareTab.position(w+gap/2-squishedRightBrd+originalRightBrd/2, topBrd);
          selectedSquare = myInd;
          currColorDiv.style('background-color', color(myColors[myInd].r,myColors[myInd].g,myColors[myInd].b));
-         currColorText.style('color', color(invertColor(myColors[myInd].hex)));
-         currColorText.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />#${myColors[myInd].hex}`);
+         currColorText1.style('color', color(invertColor(myColors[myInd].hex)));
+         currColorText2.style('color', color(invertColor(myColors[myInd].hex)));
+         currColorText3.style('color', color(invertColor(myColors[myInd].hex)));
+         // currColorText.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />#${myColors[myInd].hex}`);
+         currColorText1.html(`${myColors[myInd].name}`);
+         currColorText2.html(`(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})`);
+         currColorText3.html(`#${myColors[myInd].hex}`);
          newColorDiv.style('background-color', color(myColors[myInd].r,myColors[myInd].g,myColors[myInd].b));
          newColorText.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />#${myColors[myInd].hex}`);
          slider1.value(myColors[myInd].r);
@@ -158,6 +179,7 @@ function AddNewColorHex(name,hex){
       b: blue(c),
       hex: hex,
       square: nsq,
+      text: nsqText,
       ind: myInd
    });
 }
@@ -187,6 +209,13 @@ function redrawSquares(){
    for(var i = 0; i<myColors.length; i++){
       myColors[i].square.size(((w-leftBrd-rightBrd)/gx)-gap, ((h-topBrd-botBrd)/gy)-gap);
       myColors[i].square.position(i%gx*((w-leftBrd-rightBrd)/gx)+gap/2+leftBrd, Math.floor(i/gx)*(((h-topBrd-botBrd)/gy))+gap/2+topBrd);
+      var fs;
+      if(myColors[i].name.length<10){
+         fs = (((w-leftBrd-rightBrd)/gx)-gap)/10;
+      }else{
+         fs = (((w-leftBrd-rightBrd)/gx)-gap)/myColors[i].name.length;
+      }
+      myColors[i].text.style('font-size', fs + "px");
    }
 }
 
@@ -197,15 +226,38 @@ function updateNewColor(){
    var c = color(r, g, b);
    var hex = rgb2Hex(r, g, b).toUpperCase();
    newColorDiv.style('background-color', c);
-   newColorText.html(`Unnamed Color <br />(${r}, ${g}, ${b})<br />#${hex}`);
+   var colorNamed = -1;
+   for(var i = 0; i<myColors.length; i++){
+      if(r==myColors[i].r && g==myColors[i].g && b==myColors[i].b){
+         colorNamed = i;
+      }
+   }
+   if(colorNamed!=-1){
+      newColorText.html(`${myColors[colorNamed].name}<br />(${r}, ${g}, ${b})<br />#${hex}`);
+   }else{
+      newColorText.html(`Unnamed Color <br />(${r}, ${g}, ${b})<br />#${hex}`);
+   }
    root.style.setProperty('--slider1Left', "#"+rgb2Hex(0, g, b).toUpperCase());
    root.style.setProperty('--slider1Right', "#"+rgb2Hex(255, g, b).toUpperCase());
    root.style.setProperty('--slider2Left', "#"+rgb2Hex(r, 0, b).toUpperCase());
    root.style.setProperty('--slider2Right', "#"+rgb2Hex(r, 255, b).toUpperCase());
    root.style.setProperty('--slider3Left', "#"+rgb2Hex(r, g, 0).toUpperCase());
    root.style.setProperty('--slider3Right', "#"+rgb2Hex(r, g, 255).toUpperCase());
+   newColorText.style('color', invertColor(hex));
 }
 
+function windowResized() {
+   w = window.innerWidth;
+   h = window.innerHeight;
+   // resizeCanvas(w, h);
+   redrawSquares();
+   if(selectedSquare==-1){
+      selectedSquareTab.position(w, topBrd);
+   }else{
+      selectedSquareTab.position(w+gap/2-squishedRightBrd+originalRightBrd/2, topBrd);
+   }
+   background(color('#090821'));
+}
 
 function invertColor(hex) {
     if (hex.indexOf('#') === 0) {

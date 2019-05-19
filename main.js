@@ -118,13 +118,13 @@ function createCurrColorDiv(){
    currColorText3.addClass('currColorText');
 
    currColorText1W.mousePressed(()=>{
-      copy2Clipboard(currColorText1W.elt);
+      copy2Clipboard(currColorText1.elt);
    });
    currColorText2W.mousePressed(()=>{
-      copy2Clipboard(currColorText2W.elt);
+      copy2Clipboard(currColorText2.elt);
    });
    currColorText3W.mousePressed(()=>{
-      copy2Clipboard(currColorText3W.elt);
+      copy2Clipboard(currColorText3.elt);
    });
 }
 
@@ -271,13 +271,13 @@ function createNewColorDiv(){
    newColorText3.addClass('newColorText');
 
    newColorText1W.mousePressed(()=>{
-      copy2Clipboard(newColorText1W.elt);
+      copy2Clipboard(newColorText1.elt);
    });
    newColorText2W.mousePressed(()=>{
-      copy2Clipboard(newColorText2W.elt);
+      copy2Clipboard(newColorText2.elt);
    });
    newColorText3W.mousePressed(()=>{
-      copy2Clipboard(newColorText3W.elt);
+      copy2Clipboard(newColorText3.elt);
    });
 }
 
@@ -486,21 +486,17 @@ function windowResized() {
 }
 
 function copy2Clipboard(elm) {
-  if(document.body.createTextRange) {
-    var range = document.body.createTextRange();
-    range.moveToElementText(elm);
-    range.select();
-    document.execCommand("Copy");
-  }
-  else if(window.getSelection) {
-
-    var selection = window.getSelection();
-    var range = document.createRange();
-    range.selectNodeContents(elm);
-    selection.removeAllRanges();
-    selection.addRange(range);
-    document.execCommand("Copy");
-  }
+   if (document.selection) {
+     var range = document.body.createTextRange();
+     range.moveToElementText(elm);
+     range.select().createTextRange();
+     document.execCommand("copy");
+   } else if (window.getSelection) {
+     var range = document.createRange();
+      range.selectNode(elm);
+      window.getSelection().addRange(range);
+      document.execCommand("copy");
+   }
 }
 
 function invertColor(hex) {
@@ -599,7 +595,7 @@ function handleInput(r, g, b){
 
 function setNewColor(r, g, b){
    var c = color(r, g, b);
-   hex = rgb2Hex(r, g, b).toUpperCase();
+   var hex = rgb2Hex(r, g, b).toUpperCase();
    newColorDiv.style('background-color', c);
    var colorNamed = -1;
    for(var i = 0; i<myColors.length; i++){

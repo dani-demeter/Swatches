@@ -166,10 +166,6 @@ body{
    display: table-cell;
    vertical-align: middle;
    cursor: copy;
-   -webkit-user-select: none; /* Safari */
-   -moz-user-select: none; /* Firefox */
-   -ms-user-select: none; /* IE10+/Edge */
-   user-select: none; /* Standard */
 }
 
 /* .currColorText{
@@ -211,10 +207,6 @@ body{
    vertical-align: middle;
    width: 100%;
    cursor: copy;
-   -webkit-user-select: none; /* Safari */
-   -moz-user-select: none; /* Firefox */
-   -ms-user-select: none; /* IE10+/Edge */
-   user-select: none; /* Standard */
 }
 
 input[type=range]#slider1::-webkit-slider-runnable-track{

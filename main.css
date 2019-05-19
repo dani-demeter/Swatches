@@ -24,6 +24,7 @@
    --orangeyellow: #FFD166;
    --infrared: #EF476F;
    --caribbeangreen: #06D6A0;
+   --jade: #00A86B;
    --slider1Left: #06D6A0;
    --slider1Right: #06D6A0;
    --slider2Left: #06D6A0;
@@ -126,8 +127,8 @@ body{
    /* background-color: var(--ghostwhite); */
    background-color: transparent;
    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+   -moz-box-sizing: border-box;
+   -webkit-box-sizing: border-box;
    border: 3px solid var(--ghostwhite);
    border-radius: 10px;
 }
@@ -229,13 +230,13 @@ input[type=range]#slider3::-webkit-slider-runnable-track{
 input[type=range].slider {
   -webkit-appearance: none;
   background-color: transparent;
-  width: 90%;
+  /* width: 90%; */
   /* margin: 4.85px 0; */
   transition: all 0.2s;
   outline: none;
 }
 input[type=range].slider::-webkit-slider-runnable-track {
-  width: 90%;
+  /* width: 90%; */
   height: 10.3px;
   cursor: pointer;
   background: #29142e;
@@ -253,7 +254,7 @@ input[type=range].slider::-webkit-slider-thumb {
   margin-top: -5.85px;
 }
 input[type=range].slider::-moz-range-track {
-  width: 90%;
+  /* width: 90%; */
   height: 10.3px;
   cursor: pointer;
   border-radius: 25px;
@@ -268,7 +269,7 @@ input[type=range].slider::-moz-range-thumb {
   cursor: pointer;
 }
 input[type=range].slider::-ms-track {
-  width: 90%;
+  /* width: 90%; */
   height: 10.3px;
   cursor: pointer;
   background: transparent;
@@ -288,7 +289,7 @@ input[type=range].slider::-ms-thumb {
 .colorModeBtn{
    z-index: 1;
    background: transparent;
-   border: 1px solid var(--ghostwhite);
+   border: 1px solid var(--cerulean);
    border-radius: 10px;
    overflow: hidden;
    cursor: pointer;
@@ -324,4 +325,36 @@ input[type=range].slider::-ms-thumb {
    vertical-align: middle;
    width: 100%;
    height: 100%;
+}
+
+.inputsDiv{
+   /* border: 2px solid var(--ghostwhite); */
+}
+
+input[type="text"]{
+   box-sizing: border-box;
+   background-color: transparent;
+   border-radius: 5px;
+   color: var(--ghostwhite);
+   font-family: montserrat;
+   text-align: center;
+   transition: all 0.2s linear;
+}
+
+input[type="text"]:focus{
+   outline: none;
+   border-width: 3px !important;
+}
+
+#inp1{
+   border: 1px solid var(--raspberry);
+}
+#inp2{
+   border: 1px solid var(--jade);
+}
+#inp3{
+   border: 1px solid var(--cerulean);
+}
+#inp4{
+   border: 1px solid var(--ghostwhite);
 }

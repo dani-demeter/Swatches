@@ -49,6 +49,12 @@ var slider3From = 0;
 var sliderStartTime = 0;
 var sliderDur = 300;
 
+var inputs;
+var inp1;
+var inp2;
+var inp3;
+var inp4;
+
 function setup(){
    w = window.innerWidth;
    h = window.innerHeight;
@@ -72,6 +78,7 @@ function setup(){
 
    createSelectedSquareTab();
    createCurrColorDiv();
+   createInputs();
    createSlidersDiv();
    createColorModeBtn();
    createNewColorDiv();
@@ -122,10 +129,46 @@ function createCurrColorDiv(){
    });
 }
 
+function createInputs(){
+   inputs = createDiv('');
+   selectedSquareTab.child(inputs);
+   inputs.position(0, (h-topP*h-botP*h)/3+gap/2);
+   inputs.size(squishedrightP*w-2*gap-originalrightP*w, buttonHeightP*h);
+   inputs.addClass('inputsDiv');
+
+   inp1 = createInput('');
+   inp2 = createInput('');
+   inp3 = createInput('');
+   inp4 = createInput('');
+
+   inp1.id('inp1');
+   inp2.id('inp2');
+   inp3.id('inp3');
+   inp4.id('inp4');
+
+   var pw = squishedrightP*w-2*gap-originalrightP*w;
+   var vertgap = pw/30;
+   inp1.size(pw/6, buttonHeightP*h);
+   inp2.size(pw/6, buttonHeightP*h);
+   inp3.size(pw/6, buttonHeightP*h);
+   inp4.size(pw/3, buttonHeightP*h);
+
+   inp1.position(vertgap, 0);
+   inp2.position(pw/6+2*vertgap, 0);
+   inp3.position(2*pw/6+3*vertgap, 0);
+   inp4.position(3*pw/6+4*vertgap, 0);
+
+   inputs.child(inp1);
+   inputs.child(inp2);
+   inputs.child(inp3);
+   inputs.child(inp4);
+
+}
+
 function createSlidersDiv(){
    slidersDiv = createDiv('');
-   slidersDiv.position(0, (h-topP*h-botP*h)/3+buttonHeightP*h);
-   slidersDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-gap);
+   slidersDiv.position(0, (h-topP*h-botP*h)/3+buttonHeightP*h+2*gap);
+   slidersDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-3*gap);
    slidersDiv.class('slidersDiv');
 
    slider1 = createSlider(0, 255, 50);
@@ -144,13 +187,15 @@ function createSlidersDiv(){
    slider2.addClass("slider");
    slider3.addClass("slider");
 
-   // slider1.size(squishedrightP*w-originalrightP*w-6*gap, (((h-topP*h-botP*h)/3))/8);
-   // slider2.size(squishedrightP*w-originalrightP*w-6*gap, (((h-topP*h-botP*h)/3))/8);
-   // slider3.size(squishedrightP*w-originalrightP*w-6*gap, (((h-topP*h-botP*h)/3))/8);
+   var slh = (h-topP*h-botP*h)/3-3*gap;
 
-   slider1.position(3*gap, (((h-topP*h-botP*h)/3))/4-(((h-topP*h-botP*h)/3))/16);
-   slider2.position(3*gap, (((h-topP*h-botP*h)/3))/2-(((h-topP*h-botP*h)/3))/16);
-   slider3.position(3*gap, 3*(((h-topP*h-botP*h)/3))/4-(((h-topP*h-botP*h)/3))/16);
+   slider1.size(squishedrightP*w-originalrightP*w-6*gap, slh/4);
+   slider2.size(squishedrightP*w-originalrightP*w-6*gap, slh/4);
+   slider3.size(squishedrightP*w-originalrightP*w-6*gap, slh/4);
+
+   slider1.position(gap, slh/4-slh/8);
+   slider2.position(gap, slh/2-slh/8);
+   slider3.position(gap, 3*slh/4-slh/8);
 
    selectedSquareTab.child(slidersDiv);
    slidersDiv.child(slider1);
@@ -439,6 +484,10 @@ function copy2Clipboard(elm) {
 }
 
 function invertColor(hex) {
+   return invertColorA(hex, true);
+}
+
+function invertColorA(hex, bw) {
     if (hex.indexOf('#') === 0) {
         hex = hex.slice(1);
     }
@@ -449,12 +498,21 @@ function invertColor(hex) {
     if (hex.length !== 6) {
         throw new Error('Invalid HEX color.');
     }
+    var r = parseInt(hex.slice(0, 2), 16),
+        g = parseInt(hex.slice(2, 4), 16),
+        b = parseInt(hex.slice(4, 6), 16);
+    if (bw) {
+        // http://stackoverflow.com/a/3943023/112731
+        return (r * 0.299 + g * 0.587 + b * 0.114) > 186
+            ? '#000000'
+            : '#FFFFFF';
+    }
     // invert color components
-    var r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16),
-        g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16),
-        b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16);
+    r = (255 - r).toString(16);
+    g = (255 - g).toString(16);
+    b = (255 - b).toString(16);
     // pad each with zeros and return
-    return '#' + padZero(r) + padZero(g) + padZero(b);
+    return "#" + padZero(r) + padZero(g) + padZero(b);
 }
 
 function padZero(str, len) {

@@ -355,14 +355,7 @@ function AddNewColor(name,hex){
          root.style.setProperty('--slider3Left', "#"+rgb2Hex(myColors[myInd].r, myColors[myInd].g, 0).toUpperCase());
          root.style.setProperty('--slider3Right', "#"+rgb2Hex(myColors[myInd].r, myColors[myInd].g, 255).toUpperCase());
 
-         sliding = true;
-         slider1To = myColors[myInd].r;
-         slider2To = myColors[myInd].g;
-         slider3To = myColors[myInd].b;
-         slider1From = slider1.value();
-         slider2From = slider2.value();
-         slider3From = slider3.value();
-         sliderStartTime = millis();
+         slideTo(myColors[myInd].r, slider1.value(), myColors[myInd].g, slider2.value(), myColors[myInd].b, slider3.value());
          // updateNewColor();
 
          nsq.addClass('selectedSquare');
@@ -379,6 +372,17 @@ function AddNewColor(name,hex){
       text: nsqText,
       ind: myInd
    });
+}
+
+function slideTo(t1, f1, t2, f2, t3, f3){
+   sliding = true;
+   slider1To = t1;
+   slider2To = t2;
+   slider3To = t3;
+   slider1From = f1;
+   slider2From = f2;
+   slider3From = f3;
+   sliderStartTime = millis();
 }
 
 function getRandomInt(min, max){
@@ -422,43 +426,50 @@ function updateNewColor(){
    var b = slider3.value();
    var c = color(r, g, b);
    var hex = rgb2Hex(r, g, b).toUpperCase();
-   newColorDiv.style('background-color', c);
-   var colorNamed = -1;
-   for(var i = 0; i<myColors.length; i++){
-      if(r==myColors[i].r && g==myColors[i].g && b==myColors[i].b){
-         colorNamed = i;
-      }
-   }
-   var fs;
-   if(colorNamed!=-1){
-      newColorText1.html(`${myColors[colorNamed].name}`);
-      if(myColors[colorNamed].name.length<10){
-         fs = (squishedrightP*w-gap-originalrightP*w)/10;
-      }else{
-         fs = (squishedrightP*w-gap-originalrightP*w)/myColors[colorNamed].name.length;
-      }
-   }else{
-      newColorText1.html(`New Color`);
-      fs = (((w-leftP*w-rightP*w)/gx)-gap)/9;
-   }
-   currColorText1.style('font-size', fs + "px");
-   currColorText2.style('font-size', fs + "px");
-   currColorText3.style('font-size', fs + "px");
-   newColorText1.style('font-size', fs + "px");
-   newColorText2.style('font-size', fs + "px");
-   newColorText3.style('font-size', fs + "px");
-   newColorText2.html(`(${r}, ${g}, ${b})`);
-   newColorText3.html(`#${hex}`);
-   root.style.setProperty('--slider1Left', "#"+rgb2Hex(0, g, b).toUpperCase());
-   root.style.setProperty('--slider1Right', "#"+rgb2Hex(255, g, b).toUpperCase());
-   root.style.setProperty('--slider2Left', "#"+rgb2Hex(r, 0, b).toUpperCase());
-   root.style.setProperty('--slider2Right', "#"+rgb2Hex(r, 255, b).toUpperCase());
-   root.style.setProperty('--slider3Left', "#"+rgb2Hex(r, g, 0).toUpperCase());
-   root.style.setProperty('--slider3Right', "#"+rgb2Hex(r, g, 255).toUpperCase());
-   // newColorText.style('color', invertColor(hex));
-   newColorText1.style('color', invertColor(hex));
-   newColorText2.style('color', invertColor(hex));
-   newColorText3.style('color', invertColor(hex));
+
+   inp1.value(r);
+   inp2.value(g);
+   inp3.value(b);
+   inp4.value(hex);
+   // newColorDiv.style('background-color', c);
+   // var colorNamed = -1;
+   // for(var i = 0; i<myColors.length; i++){
+   //    if(r==myColors[i].r && g==myColors[i].g && b==myColors[i].b){
+   //       colorNamed = i;
+   //    }
+   // }
+   // var fs;
+   // if(colorNamed!=-1){
+   //    newColorText1.html(`${myColors[colorNamed].name}`);
+   //    if(myColors[colorNamed].name.length<10){
+   //       fs = (squishedrightP*w-gap-originalrightP*w)/10;
+   //    }else{
+   //       fs = (squishedrightP*w-gap-originalrightP*w)/myColors[colorNamed].name.length;
+   //    }
+   // }else{
+   //    newColorText1.html(`New Color`);
+   //    fs = (((w-leftP*w-rightP*w)/gx)-gap)/9;
+   // }
+   // currColorText1.style('font-size', fs + "px");
+   // currColorText2.style('font-size', fs + "px");
+   // currColorText3.style('font-size', fs + "px");
+   // newColorText1.style('font-size', fs + "px");
+   // newColorText2.style('font-size', fs + "px");
+   // newColorText3.style('font-size', fs + "px");
+   // newColorText2.html(`(${r}, ${g}, ${b})`);
+   // newColorText3.html(`#${hex}`);
+   // root.style.setProperty('--slider1Left', "#"+rgb2Hex(0, g, b).toUpperCase());
+   // root.style.setProperty('--slider1Right', "#"+rgb2Hex(255, g, b).toUpperCase());
+   // root.style.setProperty('--slider2Left', "#"+rgb2Hex(r, 0, b).toUpperCase());
+   // root.style.setProperty('--slider2Right', "#"+rgb2Hex(r, 255, b).toUpperCase());
+   // root.style.setProperty('--slider3Left', "#"+rgb2Hex(r, g, 0).toUpperCase());
+   // root.style.setProperty('--slider3Right', "#"+rgb2Hex(r, g, 255).toUpperCase());
+   // // newColorText.style('color', invertColor(hex));
+   // newColorText1.style('color', invertColor(hex));
+   // newColorText2.style('color', invertColor(hex));
+   // newColorText3.style('color', invertColor(hex));
+
+   setNewColor(r, g, b);
 }
 
 function windowResized() {
@@ -581,10 +592,51 @@ function changedHexInput(){
 }
 
 function handleInput(r, g, b){
-   slider1.value(r);
-   slider2.value(g);
-   slider3.value(b);
-   updateNewColor();
+   slideTo(r, slider1.value(), g, slider2.value(), b, slider3.value());
+   setNewColor(r, g, b);
+   // updateNewColor();
+}
+
+function setNewColor(r, g, b){
+   var c = color(r, g, b);
+   hex = rgb2Hex(r, g, b).toUpperCase();
+   newColorDiv.style('background-color', c);
+   var colorNamed = -1;
+   for(var i = 0; i<myColors.length; i++){
+      if(r==myColors[i].r && g==myColors[i].g && b==myColors[i].b){
+         colorNamed = i;
+      }
+   }
+   var fs;
+   if(colorNamed!=-1){
+      newColorText1.html(`${myColors[colorNamed].name}`);
+      if(myColors[colorNamed].name.length<10){
+         fs = (squishedrightP*w-gap-originalrightP*w)/10;
+      }else{
+         fs = (squishedrightP*w-gap-originalrightP*w)/myColors[colorNamed].name.length;
+      }
+   }else{
+      newColorText1.html(`New Color`);
+      fs = (((w-leftP*w-rightP*w)/gx)-gap)/9;
+   }
+   currColorText1.style('font-size', fs + "px");
+   currColorText2.style('font-size', fs + "px");
+   currColorText3.style('font-size', fs + "px");
+   newColorText1.style('font-size', fs + "px");
+   newColorText2.style('font-size', fs + "px");
+   newColorText3.style('font-size', fs + "px");
+   newColorText2.html(`(${r}, ${g}, ${b})`);
+   newColorText3.html(`#${hex}`);
+   root.style.setProperty('--slider1Left', "#"+rgb2Hex(0, g, b).toUpperCase());
+   root.style.setProperty('--slider1Right', "#"+rgb2Hex(255, g, b).toUpperCase());
+   root.style.setProperty('--slider2Left', "#"+rgb2Hex(r, 0, b).toUpperCase());
+   root.style.setProperty('--slider2Right', "#"+rgb2Hex(r, 255, b).toUpperCase());
+   root.style.setProperty('--slider3Left', "#"+rgb2Hex(r, g, 0).toUpperCase());
+   root.style.setProperty('--slider3Right', "#"+rgb2Hex(r, g, 255).toUpperCase());
+   // newColorText.style('color', invertColor(hex));
+   newColorText1.style('color', invertColor(hex));
+   newColorText2.style('color', invertColor(hex));
+   newColorText3.style('color', invertColor(hex));
 }
 
 function isHex(hex){

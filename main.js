@@ -37,7 +37,7 @@ var newColorText3;
 var colorModeBtn;
 var cMode = "RGB";
 
-var buttonHeight = 24;
+var buttonHeightP = 0.05;
 
 var sliding = false;
 var slider1To = 0;
@@ -79,7 +79,7 @@ function setup(){
 
 function createSelectedSquareTab(){
    selectedSquareTab = createDiv('');
-   selectedSquareTab.position(w, topP*h-buttonHeight);
+   selectedSquareTab.position(w, topP*h-buttonHeightP*h);
    selectedSquareTab.size(squishedrightP*w-gap-originalrightP*w, h-topP*h-botP*h);
    selectedSquareTab.class('selectedSquareTab');
 }
@@ -103,13 +103,13 @@ function createCurrColorDiv(){
 
    currColorText1 = createDiv('');
    currColorText1W.child(currColorText1);
-   currColorText1.id('currColorText1');
+   currColorText1.addClass('currColorText');
    currColorText2 = createDiv('');
    currColorText2W.child(currColorText2);
-   currColorText2.id('currColorText2');
+   currColorText2.addClass('currColorText');
    currColorText3 = createDiv('');
    currColorText3W.child(currColorText3);
-   currColorText3.id('currColorText3');
+   currColorText3.addClass('currColorText');
 
    currColorText1W.mousePressed(()=>{
       copy2Clipboard(currColorText1W.elt);
@@ -124,7 +124,7 @@ function createCurrColorDiv(){
 
 function createSlidersDiv(){
    slidersDiv = createDiv('');
-   slidersDiv.position(0, (h-topP*h-botP*h)/3+buttonHeight);
+   slidersDiv.position(0, (h-topP*h-botP*h)/3+buttonHeightP*h);
    slidersDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-gap);
    slidersDiv.class('slidersDiv');
 
@@ -162,18 +162,18 @@ function createColorModeBtn(){
    colorModeBtn = createDiv('');
    colorModeBtn.addClass("colorModeBtn");
    var sstw = squishedrightP*w-2*gap-originalrightP*w;
-   colorModeBtn.position(sstw/4,2*(h-topP*h-botP*h)/3+buttonHeight);
-   colorModeBtn.size(sstw/2, buttonHeight);
+   colorModeBtn.position(sstw/4,2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   colorModeBtn.size(sstw/2, buttonHeightP*h);
    selectedSquareTab.child(colorModeBtn);
 
    var rgbtW = createDiv('');
    rgbtW.position(0, 0);
-   rgbtW.size(sstw/4, buttonHeight);
+   rgbtW.size(sstw/4, buttonHeightP*h);
    rgbtW.addClass("rgbhsltW");
 
    var hsltW = createDiv('');
    hsltW.position(sstw/4,0);
-   hsltW.size(sstw/4, buttonHeight);
+   hsltW.size(sstw/4, buttonHeightP*h);
    hsltW.addClass("rgbhsltW");
 
    var rgbt = createDiv("RGB");
@@ -196,7 +196,7 @@ function createColorModeBtn(){
 
 function createNewColorDiv(){
    newColorDiv = createDiv('');
-   newColorDiv.position(0, 2*(h-topP*h-botP*h)/3+2*buttonHeight+gap);
+   newColorDiv.position(0, 2*(h-topP*h-botP*h)/3+2*buttonHeightP*h+gap);
    newColorDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-gap);
    newColorDiv.class('newColorDiv');
    selectedSquareTab.child(newColorDiv);
@@ -213,13 +213,13 @@ function createNewColorDiv(){
 
    newColorText1 = createDiv('');
    newColorText1W.child(newColorText1);
-   newColorText1.id('newColorText1');
+   newColorText1.addClass('newColorText');
    newColorText2 = createDiv('');
    newColorText2W.child(newColorText2);
-   newColorText2.id('newColorText2');
+   newColorText2.addClass('newColorText');
    newColorText3 = createDiv('');
    newColorText3W.child(newColorText3);
-   newColorText3.id('newColorText3');
+   newColorText3.addClass('newColorText');
 
    newColorText1W.mousePressed(()=>{
       copy2Clipboard(newColorText1W.elt);
@@ -258,12 +258,12 @@ function AddNewColor(name,hex){
          selectedSquare = -1;
          rightP = originalrightP;
          nsq.removeClass('selectedSquare');
-         selectedSquareTab.position(w, topP*h-buttonHeight);
+         selectedSquareTab.position(w, topP*h-buttonHeightP*h);
       }else{
          if(selectedSquare!=-1){
             myColors[selectedSquare].square.removeClass('selectedSquare');
          }
-         selectedSquareTab.position(w+gap/2-squishedrightP*w+originalrightP*w/2, topP*h-buttonHeight);
+         selectedSquareTab.position(w+gap/2-squishedrightP*w+originalrightP*w/2, topP*h-buttonHeightP*h);
          selectedSquare = myInd;
          var fs;
          if(myColors[myInd].name.length<10){
@@ -413,9 +413,9 @@ function windowResized() {
    // resizeCanvas(w, h);
    redrawSquares();
    if(selectedSquare==-1){
-      selectedSquareTab.position(w, topP*h-buttonHeight);
+      selectedSquareTab.position(w, topP*h-buttonHeightP*h);
    }else{
-      selectedSquareTab.position(w+gap/2-squishedrightP*w+originalrightP*w/2, topP*h-buttonHeight);
+      selectedSquareTab.position(w+gap/2-squishedrightP*w+originalrightP*w/2, topP*h-buttonHeightP*h);
    }
    background(color('#090821'));
 }

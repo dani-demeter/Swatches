@@ -30,6 +30,7 @@
    --slider2Right: #06D6A0;
    --slider3Left: #06D6A0;
    --slider3Right: #06D6A0;
+   --rgbhslp: -100%;
 }
 @font-face {
     font-family: 'montserrat';
@@ -179,45 +180,6 @@ body{
    vertical-align: middle;
 } */
 
-.colorModeBtn {
-   border-radius: 10px;
-   font-family: montserrat;
-   background-color: var(--eerieblack);
-   color: var(--ghostwhite);
-   border: 1px solid var(--ghostwhite);
-   cursor: pointer;
-  z-index: 1;
-  /* position: relative; */
-  padding: 0.5em 1em;
-  outline: none;
-  overflow: hidden;
-  transition: color 0.2s ease-in-out;
-}
-
-.colorModeBtn::before {
-  content: '';
-  z-index: -1;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 1em;
-  height: 1em;
-  border-radius: 50%;
-  background-color: #3cefff;
-  transform-origin: center;
-  transform: translate(-50%, -50%) scale(0);
-  transition: transform 0.25s ease-in-out;
-}
-
-.colorModeBtn:hover {
-  cursor: pointer;
-  color: #161616;
-}
-
-.colorModeBtn:hover::before {
-  transform: translate(-50%, -50%) scale(15);
-}
-
 .newColorDiv{
    border-radius: 10px;
    box-sizing: border-box;
@@ -336,4 +298,41 @@ input[type=range].slider::-ms-thumb {
   background: #ffffff;
   cursor: pointer;
   height: 10.3px;
+}
+
+.colorModeBtn{
+   z-index: 1;
+   background: transparent;
+   border: 1px solid var(--ghostwhite);
+   border-radius: 10px;
+   overflow: hidden;
+   cursor: pointer;
+}
+
+.colorModeBtn::before{
+   content: '';
+   z-index: -1;
+   position: absolute;
+  width: 60%;
+  height: 100%;
+  background-color: var(--cerulean);
+  transform-origin: center;
+  transform: translate(-100%, 0%);
+  transition: transform 0.2s ease-in-out;
+}
+
+.colorModeBtn:before {
+  transform: translate(var(--rgbhslp), 0%);
+}
+
+.rgbhsltW{
+   display: table;
+}
+
+.rgbhslt{
+   color: var(--ghostwhite);
+   display: table-cell;
+   vertical-align: middle;
+   width: 100%;
+   height: 100%;
 }

@@ -35,7 +35,7 @@ var newColorText2;
 var newColorText3;
 
 var colorModeBtn;
-var colorMode = "RGB";
+var cMode = "RGB";
 
 var buttonHeight = 24;
 
@@ -159,25 +159,38 @@ function createSlidersDiv(){
 }
 
 function createColorModeBtn(){
-   colorModeBtn = createButton("RGB");
+   colorModeBtn = createDiv('');
+   colorModeBtn.addClass("colorModeBtn");
+   var sstw = squishedrightP*w-2*gap-originalrightP*w;
+   colorModeBtn.position(sstw/4,2*(h-topP*h-botP*h)/3+buttonHeight);
+   colorModeBtn.size(sstw/2, buttonHeight);
    selectedSquareTab.child(colorModeBtn);
-   colorModeBtn.class("colorModeBtn");
 
-   colorModeBtn.mouseOver(()=>{
-      colorModeBtn.html(colorMode=="RGB" ? "HSL" : "RGB");
-   });
+   var rgbtW = createDiv('');
+   rgbtW.position(0, 0);
+   rgbtW.size(sstw/4, buttonHeight);
+   rgbtW.addClass("rgbhsltW");
 
-   colorModeBtn.mouseOut(()=>{
-      colorModeBtn.html(colorMode=="RGB" ? "RGB" : "HSL");
-   });
+   var hsltW = createDiv('');
+   hsltW.position(sstw/4,0);
+   hsltW.size(sstw/4, buttonHeight);
+   hsltW.addClass("rgbhsltW");
+
+   var rgbt = createDiv("RGB");
+   rgbt.addClass("rgbhslt");
+
+   var hslt = createDiv("HSL");
+   hslt.addClass("rgbhslt");
+
+   rgbtW.child(rgbt);
+   hsltW.child(hslt);
+   colorModeBtn.child(rgbtW);
+   colorModeBtn.child(hsltW);
 
    colorModeBtn.mousePressed(()=>{
-      colorMode = (colorMode=="RGB") ? "HSL" : "RGB";
-      colorModeBtn.html(colorMode);
+      cMode = (cMode=="RGB") ? "HSL" : "RGB";
+      root.style.setProperty('--rgbhslp', (cMode=="RGB") ? "-100%" : "0%");
    });
-
-   colorModeBtn.position((squishedrightP*w-2*gap-originalrightP*w)/8, 2*(h-topP*h-botP*h)/3+buttonHeight);
-   colorModeBtn.size(3*(squishedrightP*w-2*gap-originalrightP*w)/4, buttonHeight);
 
 }
 

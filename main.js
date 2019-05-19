@@ -75,7 +75,6 @@ function setup(){
    AddNewColor("bubbles", "E5F8FF");
    AddNewColor("cerulean", "007BA7");
 
-
    createSelectedSquareTab();
    createCurrColorDiv();
    createInputs();
@@ -162,6 +161,11 @@ function createInputs(){
    inputs.child(inp2);
    inputs.child(inp3);
    inputs.child(inp4);
+
+   inp1.input(changedInput);
+   inp2.input(changedInput);
+   inp3.input(changedInput);
+   inp4.input(changedHexInput);
 
 }
 
@@ -316,6 +320,11 @@ function AddNewColor(name,hex){
          }else{
             fs = (squishedrightP*w-gap-originalrightP*w)/myColors[myInd].name.length;
          }
+         inp1.value(myColors[myInd].r);
+         inp2.value(myColors[myInd].g);
+         inp3.value(myColors[myInd].b);
+         inp4.value(myColors[myInd].hex);
+
          currColorText1.style('font-size', fs + "px");
          currColorText2.style('font-size', fs + "px");
          currColorText3.style('font-size', fs + "px");
@@ -545,4 +554,43 @@ function draw(){
          slider3.value(slider3From+s3d*y);
       }
    }
+}
+
+function changedInput(){
+   var r = limit((inp1.value().length==0 ? "0" : inp1.value()), 0, 255);
+   var g = limit((inp2.value().length==0 ? "0" : inp2.value()), 0, 255);
+   var b = limit((inp3.value().length==0 ? "0" : inp3.value()), 0, 255);
+
+   var hex = rgb2Hex(r, g, b).toUpperCase();
+   inp4.value(hex);
+   handleInput(r, g, b);
+}
+
+function changedHexInput(){
+   var i = (inp4.value().charAt(0)=="#") ? inp4.value(): "#"+inp4.value();
+   if(isHex(i)){
+      var c = color(i);
+      var r = red(c);
+      var g = green(c);
+      var b = blue(c);
+      inp1.value(r);
+      inp2.value(g);
+      inp3.value(b);
+      handleInput(r, g, b);
+   }
+}
+
+function handleInput(r, g, b){
+   slider1.value(r);
+   slider2.value(g);
+   slider3.value(b);
+   updateNewColor();
+}
+
+function isHex(hex){
+   return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hex);
+}
+
+function limit(num, min, max){
+   return Math.min(Math.max(parseInt(num), min), max);
 }

@@ -33,9 +33,9 @@ var newColorText3W;
 var newColorText1;
 var newColorText2;
 var newColorText3;
-var sliderMode = 'rgb';
 
 var colorModeBtn;
+var colorMode = "RGB";
 
 var buttonHeight = 24;
 
@@ -163,6 +163,19 @@ function createColorModeBtn(){
    selectedSquareTab.child(colorModeBtn);
    colorModeBtn.class("colorModeBtn");
 
+   colorModeBtn.mouseOver(()=>{
+      colorModeBtn.html(colorMode=="RGB" ? "HSL" : "RGB");
+   });
+
+   colorModeBtn.mouseOut(()=>{
+      colorModeBtn.html(colorMode=="RGB" ? "RGB" : "HSL");
+   });
+
+   colorModeBtn.mousePressed(()=>{
+      colorMode = (colorMode=="RGB") ? "HSL" : "RGB";
+      colorModeBtn.html(colorMode);
+   });
+
    colorModeBtn.position((squishedrightP*w-2*gap-originalrightP*w)/8, 2*(h-topP*h-botP*h)/3+buttonHeight);
    colorModeBtn.size(3*(squishedrightP*w-2*gap-originalrightP*w)/4, buttonHeight);
 
@@ -255,6 +268,9 @@ function AddNewColor(name,hex){
          currColorText1.style('color', color(invertColor(myColors[myInd].hex)));
          currColorText2.style('color', color(invertColor(myColors[myInd].hex)));
          currColorText3.style('color', color(invertColor(myColors[myInd].hex)));
+         newColorText1.style('color', color(invertColor(myColors[myInd].hex)));
+         newColorText2.style('color', color(invertColor(myColors[myInd].hex)));
+         newColorText3.style('color', color(invertColor(myColors[myInd].hex)));
          // currColorText.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />#${myColors[myInd].hex}`);
          currColorText1.html(`${myColors[myInd].name}`);
          currColorText2.html(`(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})`);
@@ -264,9 +280,13 @@ function AddNewColor(name,hex){
          newColorText1.html(`${myColors[myInd].name}`);
          newColorText2.html(`(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})`);
          newColorText3.html(`#${myColors[myInd].hex}`);
-         // slider1.value(myColors[myInd].r);
-         // slider2.value(myColors[myInd].g);
-         // slider3.value(myColors[myInd].b);
+
+         root.style.setProperty('--slider1Left', "#"+rgb2Hex(0, myColors[myInd].g, myColors[myInd].b).toUpperCase());
+         root.style.setProperty('--slider1Right', "#"+rgb2Hex(255, myColors[myInd].g, myColors[myInd].b).toUpperCase());
+         root.style.setProperty('--slider2Left', "#"+rgb2Hex(myColors[myInd].r, 0, myColors[myInd].b).toUpperCase());
+         root.style.setProperty('--slider2Right', "#"+rgb2Hex(myColors[myInd].r, 255, myColors[myInd].b).toUpperCase());
+         root.style.setProperty('--slider3Left', "#"+rgb2Hex(myColors[myInd].r, myColors[myInd].g, 0).toUpperCase());
+         root.style.setProperty('--slider3Right', "#"+rgb2Hex(myColors[myInd].r, myColors[myInd].g, 255).toUpperCase());
 
          sliding = true;
          slider1To = myColors[myInd].r;
@@ -276,7 +296,7 @@ function AddNewColor(name,hex){
          slider2From = slider2.value();
          slider3From = slider3.value();
          sliderStartTime = millis();
-         updateNewColor();
+         // updateNewColor();
 
          nsq.addClass('selectedSquare');
       }
@@ -372,8 +392,6 @@ function updateNewColor(){
    newColorText1.style('color', invertColor(hex));
    newColorText2.style('color', invertColor(hex));
    newColorText3.style('color', invertColor(hex));
-
-
 }
 
 function windowResized() {
@@ -439,9 +457,9 @@ function draw(){
          slider1.value(slider1To);
          slider2.value(slider2To);
          slider3.value(slider3To);
+         updateNewColor();
       }else{
          var x = (millis()-sliderStartTime)/sliderDur;
-         console.log(x);
          var y;
          if(x<0.5){
             y = 2*x*x;

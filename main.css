@@ -179,13 +179,43 @@ body{
    vertical-align: middle;
 } */
 
-.colorModeBtn{
+.colorModeBtn {
    border-radius: 10px;
    font-family: montserrat;
    background-color: var(--eerieblack);
    color: var(--ghostwhite);
    border: 1px solid var(--ghostwhite);
    cursor: pointer;
+  z-index: 1;
+  /* position: relative; */
+  padding: 0.5em 1em;
+  outline: none;
+  overflow: hidden;
+  transition: color 0.2s ease-in-out;
+}
+
+.colorModeBtn::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  background-color: #3cefff;
+  transform-origin: center;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.25s ease-in-out;
+}
+
+.colorModeBtn:hover {
+  cursor: pointer;
+  color: #161616;
+}
+
+.colorModeBtn:hover::before {
+  transform: translate(-50%, -50%) scale(15);
 }
 
 .newColorDiv{
@@ -258,7 +288,6 @@ input[type=range].slider {
   outline: none;
 }
 input[type=range].slider::-webkit-slider-runnable-track {
-   animate: 0.2s;
   width: 90%;
   height: 10.3px;
   cursor: pointer;
@@ -277,7 +306,6 @@ input[type=range].slider::-webkit-slider-thumb {
   margin-top: -5.85px;
 }
 input[type=range].slider::-moz-range-track {
-   animate: 0.2s;
   width: 90%;
   height: 10.3px;
   cursor: pointer;
@@ -293,7 +321,6 @@ input[type=range].slider::-moz-range-thumb {
   cursor: pointer;
 }
 input[type=range].slider::-ms-track {
-   animate: 0.2s;
   width: 90%;
   height: 10.3px;
   cursor: pointer;

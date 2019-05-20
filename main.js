@@ -7,11 +7,11 @@ var myColors = [];
 
 var gap = 4;
 var topP = 0.1;
-var leftP = 0.02;
-var rightP = 0.02;
+var leftP = 0.05;
+var rightP = 0.05;
 var botP = 0.1;
 var squishedrightP = 0.2;
-var originalrightP = 0.02;
+var originalrightP = 0.05;
 
 var selectedSquare = -1;
 var selectedSquareTab;
@@ -34,8 +34,8 @@ var newColorText1;
 var newColorText2;
 var newColorText3;
 
-var colorModeBtn;
-var cMode = "RGB";
+// var colorModeBtn;
+// var cMode = "RGB";
 
 var buttonHeightP = 0.05;
 
@@ -54,6 +54,10 @@ var inp1;
 var inp2;
 var inp3;
 var inp4;
+
+var removeButton;
+var replaceButton;
+var saveAsButton;
 
 function setup(){
    w = window.innerWidth;
@@ -79,20 +83,23 @@ function setup(){
    createCurrColorDiv();
    createInputs();
    createSlidersDiv();
-   createColorModeBtn();
+   // createColorModeBtn();
    createNewColorDiv();
+   createButtons();
 }
 
 function createSelectedSquareTab(){
    selectedSquareTab = createDiv('');
-   selectedSquareTab.position(w, topP*h-buttonHeightP*h);
-   selectedSquareTab.size(squishedrightP*w-gap-originalrightP*w, h-topP*h-botP*h);
+   // selectedSquareTab.position(w, topP*h-buttonHeightP*h);
+   selectedSquareTab.position(w, 0);
+   // selectedSquareTab.size(squishedrightP*w-2*gap-originalrightP*w, h-topP*h-botP*h+2*buttonHeightP*h);
+   selectedSquareTab.size(squishedrightP*w-(2*gap+originalrightP*w)/3, h);
    selectedSquareTab.class('selectedSquareTab');
 }
 
 function createCurrColorDiv(){
    currColorDiv = createDiv('');
-   currColorDiv.position(0, 0);
+   currColorDiv.position((2*gap+originalrightP*w)/3, topP*h-buttonHeightP*h);
    currColorDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-gap);
    currColorDiv.class('currColorDiv');
    selectedSquareTab.child(currColorDiv);
@@ -131,7 +138,7 @@ function createCurrColorDiv(){
 function createInputs(){
    inputs = createDiv('');
    selectedSquareTab.child(inputs);
-   inputs.position(0, (h-topP*h-botP*h)/3+gap/2);
+   inputs.position((2*gap+originalrightP*w)/3, topP*h-buttonHeightP*h+(h-topP*h-botP*h)/3+gap/2);
    inputs.size(squishedrightP*w-2*gap-originalrightP*w, buttonHeightP*h);
    inputs.addClass('inputsDiv');
 
@@ -167,11 +174,16 @@ function createInputs(){
    inp3.input(changedInput);
    inp4.input(changedHexInput);
 
+   inp1.style("font-size", inp1.size().width/3+"px");
+   inp2.style("font-size", inp2.size().width/3+"px");
+   inp3.style("font-size", inp3.size().width/3+"px");
+   inp4.style("font-size", inp4.size().width/6+"px");
+
 }
 
 function createSlidersDiv(){
    slidersDiv = createDiv('');
-   slidersDiv.position(0, (h-topP*h-botP*h)/3+buttonHeightP*h+2*gap);
+   slidersDiv.position((2*gap+originalrightP*w)/3, topP*h-buttonHeightP*h+(h-topP*h-botP*h)/3+buttonHeightP*h+2*gap);
    slidersDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-3*gap);
    slidersDiv.class('slidersDiv');
 
@@ -207,45 +219,145 @@ function createSlidersDiv(){
    slidersDiv.child(slider3);
 }
 
-function createColorModeBtn(){
-   colorModeBtn = createDiv('');
-   colorModeBtn.addClass("colorModeBtn");
-   var sstw = squishedrightP*w-2*gap-originalrightP*w;
-   colorModeBtn.position(sstw/4,2*(h-topP*h-botP*h)/3+buttonHeightP*h);
-   colorModeBtn.size(sstw/2, buttonHeightP*h);
-   selectedSquareTab.child(colorModeBtn);
+function createButtons(){
+   var pw = squishedrightP*w-2*gap-originalrightP*w;
+   var vertgap = pw/30;
 
-   var rgbtW = createDiv('');
-   rgbtW.position(0, 0);
-   rgbtW.size(sstw/4, buttonHeightP*h);
-   rgbtW.addClass("rgbhsltW");
+   saveAsButton = createButton('Add');
+   saveAsButton.position((2*gap+originalrightP*w)/3+vertgap, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   saveAsButton.size((pw-4*vertgap)/3, buttonHeightP*h);
+   selectedSquareTab.child(saveAsButton);
+   saveAsButton.addClass("tabButton");
 
-   var hsltW = createDiv('');
-   hsltW.position(sstw/4,0);
-   hsltW.size(sstw/4, buttonHeightP*h);
-   hsltW.addClass("rgbhsltW");
+   replaceButton = createButton('Replace');
+   replaceButton.position((2*gap+originalrightP*w)/3+vertgap*2+(pw-4*vertgap)/3, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   replaceButton.size((pw-4*vertgap)/3, buttonHeightP*h);
+   selectedSquareTab.child(replaceButton);
+   replaceButton.addClass("tabButton");
 
-   var rgbt = createDiv("RGB");
-   rgbt.addClass("rgbhslt");
+   removeButton = createButton('Remove');
+   removeButton.position((2*gap+originalrightP*w)/3+vertgap*3+2*(pw-4*vertgap)/3, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   removeButton.size((pw-4*vertgap)/3, buttonHeightP*h);
+   selectedSquareTab.child(removeButton);
+   removeButton.addClass("tabButton");
 
-   var hslt = createDiv("HSL");
-   hslt.addClass("rgbhslt");
+   saveAsButton.style('font-size', saveAsButton.size().width/6+"px");
+   replaceButton.style('font-size', replaceButton.size().width/6+"px");
+   removeButton.style('font-size', removeButton.size().width/6+"px");
 
-   rgbtW.child(rgbt);
-   hsltW.child(hslt);
-   colorModeBtn.child(rgbtW);
-   colorModeBtn.child(hsltW);
 
-   colorModeBtn.mousePressed(()=>{
-      cMode = (cMode=="RGB") ? "HSL" : "RGB";
-      root.style.setProperty('--rgbhslp', (cMode=="RGB") ? "-100%" : "0%");
+   saveAsButton.mousePressed(()=>{
+      if(newColorText2.html()!=currColorText2.html()){
+         swal("What should be the new color's name?", {
+            content: "input"
+         })
+         .then(name => {
+            if(!name) throw null;
+            AddNewColor(name,newColorText3.html());
+            myColors[selectedSquare].square.removeClass('selectedSquare');
+            selectedSquare = myColors.length-1;
+            myColors[selectedSquare].square.addClass('selectedSquare');
+            // updateNewColor();
+            selectColor(myColors.length-1);
+            redrawSquares();
+         });
+      }
    });
 
+   replaceButton.mousePressed(()=>{
+      if(newColorText2.html()!=currColorText2.html()){ //replace
+         swal("What should be the new color's name?", {
+            content: "input"
+         })
+         .then(name => {
+            if(name){
+               myColors[selectedSquare].name = name;
+               var c = color(newColorText3.html());
+               myColors[selectedSquare].r = red(c);
+               myColors[selectedSquare].g = green(c);
+               myColors[selectedSquare].b = blue(c);
+               myColors[selectedSquare].hex = newColorText3.html().substring(1, 7);
+               myColors[selectedSquare].square.style('background-color', c);
+               myColors[selectedSquare].text.html(name);
+
+               var fs;
+               if(myColors[selectedSquare].name.length<10){
+                  fs = (squishedrightP*w-gap-originalrightP*w)/10;
+               }else{
+                  fs = (squishedrightP*w-gap-originalrightP*w)/myColors[selectedSquare].name.length;
+               }
+               currColorText1.style('font-size', fs + "px");
+               currColorText2.style('font-size', fs + "px");
+               currColorText3.style('font-size', fs + "px");
+               newColorText1.style('font-size', fs + "px");
+               newColorText2.style('font-size', fs + "px");
+               newColorText3.style('font-size', fs + "px");
+               currColorDiv.style('background-color', color(myColors[selectedSquare].r,myColors[selectedSquare].g,myColors[selectedSquare].b));
+               currColorText1.style('color', color(invertColor(myColors[selectedSquare].hex)));
+               currColorText2.style('color', color(invertColor(myColors[selectedSquare].hex)));
+               currColorText3.style('color', color(invertColor(myColors[selectedSquare].hex)));
+               currColorText1.html(`${myColors[selectedSquare].name}`);
+               currColorText2.html(`(${myColors[selectedSquare].r}, ${myColors[selectedSquare].g}, ${myColors[selectedSquare].b})`);
+               currColorText3.html(`#${myColors[selectedSquare].hex}`);
+               setNewColor(myColors[selectedSquare].r, myColors[selectedSquare].g, myColors[selectedSquare].b);
+            }
+         });
+      }else{//rename
+         swal("What should be the new name?", {
+            content: "input"
+         })
+         .then(name => {
+            if(name){
+               myColors[selectedSquare].name = name;
+               myColors[selectedSquare].text.html(name);
+               var fs;
+               if(myColors[selectedSquare].name.length<10){
+                  fs = (squishedrightP*w-gap-originalrightP*w)/10;
+               }else{
+                  fs = (squishedrightP*w-gap-originalrightP*w)/myColors[selectedSquare].name.length;
+               }
+               currColorText1.style('font-size', fs + "px");
+               currColorText2.style('font-size', fs + "px");
+               currColorText3.style('font-size', fs + "px");
+               newColorText1.style('font-size', fs + "px");
+               newColorText2.style('font-size', fs + "px");
+               newColorText3.style('font-size', fs + "px");
+               currColorText1.html(`${myColors[selectedSquare].name}`);
+               setNewColor(myColors[selectedSquare].r, myColors[selectedSquare].g, myColors[selectedSquare].b);
+            }
+         });
+      }
+   });
+
+   removeButton.mousePressed(()=>{
+      swal("Are you sure you want to remove this color from your palette?", {
+         dangerMode: true,
+         buttons: {
+            cancel: "Cancel",
+            confirm: {value: "OK", text: "Yes"}
+         }
+      })
+      .then(value => {
+         if(value=="OK"){
+            rightP = originalrightP;
+            myColors[selectedSquare].square.removeClass('selectedSquare');
+            selectedSquareTab.position(w, 0);
+            myColors[selectedSquare].square.remove();
+            myColors.splice(selectedSquare, 1);
+            for(var i = 0; i<myColors.length; i++){
+               myColors[i].ind = i;
+               myColors[i].square.ind = i;
+            }
+            selectedSquare = -1;
+            redrawSquares();
+         }
+      });
+   });
 }
 
 function createNewColorDiv(){
    newColorDiv = createDiv('');
-   newColorDiv.position(0, 2*(h-topP*h-botP*h)/3+2*buttonHeightP*h+gap);
+   newColorDiv.position((2*gap+originalrightP*w)/3, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+2*buttonHeightP*h+gap);
    newColorDiv.size(squishedrightP*w-2*gap-originalrightP*w, (h-topP*h-botP*h)/3-gap);
    newColorDiv.class('newColorDiv');
    selectedSquareTab.child(newColorDiv);
@@ -281,7 +393,42 @@ function createNewColorDiv(){
    });
 }
 
+function selectColor(ind){
+   var fs;
+   if(myColors[ind].name.length<10){
+      fs = (squishedrightP*w-gap-originalrightP*w)/10;
+   }else{
+      fs = (squishedrightP*w-gap-originalrightP*w)/myColors[ind].name.length;
+   }
+   inp1.value(myColors[ind].r);
+   inp2.value(myColors[ind].g);
+   inp3.value(myColors[ind].b);
+   inp4.value(myColors[ind].hex);
+
+   currColorText1.style('font-size', fs + "px");
+   currColorText2.style('font-size', fs + "px");
+   currColorText3.style('font-size', fs + "px");
+   newColorText1.style('font-size', fs + "px");
+   newColorText2.style('font-size', fs + "px");
+   newColorText3.style('font-size', fs + "px");
+   currColorDiv.style('background-color', color(myColors[ind].r,myColors[ind].g,myColors[ind].b));
+   currColorText1.style('color', color(invertColor(myColors[ind].hex)));
+   currColorText2.style('color', color(invertColor(myColors[ind].hex)));
+   currColorText3.style('color', color(invertColor(myColors[ind].hex)));
+   newColorText1.style('color', color(invertColor(myColors[ind].hex)));
+   newColorText2.style('color', color(invertColor(myColors[ind].hex)));
+   newColorText3.style('color', color(invertColor(myColors[ind].hex)));
+   // currColorText.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />#${myColors[myInd].hex}`);
+   currColorText1.html(`${myColors[ind].name}`);
+   currColorText2.html(`(${myColors[ind].r}, ${myColors[ind].g}, ${myColors[ind].b})`);
+   currColorText3.html(`#${myColors[ind].hex}`);
+   newColorDiv.style('background-color', color(myColors[ind].r,myColors[ind].g,myColors[ind].b));
+   setNewColor(myColors[ind].r, myColors[ind].g, myColors[ind].b);
+   slideTo(myColors[ind].r, slider1.value(), myColors[ind].g, slider2.value(), myColors[ind].b, slider3.value());
+}
+
 function AddNewColor(name,hex){
+   hex = (hex.charAt(0)=="#") ? hex.substring(1,7): hex;
    let nsq = createDiv('');
    hex = hex.toUpperCase();
    var c = color("#"+hex);
@@ -301,63 +448,53 @@ function AddNewColor(name,hex){
    let myInd = myColors.length;
    nsq.position(myInd%gx*((w-leftP*w-rightP*w)/gx)+gap/2+leftP*w, Math.floor(myInd/gx)*(((h-topP*h-botP*h)/gy))+gap/2+topP*h);
    nsq.style('background-color', c);
+   nsq.ind = myInd;
    nsq.mousePressed(()=>{
       rightP = squishedrightP;
-      if(selectedSquare==myInd){
+      if(selectedSquare==nsq.ind){
          selectedSquare = -1;
          rightP = originalrightP;
          nsq.removeClass('selectedSquare');
-         selectedSquareTab.position(w, topP*h-buttonHeightP*h);
+         selectedSquareTab.position(w, 0);
+         // selectedSquareTab.position(w, topP*h-buttonHeightP*h);
       }else{
          if(selectedSquare!=-1){
             myColors[selectedSquare].square.removeClass('selectedSquare');
          }
-         selectedSquareTab.position(w+gap/2-squishedrightP*w+originalrightP*w/2, topP*h-buttonHeightP*h);
-         selectedSquare = myInd;
-         var fs;
-         if(myColors[myInd].name.length<10){
-            fs = (squishedrightP*w-gap-originalrightP*w)/10;
-         }else{
-            fs = (squishedrightP*w-gap-originalrightP*w)/myColors[myInd].name.length;
-         }
-         inp1.value(myColors[myInd].r);
-         inp2.value(myColors[myInd].g);
-         inp3.value(myColors[myInd].b);
-         inp4.value(myColors[myInd].hex);
-
-         currColorText1.style('font-size', fs + "px");
-         currColorText2.style('font-size', fs + "px");
-         currColorText3.style('font-size', fs + "px");
-         newColorText1.style('font-size', fs + "px");
-         newColorText2.style('font-size', fs + "px");
-         newColorText3.style('font-size', fs + "px");
-         currColorDiv.style('background-color', color(myColors[myInd].r,myColors[myInd].g,myColors[myInd].b));
-         currColorText1.style('color', color(invertColor(myColors[myInd].hex)));
-         currColorText2.style('color', color(invertColor(myColors[myInd].hex)));
-         currColorText3.style('color', color(invertColor(myColors[myInd].hex)));
-         newColorText1.style('color', color(invertColor(myColors[myInd].hex)));
-         newColorText2.style('color', color(invertColor(myColors[myInd].hex)));
-         newColorText3.style('color', color(invertColor(myColors[myInd].hex)));
-         // currColorText.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />#${myColors[myInd].hex}`);
-         currColorText1.html(`${myColors[myInd].name}`);
-         currColorText2.html(`(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})`);
-         currColorText3.html(`#${myColors[myInd].hex}`);
-         newColorDiv.style('background-color', color(myColors[myInd].r,myColors[myInd].g,myColors[myInd].b));
-         // newColorText.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />#${myColors[myInd].hex}`);
-         newColorText1.html(`${myColors[myInd].name}`);
-         newColorText2.html(`(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})`);
-         newColorText3.html(`#${myColors[myInd].hex}`);
-
-         root.style.setProperty('--slider1Left', "#"+rgb2Hex(0, myColors[myInd].g, myColors[myInd].b).toUpperCase());
-         root.style.setProperty('--slider1Right', "#"+rgb2Hex(255, myColors[myInd].g, myColors[myInd].b).toUpperCase());
-         root.style.setProperty('--slider2Left', "#"+rgb2Hex(myColors[myInd].r, 0, myColors[myInd].b).toUpperCase());
-         root.style.setProperty('--slider2Right', "#"+rgb2Hex(myColors[myInd].r, 255, myColors[myInd].b).toUpperCase());
-         root.style.setProperty('--slider3Left', "#"+rgb2Hex(myColors[myInd].r, myColors[myInd].g, 0).toUpperCase());
-         root.style.setProperty('--slider3Right', "#"+rgb2Hex(myColors[myInd].r, myColors[myInd].g, 255).toUpperCase());
-
-         slideTo(myColors[myInd].r, slider1.value(), myColors[myInd].g, slider2.value(), myColors[myInd].b, slider3.value());
-         // updateNewColor();
-
+         selectedSquareTab.position(w-selectedSquareTab.size().width, 0);
+         selectedSquare = nsq.ind;
+         selectColor(nsq.ind);
+         // var fs;
+         // if(myColors[nsq.ind].name.length<10){
+         //    fs = (squishedrightP*w-gap-originalrightP*w)/10;
+         // }else{
+         //    fs = (squishedrightP*w-gap-originalrightP*w)/myColors[nsq.ind].name.length;
+         // }
+         // inp1.value(myColors[nsq.ind].r);
+         // inp2.value(myColors[nsq.ind].g);
+         // inp3.value(myColors[nsq.ind].b);
+         // inp4.value(myColors[nsq.ind].hex);
+         //
+         // currColorText1.style('font-size', fs + "px");
+         // currColorText2.style('font-size', fs + "px");
+         // currColorText3.style('font-size', fs + "px");
+         // newColorText1.style('font-size', fs + "px");
+         // newColorText2.style('font-size', fs + "px");
+         // newColorText3.style('font-size', fs + "px");
+         // currColorDiv.style('background-color', color(myColors[nsq.ind].r,myColors[nsq.ind].g,myColors[nsq.ind].b));
+         // currColorText1.style('color', color(invertColor(myColors[nsq.ind].hex)));
+         // currColorText2.style('color', color(invertColor(myColors[nsq.ind].hex)));
+         // currColorText3.style('color', color(invertColor(myColors[nsq.ind].hex)));
+         // newColorText1.style('color', color(invertColor(myColors[nsq.ind].hex)));
+         // newColorText2.style('color', color(invertColor(myColors[nsq.ind].hex)));
+         // newColorText3.style('color', color(invertColor(myColors[nsq.ind].hex)));
+         // // currColorText.html(`${myColors[myInd].name}<br />(${myColors[myInd].r}, ${myColors[myInd].g}, ${myColors[myInd].b})<br />#${myColors[myInd].hex}`);
+         // currColorText1.html(`${myColors[nsq.ind].name}`);
+         // currColorText2.html(`(${myColors[nsq.ind].r}, ${myColors[nsq.ind].g}, ${myColors[nsq.ind].b})`);
+         // currColorText3.html(`#${myColors[nsq.ind].hex}`);
+         // newColorDiv.style('background-color', color(myColors[nsq.ind].r,myColors[nsq.ind].g,myColors[nsq.ind].b));
+         // setNewColor(myColors[nsq.ind].r, myColors[nsq.ind].g, myColors[nsq.ind].b);
+         // slideTo(myColors[nsq.ind].r, slider1.value(), myColors[nsq.ind].g, slider2.value(), myColors[nsq.ind].b, slider3.value());
          nsq.addClass('selectedSquare');
       }
       redrawSquares();
@@ -431,59 +568,22 @@ function updateNewColor(){
    inp2.value(g);
    inp3.value(b);
    inp4.value(hex);
-   // newColorDiv.style('background-color', c);
-   // var colorNamed = -1;
-   // for(var i = 0; i<myColors.length; i++){
-   //    if(r==myColors[i].r && g==myColors[i].g && b==myColors[i].b){
-   //       colorNamed = i;
-   //    }
-   // }
-   // var fs;
-   // if(colorNamed!=-1){
-   //    newColorText1.html(`${myColors[colorNamed].name}`);
-   //    if(myColors[colorNamed].name.length<10){
-   //       fs = (squishedrightP*w-gap-originalrightP*w)/10;
-   //    }else{
-   //       fs = (squishedrightP*w-gap-originalrightP*w)/myColors[colorNamed].name.length;
-   //    }
-   // }else{
-   //    newColorText1.html(`New Color`);
-   //    fs = (((w-leftP*w-rightP*w)/gx)-gap)/9;
-   // }
-   // currColorText1.style('font-size', fs + "px");
-   // currColorText2.style('font-size', fs + "px");
-   // currColorText3.style('font-size', fs + "px");
-   // newColorText1.style('font-size', fs + "px");
-   // newColorText2.style('font-size', fs + "px");
-   // newColorText3.style('font-size', fs + "px");
-   // newColorText2.html(`(${r}, ${g}, ${b})`);
-   // newColorText3.html(`#${hex}`);
-   // root.style.setProperty('--slider1Left', "#"+rgb2Hex(0, g, b).toUpperCase());
-   // root.style.setProperty('--slider1Right', "#"+rgb2Hex(255, g, b).toUpperCase());
-   // root.style.setProperty('--slider2Left', "#"+rgb2Hex(r, 0, b).toUpperCase());
-   // root.style.setProperty('--slider2Right', "#"+rgb2Hex(r, 255, b).toUpperCase());
-   // root.style.setProperty('--slider3Left', "#"+rgb2Hex(r, g, 0).toUpperCase());
-   // root.style.setProperty('--slider3Right', "#"+rgb2Hex(r, g, 255).toUpperCase());
-   // // newColorText.style('color', invertColor(hex));
-   // newColorText1.style('color', invertColor(hex));
-   // newColorText2.style('color', invertColor(hex));
-   // newColorText3.style('color', invertColor(hex));
 
    setNewColor(r, g, b);
 }
 
-function windowResized() {
-   w = window.innerWidth;
-   h = window.innerHeight;
-   // resizeCanvas(w, h);
-   redrawSquares();
-   if(selectedSquare==-1){
-      selectedSquareTab.position(w, topP*h-buttonHeightP*h);
-   }else{
-      selectedSquareTab.position(w+gap/2-squishedrightP*w+originalrightP*w/2, topP*h-buttonHeightP*h);
-   }
-   background(color('#090821'));
-}
+// function windowResized() {
+//    w = window.innerWidth;
+//    h = window.innerHeight;
+//    // resizeCanvas(w, h);
+//    redrawSquares();
+//    if(selectedSquare==-1){
+//       selectedSquareTab.position(w, 0);
+//    }else{
+//       selectedSquareTab.position(w-selectedSquareTab.size().width, 0);
+//    }
+//    background(color('#090821'));
+// }
 
 function copy2Clipboard(elm) {
    if (document.selection) {
@@ -603,25 +703,32 @@ function setNewColor(r, g, b){
          colorNamed = i;
       }
    }
-   var fs;
+   // var fs;
    if(colorNamed!=-1){
       newColorText1.html(`${myColors[colorNamed].name}`);
-      if(myColors[colorNamed].name.length<10){
-         fs = (squishedrightP*w-gap-originalrightP*w)/10;
-      }else{
-         fs = (squishedrightP*w-gap-originalrightP*w)/myColors[colorNamed].name.length;
-      }
+      // if(myColors[colorNamed].name.length<10){
+         // fs = (squishedrightP*w-gap-originalrightP*w)/10;
+      // }else{
+         // fs = (squishedrightP*w-gap-originalrightP*w)/myColors[colorNamed].name.length;
+      // }
    }else{
       newColorText1.html(`New Color`);
-      fs = (((w-leftP*w-rightP*w)/gx)-gap)/9;
+      // fs = (((w-leftP*w-rightP*w)/gx)-gap)/9;
    }
-   currColorText1.style('font-size', fs + "px");
-   currColorText2.style('font-size', fs + "px");
-   currColorText3.style('font-size', fs + "px");
-   newColorText1.style('font-size', fs + "px");
-   newColorText2.style('font-size', fs + "px");
-   newColorText3.style('font-size', fs + "px");
    newColorText2.html(`(${r}, ${g}, ${b})`);
+   if(colorNamed!=-1){
+      hideAdd();
+      if(newColorText2.html()==currColorText2.html()){
+         showReplace();
+         replaceButton.html("Rename");
+      }else{
+         hideReplace();
+      }
+   }else{
+      replaceButton.html("Replace");
+      showReplace();
+      showAdd();
+   }
    newColorText3.html(`#${hex}`);
    root.style.setProperty('--slider1Left', "#"+rgb2Hex(0, g, b).toUpperCase());
    root.style.setProperty('--slider1Right', "#"+rgb2Hex(255, g, b).toUpperCase());
@@ -635,8 +742,55 @@ function setNewColor(r, g, b){
    newColorText3.style('color', invertColor(hex));
 }
 
+function hideReplace(){
+   hideAdd();
+   replaceButton.style('opacity', '0');
+   replaceButton.style('cursor', 'default');
+   replaceButton.elt.disabled = true;
+   var pw = squishedrightP*w-2*gap-originalrightP*w;
+   var vertgap = pw/30;
+   replaceButton.position(0, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   removeButton.position((2*gap+originalrightP*w)/3+vertgap, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   removeButton.size(pw-2*vertgap, buttonHeightP*h);
+}
+
+function showReplace(){
+   hideAdd();
+   replaceButton.style('opacity', '1');
+   replaceButton.style('cursor', 'pointer');
+   replaceButton.elt.disabled = false;
+}
+
+function hideAdd(){
+   // saveAsButton.size(0, 0);
+   saveAsButton.style('opacity', '0');
+   saveAsButton.style('cursor', 'default');
+   saveAsButton.elt.disabled = true;
+   var pw = squishedrightP*w-2*gap-originalrightP*w;
+   var vertgap = pw/30;
+   saveAsButton.position(0, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   replaceButton.position((2*gap+originalrightP*w)/3+vertgap, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   replaceButton.size((pw-3*vertgap)/2, buttonHeightP*h);
+   removeButton.position((2*gap+originalrightP*w)/3+2*vertgap+(pw-3*vertgap)/2, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   removeButton.size((pw-3*vertgap)/2, buttonHeightP*h);
+}
+
+function showAdd(){
+   // saveAsButton.size((pw-4*vertgap)/3, buttonHeightP*h);
+   saveAsButton.style('opacity', '1');
+   saveAsButton.style('cursor', 'pointer');
+   saveAsButton.elt.disabled = false;
+   var pw = squishedrightP*w-2*gap-originalrightP*w;
+   var vertgap = pw/30;
+   saveAsButton.position((2*gap+originalrightP*w)/3+vertgap, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   replaceButton.position((2*gap+originalrightP*w)/3+vertgap*2+(pw-4*vertgap)/3, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   replaceButton.size((pw-4*vertgap)/3, buttonHeightP*h);
+   removeButton.position((2*gap+originalrightP*w)/3+vertgap*3+2*(pw-4*vertgap)/3, topP*h-buttonHeightP*h+2*(h-topP*h-botP*h)/3+buttonHeightP*h);
+   removeButton.size((pw-4*vertgap)/3, buttonHeightP*h);
+}
+
 function isHex(hex){
-   return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hex);
+   return /(^#[0-9A-F]{6}$)/i.test(hex);
 }
 
 function limit(num, min, max){

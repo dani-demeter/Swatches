@@ -32,6 +32,8 @@
    --slider3Left: #06D6A0;
    --slider3Right: #06D6A0;
    --rgbhslp: -100%;
+   --leftGradient: var(--eerieblack);
+   --rightGradient: var(--richblack);
 }
 @font-face {
     font-family: 'montserrat';
@@ -117,10 +119,16 @@ body{
 }
 
 .selectedSquareTab{
-   background-color: transparent;
+   /* background-color: var(--eerieblack); */
+   border-left: 2px solid var(--ghostwhite);
    transition: all 0.3s ease-in-out;
-   border-radius: 5px;
    text-align: center;
+   background: -moz-linear-gradient(left, var(--leftGradient), var(--rightGradient) 100%);
+   background: -webkit-gradient(left top, right top, color-stop(0%, var(--leftGradient)), color-stop(100%, var(--rightGradient)));
+   background: -webkit-linear-gradient(left, var(--leftGradient) 0%, var(--rightGradient) 100%);
+   background: -o-linear-gradient(left, var(--leftGradient) 0%, var(--rightGradient) 100%);
+   background: -ms-linear-gradient(left, var(--leftGradient) 0%, var(--rightGradient) 100%);
+   background: linear-gradient(to right, var(--leftGradient) 0%, var(--rightGradient) 100%);
 }
 
 .slidersDiv{
@@ -349,4 +357,24 @@ input[type="text"]:focus{
 }
 #inp4{
    border: 1px solid var(--ghostwhite);
+}
+
+.tabButton{
+   border-radius: 20px;
+   font-family: montserrat;
+   color: var(--ghostwhite);
+   border: 1px solid var(--ghostwhite);
+   background-color: transparent;
+   cursor: pointer;
+   transition: all 0.15s ease-in-out;
+   text-align: center;
+   outline: none;
+}
+
+.tabButton:hover{
+   border-color: var(--firebrick);
+}
+
+.swal-text{
+   text-align: center;
 }

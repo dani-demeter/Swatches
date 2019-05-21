@@ -37,12 +37,9 @@
 }
 @font-face {
     font-family: 'montserrat';
-    /* src: url('fonts/montserrat-extralight-webfont.woff2') format('woff2'),
-         url("fonts/Montserrat-ExtraLight.otf") format("opentype"),
-         url('fonts/montserrat-extralight-webfont.woff') format('woff'); */
-   src: url('fonts/Montserrat-Regular.woff2') format('woff2'),
-        url("fonts/Montserrat-Regular.otf") format("opentype"),
-        url('fonts/Montserrat-Regular.woff') format('woff');
+   src: url('resources/fonts/Montserrat-Regular.woff2') format('woff2'),
+        url("resources/fonts/Montserrat-Regular.otf") format("opentype"),
+        url('resources/fonts/Montserrat-Regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
@@ -377,4 +374,32 @@ input[type="text"]:focus{
 
 .swal-text{
    text-align: center;
+}
+
+#leftArrow{
+   background: url('resources/images/arrow-left-circle.svg') no-repeat;
+   border: none;
+   background-size: contain;
+   transition: all 0.3s ease-in-out;
+   /* transition: background 0.2s; */
+   outline: none;
+}
+
+#leftArrow:hover{
+   background: url('resources/images/arrow-left-circle-highlight.svg') no-repeat;
+   background-size: contain;
+}
+
+#rightArrow{
+   background: url('resources/images/arrow-right-circle.svg') no-repeat;
+   border: none;
+   background-size: contain;
+   transition: all 0.3s ease-in-out;
+   /* transition: background 0.2s; */
+   outline: none;
+}
+
+#rightArrow:hover{
+   background: url('resources/images/arrow-right-circle-highlight.svg') no-repeat;
+   background-size: contain;
 }

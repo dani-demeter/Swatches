@@ -1,11 +1,11 @@
 let root = document.documentElement;
 var cnv;
 var w, h;
-var gx = 4;
-var gy = 3;
+var gx = 3;
+var gy = 2;
 var myColors = [];
 var needPages = false;
-var page = 1;
+var page = 0;
 
 var gap = 4;
 var topP = 0.1;
@@ -100,15 +100,43 @@ function setup(){
 }
 
 function createArrows(){
-   leftArrow = createButton('');
+   leftArrow = createDiv('');
    leftArrow.size(40,40);
    leftArrow.position(leftP*w, h-(botP*h-40)/2-40);
    leftArrow.id("leftArrow");
+   leftArrow.mousePressed(pressLeft);
 
-   rightArrow = createButton('');
+   rightArrow = createDiv('');
    rightArrow.size(40,40);
    rightArrow.position(w-rightP*w-40, h-(botP*h-40)/2-40);
    rightArrow.id("rightArrow");
+   rightArrow.mousePressed(pressRight);
+}
+
+function pressLeft(){
+   console.log(page);
+   if(page!=0){
+      console.log("left not end");
+      page = page-1;
+   }else{
+      console.log("left end");
+      page = Math.floor(myColors.length/(gx*gy));
+   }
+   console.log(page);
+   redrawSquares();
+}
+
+function pressRight(){
+   console.log(page);
+   if(page!=Math.floor(myColors.length/(gx*gy))){
+      console.log("right not end");
+      page = page+1;
+   }else{
+      console.log("right end");
+      page = 0;
+   }
+   console.log(page);
+   redrawSquares();
 }
 
 function createSelectedSquareTab(){
@@ -469,7 +497,7 @@ function AddNewColor(name,hex){
    nsq.child(nsqText);
    nsq.size(((w-leftP*w-rightP*w)/gx)-gap, ((h-topP*h-botP*h)/gy)-gap);
    let myInd = myColors.length;
-   nsq.position(myInd%gx*((w-leftP*w-rightP*w)/gx)+gap/2+leftP*w+Math.floor(myInd/(gx*gy))*w, Math.floor(myInd/gx)*(((h-topP*h-botP*h)/gy))+gap/2+topP*h);
+   nsq.position(myInd%gx*((w-leftP*w-rightP*w)/gx)+gap/2+leftP*w+Math.floor(myInd/(gx*gy))*w-page*w, Math.floor((myInd%(gx*gy))/gx)*((h-topP*h-botP*h)/gy)+gap/2+topP*h);
 
    nsq.style('background-color', c);
    nsq.ind = myInd;
@@ -508,12 +536,12 @@ function AddNewColor(name,hex){
 function checkForPages(){
    if(myColors.length>=(gx*gy)){
       needPages = true;
-      page = 1;
+      // page = 0;
       leftArrow.style('opacity', 1);
       rightArrow.style('opacity', 1);
    }else{
       needPages = false;
-      page = 1;
+      page = 0;
       leftArrow.style('opacity', 0);
       rightArrow.style('opacity', 0);
    }
@@ -554,7 +582,7 @@ function rgb2Hex(r,g,b) {
 function redrawSquares(){
    for(var i = 0; i<myColors.length; i++){
       myColors[i].square.size(((w-leftP*w-rightP*w)/gx)-gap, ((h-topP*h-botP*h)/gy)-gap);
-      myColors[i].square.position(i%gx*((w-leftP*w-rightP*w)/gx)+gap/2+leftP*w+Math.floor(i/(gx*gy))*w, Math.floor(i/gx)*(((h-topP*h-botP*h)/gy))+gap/2+topP*h);
+      myColors[i].square.position(i%gx*((w-leftP*w-rightP*w)/gx)+gap/2+leftP*w+Math.floor(i/(gx*gy))*w-page*w, Math.floor((i%(gx*gy))/gx)*(((h-topP*h-botP*h)/gy))+gap/2+topP*h);
       var fs;
       if(myColors[i].name.length<10){
          fs = (((w-leftP*w-rightP*w)/gx)-gap)/10;

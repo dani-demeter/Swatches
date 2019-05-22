@@ -126,6 +126,7 @@ body{
    background: -o-linear-gradient(left, var(--leftGradient) 0%, var(--rightGradient) 100%);
    background: -ms-linear-gradient(left, var(--leftGradient) 0%, var(--rightGradient) 100%);
    background: linear-gradient(to right, var(--leftGradient) 0%, var(--rightGradient) 100%);
+   z-index: 1;
 }
 
 .slidersDiv{
@@ -136,6 +137,8 @@ body{
    -webkit-box-sizing: border-box;
    border: 3px solid var(--ghostwhite);
    border-radius: 10px;
+   z-index: 1;
+
 }
 
 .currColorDiv{
@@ -146,6 +149,8 @@ body{
    border: 3px solid var(--ghostwhite);
    display: table;
    text-align: center;
+   z-index: 1;
+
 }
 
 #currColorText1W{
@@ -186,6 +191,8 @@ body{
    border: 3px solid var(--ghostwhite);
    display: table;
    text-align: center;
+   z-index: 1;
+
 }
 
 #newColorText1W{
@@ -326,6 +333,8 @@ input[type=range].slider::-ms-thumb {
 
 .inputsDiv{
    /* border: 2px solid var(--ghostwhite); */
+   z-index: 1;
+
 }
 
 input[type="text"]{
@@ -345,15 +354,23 @@ input[type="text"]:focus{
 
 #inp1{
    border: 1px solid var(--raspberry);
+   z-index: 1;
+   
 }
 #inp2{
    border: 1px solid var(--jade);
+   z-index: 1;
+   
 }
 #inp3{
    border: 1px solid var(--cerulean);
+   z-index: 1;
+   
 }
 #inp4{
    border: 1px solid var(--ghostwhite);
+   z-index: 1;
+   
 }
 
 .tabButton{
@@ -383,6 +400,7 @@ input[type="text"]:focus{
    transition: all 0.3s ease-in-out;
    /* transition: background 0.2s; */
    outline: none;
+   cursor: pointer;
 }
 
 #leftArrow:hover{

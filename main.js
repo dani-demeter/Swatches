@@ -932,6 +932,7 @@ function createMenuButton(){
    var x = (2*gap+originalleftP*w)/3;
    menuButton.size(x, x*1.5);
    menuButton.position(menuTab.size().width-2, (h/2)-x*0.75);
+   menuButton.style('opacity', 1);
 
    menuButton.mousePressed(()=>{
       menuOut = !menuOut;
@@ -959,29 +960,7 @@ function createLogIn(){
    loginButton.style('font-size', loginButton.size().width/8+"px");
    loginButton.id("login");
 
-   loginButton.mousePressed(()=>{
-      swal("What is your username?", {
-         content: "input"
-      })
-      .then(name => {
-         if(name){
-            swal("What is your password?", {
-               content: {
-                  element: "input",
-                  attributes: {
-                     placeholder: "Type your password",
-                     type: "password",
-                  },
-               }
-            })
-            .then(pass=>{
-               if(pass){
-                  console.log(name, pass);
-               }
-            })
-         }
-      });
-   });
+   loginButton.mousePressed(loginPressed);
 }
 
 function createSignup(){
@@ -990,4 +969,87 @@ function createSignup(){
    signupButton.position(menuTab.size().width/6, (h/2)+25);
    signupButton.style('font-size', signupButton.size().width/8+"px");
    signupButton.id("signup");
+
+   signupButton.mousePressed(signupPressed);
+}
+
+function loginPressed(){
+   swal("What is your username?", {
+      content: "input"
+   })
+   .then(name => {
+      if(name){
+         $.post("/checkusername", {name}, (data, status) => {
+            if(data.status!=="success"){
+               console.log(data.status);
+            }else{
+               if(data.body){//user exists
+                  swal("What is your password?", {
+                     content: {
+                        element: "input",
+                        attributes: {
+                           placeholder: "Type your password",
+                           type: "password",
+                        },
+                     }
+                  })
+                  .then(pass=>{
+                     if(pass){
+                        $.post("/login", {name, pass}, (data, status) => {
+                           if(data.status!=="success"){
+                              console.log(data.status);
+                           }else{
+                              console.log(data.body);
+                           }
+                        });
+                     }
+                  })
+               }else{
+                  console.log("user does not exist");
+               }
+            }
+         });
+      }
+   });
+}
+
+function signupPressed(){
+   swal("What will be your username?", {
+      content: "input"
+   })
+   .then(name=>{
+      if(name){
+         $.post("/checkusername", {name}, (data, status) => {
+            if(data.status!=="success"){
+               console.log(data.status);
+            }else{
+               if(data.body){//user exists
+                  console.log("username already exists");
+               }else{
+                  swal("What will be your password?", {
+                     content: {
+                        element: "input",
+                        attributes: {
+                           placeholder: "Type your password",
+                           type: "password",
+                        },
+                     }
+                  })
+                  .then(pass=>{
+                     if(pass){
+                        $.post("/signup", {name, pass}, (data, status) => {
+                           if(data.status!=="success"){
+                              console.log(data.status);
+                           }else{
+                              console.log(data.body);
+                           }
+                        });
+                     }
+                  })
+               }
+            }
+         });
+      }
+   });
+
 }

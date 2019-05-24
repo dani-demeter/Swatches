@@ -587,6 +587,7 @@ input[type="text"]:focus{
    border-top: 1px solid var(--ghostwhite);
    border-right: 1px solid var(--ghostwhite);
    border-bottom: 1px solid var(--ghostwhite);
+   opacity: 0;
 }
 
 .menubuttonsmallwrapper{

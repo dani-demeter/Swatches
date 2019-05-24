@@ -14,6 +14,8 @@ var rightP = 0.05;
 var botP = 0.1;
 var squishedrightP = 0.2;
 var originalrightP = 0.05;
+var squishedleftP = 0.2;
+var originalleftP = 0.05;
 
 var selectedSquare = -1;
 var selectedSquareTab;
@@ -63,6 +65,13 @@ var leftArrow;
 
 var addNewButton;
 
+var menuButton;
+var menuTab;
+var menuOut = false;
+
+var loginButton;
+var sigupButton;
+
 function setup(){
    w = window.innerWidth;
    h = window.innerHeight;
@@ -70,11 +79,12 @@ function setup(){
    cnv = createCanvas(w, h);
    cnv.position(0,0);
    background(color('#090821'));
-   createArrows();
 
+   createMenu();
+   createArrows();
    createAddNewButton();
    AddNewColor("whitesmoke", "F5F0F6");
-   AddNewColor("ballblue", "2AB7CA");
+   AddNewColor("watermelon", "E63952");
    AddNewColor("spacecadet", "241E4E");
    AddNewColor("raspberry", "9E0031");
    AddNewColor("tangerine", "FAA916");
@@ -83,7 +93,7 @@ function setup(){
    AddNewColor("gold", "FFC700");
    AddNewColor("gunmetal", "2C363F");
    AddNewColor("ceil", "8FB2CE");
-   AddNewColor("bubbles", "E5F8FF");
+   AddNewColor("bleu", "003952");
    AddNewColor("cerulean", "007BA7");
 
    finalizeAddNewButton();
@@ -311,14 +321,15 @@ function createButtons(){
             content: "input"
          })
          .then(name => {
-            if(!name) throw null;
-            AddNewColor(name,newColorText3.html());
-            myColors[selectedSquare].square.removeClass('selectedSquare');
-            selectedSquare = myColors.length-1;
-            myColors[selectedSquare].square.addClass('selectedSquare');
-            // updateNewColor();
-            selectColor(myColors.length-1);
-            redrawSquares();
+            if(name){
+               AddNewColor(name,newColorText3.html());
+               myColors[selectedSquare].square.removeClass('selectedSquare');
+               selectedSquare = myColors.length-1;
+               myColors[selectedSquare].square.addClass('selectedSquare');
+               // updateNewColor();
+               selectColor(myColors.length-1);
+               redrawSquares();
+            }
          });
       }
    });
@@ -398,16 +409,31 @@ function createButtons(){
       })
       .then(value => {
          if(value=="OK"){
-            rightP = originalrightP;
-            myColors[selectedSquare].square.removeClass('selectedSquare');
-            selectedSquareTab.position(w, 0);
-            myColors[selectedSquare].square.remove();
-            myColors.splice(selectedSquare, 1);
-            for(var i = 0; i<myColors.length; i++){
-               myColors[i].ind = i;
-               myColors[i].square.ind = i;
+            if(myColors.length!=1){
+               myColors[selectedSquare].square.removeClass('selectedSquare');
+               myColors[selectedSquare].square.remove();
+               myColors.splice(selectedSquare, 1);
+               for(var i = 0; i<myColors.length; i++){
+                  myColors[i].ind = i;
+                  myColors[i].square.ind = i;
+               }
+               if(selectedSquare!=0){
+                  selectedSquare -= 1;
+               }
+               selectColor(selectedSquare);
+               myColors[selectedSquare].square.addClass('selectedSquare');
+            }else{
+               rightP = originalrightP;
+               myColors[selectedSquare].square.removeClass('selectedSquare');
+               selectedSquareTab.position(w, 0);
+               myColors[selectedSquare].square.remove();
+               myColors.splice(selectedSquare, 1);
+               for(var i = 0; i<myColors.length; i++){
+                  myColors[i].ind = i;
+                  myColors[i].square.ind = i;
+               }
+               selectedSquare = -1;
             }
-            selectedSquare = -1;
             redrawSquares();
          }
       });
@@ -883,4 +909,85 @@ function generateName(){
 
 	var name = capFirst(name1[getRandomInt(0, name1.length + 1)]) + ' ' + capFirst(name2[getRandomInt(0, name2.length + 1)]);
 	return name;
+}
+
+function createMenu(){
+   menuTab = createDiv('');
+   menuTab.size(squishedleftP*w-(2*gap+originalleftP*w)/3, h);
+   menuTab.position(-menuTab.size().width, 0);
+   menuTab.id("menuTab");
+
+   createMenuButton();
+   menuTab.child(menuButton);
+
+   createLogIn();
+   menuTab.child(loginButton);
+
+   createSignup();
+   menuTab.child(signupButton);
+}
+
+function createMenuButton(){
+   menuButton = select(".menubuttonwrapper");
+   var x = (2*gap+originalleftP*w)/3;
+   menuButton.size(x, x*1.5);
+   menuButton.position(menuTab.size().width-2, (h/2)-x*0.75);
+
+   menuButton.mousePressed(()=>{
+      menuOut = !menuOut;
+      if(menuOut){
+         select("#menubuttonsvg").style('transform', 'rotate(180deg)');
+         menuButton.addClass("menubuttonwrapperout");
+         menuButton.removeClass("menubuttonwrapperin");
+         menuTab.position(0,0);
+         leftP = squishedleftP;
+      }else{
+         select("#menubuttonsvg").style('transform', 'rotate(0deg)');
+         menuButton.removeClass("menubuttonwrapperout");
+         menuButton.addClass("menubuttonwrapperin");
+         menuTab.position(-menuTab.size().width, 0);
+         leftP = originalleftP;
+      }
+      redrawSquares();
+   });
+}
+
+function createLogIn(){
+   loginButton = createButton("Log In");
+   loginButton.size(menuTab.size().width*2/3, 50);
+   loginButton.position(menuTab.size().width/6, (h/2)-50-25);
+   loginButton.style('font-size', loginButton.size().width/8+"px");
+   loginButton.id("login");
+
+   loginButton.mousePressed(()=>{
+      swal("What is your username?", {
+         content: "input"
+      })
+      .then(name => {
+         if(name){
+            swal("What is your password?", {
+               content: {
+                  element: "input",
+                  attributes: {
+                     placeholder: "Type your password",
+                     type: "password",
+                  },
+               }
+            })
+            .then(pass=>{
+               if(pass){
+                  console.log(name, pass);
+               }
+            })
+         }
+      });
+   });
+}
+
+function createSignup(){
+   signupButton = createButton("Sign Up");
+   signupButton.size(menuTab.size().width*2/3, 50);
+   signupButton.position(menuTab.size().width/6, (h/2)+25);
+   signupButton.style('font-size', signupButton.size().width/8+"px");
+   signupButton.id("signup");
 }

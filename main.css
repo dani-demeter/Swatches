@@ -652,3 +652,20 @@ input[type="text"]:focus{
   transition: transform 0.45s ease-in-out;
   transform: translateX(300%) rotate(35deg);
 }
+
+#modalCover{
+   z-index: -1;
+   background-color: var(--richblack);
+   opacity: 0;
+   transition: opacity 500ms;
+}
+
+#lisuModal{
+   z-index: 4;
+   background-color: var(--eerieblack);
+   transition: all 0.3s ease;
+   border-radius: 10px;
+   border: 2px solid var(--ghostwhite);
+   color: var(--ghostwhite);
+   text-align: center;
+}

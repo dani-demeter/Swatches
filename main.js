@@ -72,6 +72,13 @@ var menuOut = false;
 var loginButton;
 var sigupButton;
 
+var modalcover;
+var lisumodal;
+var lisumodalWP = 0.3;
+var lisumodalHP = 0.3;
+var lisuIn1;
+var lisuIn2;
+
 function setup(){
    w = window.innerWidth;
    h = window.innerHeight;
@@ -960,7 +967,29 @@ function createLogIn(){
    loginButton.style('font-size', loginButton.size().width/8+"px");
    loginButton.id("login");
 
-   loginButton.mousePressed(loginPressed);
+   lisumodal = select("#lisuModal");
+   lisumodal.size(lisumodalWP*w, lisumodalHP*h);
+   lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height);
+
+   modalcover = select("#modalCover");
+   modalcover.size(w, h);
+   modalcover.position(0,0);
+
+
+   modalcover.mousePressed(()=>{
+      lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height);
+      modalcover.style("opacity", 0);
+      modalcover.style("z-index", -1);
+   });
+
+   loginButton.mousePressed(login2);
+}
+
+function login2(){
+   lisumodal.position((w-lisumodal.size().width)/2, (h-lisumodal.size().height)/2);
+
+   modalcover.style("z-index", 3);
+   modalcover.style("opacity", 0.75);
 }
 
 function createSignup(){

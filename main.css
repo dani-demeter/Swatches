@@ -337,7 +337,7 @@ input[type=range].slider::-ms-thumb {
 
 }
 
-input[type="text"]{
+#inp1, #inp2, #inp3, #inp4{
    box-sizing: border-box;
    background-color: transparent;
    border-radius: 5px;
@@ -347,7 +347,7 @@ input[type="text"]{
    transition: all 0.2s linear;
 }
 
-input[type="text"]:focus{
+#inp1:focus, #inp2:focus, #inp3:focus, #inp4:focus{
    outline: none;
    border-width: 3px !important;
 }
@@ -668,4 +668,23 @@ input[type="text"]:focus{
    border: 2px solid var(--ghostwhite);
    color: var(--ghostwhite);
    text-align: center;
+}
+
+#lisuIn1, #lisuIn2{
+   border: 1px solid var(--ghostwhite);
+   background-color: transparent;
+   border-radius: 5px;
+   padding: 0;
+   color: var(--ghostwhite);
+}
+
+#lisuOk{
+   border: 1px solid var(--ghostwhite);
+   border-radius: 5px;
+   cursor: pointer;
+}
+#lisuCancel{
+   border: 1px solid var(--ghostwhite);
+   border-radius: 5px;
+   cursor: pointer;
 }

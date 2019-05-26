@@ -78,6 +78,8 @@ var lisumodalWP = 0.3;
 var lisumodalHP = 0.3;
 var lisuIn1;
 var lisuIn2;
+var lisuOk;
+var lisuCancel;
 
 function setup(){
    w = window.innerWidth;
@@ -969,7 +971,26 @@ function createLogIn(){
 
    lisumodal = select("#lisuModal");
    lisumodal.size(lisumodalWP*w, lisumodalHP*h);
-   lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height);
+   lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height-100);
+   var lms = lisumodal.size();
+
+   lisuIn1 = select("#lisuIn1");
+   lisuIn1.size(lms.width*3/4, lms.height/4-2*gap);
+   lisuIn1.position(lms.width/8, lms.height/4+gap);
+   lisuIn1.style('font-size', lisuIn1.size().width/15+"px");
+
+   lisuIn2 = select("#lisuIn2");
+   lisuIn2.size(lms.width*3/4, lms.height/4-2*gap);
+   lisuIn2.position(lms.width/8, lms.height/2+gap);
+   lisuIn2.style('font-size', lisuIn2.size().width/15+"px");
+
+   lisuCancel = select("#lisuCancel");
+   lisuCancel.size(lms.width/4-2*gap, lms.height/8);
+   lisuCancel.position(lms.width/2+gap, lms.height-lisuCancel.size().height-gap);
+
+   lisuOk = select("#lisuOk");
+   lisuOk.size(lms.width/4-2*gap, lms.height/8);
+   lisuOk.position(lms.width/2+2*gap+lisuCancel.size().width, lms.height-lisuOk.size().height-gap);
 
    modalcover = select("#modalCover");
    modalcover.size(w, h);
@@ -982,10 +1003,10 @@ function createLogIn(){
       modalcover.style("z-index", -1);
    });
 
-   loginButton.mousePressed(login2);
+   loginButton.mousePressed(loginPressed);
 }
 
-function login2(){
+function loginPressed(){
    lisumodal.position((w-lisumodal.size().width)/2, (h-lisumodal.size().height)/2);
 
    modalcover.style("z-index", 3);
@@ -1002,46 +1023,46 @@ function createSignup(){
    signupButton.mousePressed(signupPressed);
 }
 
-function loginPressed(){
-   swal("What is your username?", {
-      content: "input"
-   })
-   .then(name => {
-      if(name){
-         $.post("/checkusername", {name}, (data, status) => {
-            if(data.status!=="success"){
-               console.log(data.status);
-            }else{
-               if(data.body){//user exists
-                  swal("What is your password?", {
-                     content: {
-                        element: "input",
-                        attributes: {
-                           placeholder: "Type your password",
-                           type: "password",
-                        },
-                     }
-                  })
-                  .then(pass=>{
-                     if(pass){
-                        $.post("/login", {name, pass}, (data, status) => {
-                           if(data.status!=="success"){
-                              console.log(data.status);
-                           }else{
-                              console.log(data.body);
-                           }
-                        });
-                     }
-                  })
-               }else{
-                  console.log("user does not exist");
-               }
-            }
-         });
-      }
-   });
-}
-
+// function loginPressed(){
+//    swal("What is your username?", {
+//       content: "input"
+//    })
+//    .then(name => {
+//       if(name){
+//          $.post("/checkusername", {name}, (data, status) => {
+//             if(data.status!=="success"){
+//                console.log(data.status);
+//             }else{
+//                if(data.body){//user exists
+//                   swal("What is your password?", {
+//                      content: {
+//                         element: "input",
+//                         attributes: {
+//                            placeholder: "Type your password",
+//                            type: "password",
+//                         },
+//                      }
+//                   })
+//                   .then(pass=>{
+//                      if(pass){
+//                         $.post("/login", {name, pass}, (data, status) => {
+//                            if(data.status!=="success"){
+//                               console.log(data.status);
+//                            }else{
+//                               console.log(data.body);
+//                            }
+//                         });
+//                      }
+//                   })
+//                }else{
+//                   console.log("user does not exist");
+//                }
+//             }
+//          });
+//       }
+//    });
+// }
+//
 function signupPressed(){
    swal("What will be your username?", {
       content: "input"

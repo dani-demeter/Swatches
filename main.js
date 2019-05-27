@@ -976,16 +976,18 @@ function createLogIn(){
 
    lisumodal = select("#lisuModal");
    lisumodal.size(lisumodalWP*w, 1.618*lisumodalWP*w);
-   lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height-100);
+   lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height*2);
    var lms = lisumodal.size();
 
    lisuTitle = select("#lisuTitle");
    lisuTitle.size(lms.width*3/4, lms.height/8-2*gap);
    lisuTitle.position(lms.width/8, gap);
+   lisuTitle.style('font-size', lisuTitle.size().width/10+"px");
 
    lisuIn1Label = select("#lisuInp1Label");
    lisuIn1Label.size(lms.width*3/4, lms.height/8-2*gap);
    lisuIn1Label.position(lms.width/8, lms.height/8+gap);
+   lisuIn1Label.style('font-size', lisuIn1Label.size().width/12+"px");
 
    lisuIn1 = select("#lisuIn1");
    lisuIn1.size(lms.width*3/4, lms.height/8-2*gap);
@@ -995,6 +997,7 @@ function createLogIn(){
    lisuIn2Label = select("#lisuInp2Label");
    lisuIn2Label.size(lms.width*3/4, lms.height/8-2*gap);
    lisuIn2Label.position(lms.width/8, 3*lms.height/8+gap);
+   lisuIn2Label.style('font-size', lisuIn2Label.size().width/12+"px");
 
    lisuIn2 = select("#lisuIn2");
    lisuIn2.size(lms.width*3/4, lms.height/8-2*gap);
@@ -1002,12 +1005,12 @@ function createLogIn(){
    lisuIn2.style('font-size', lisuIn2.size().width/15+"px");
 
    lisuCancel = select("#lisuCancel");
-   lisuCancel.size(lms.width/4-2*gap, lms.height/8);
-   lisuCancel.position(lms.width/2+gap, lms.height-lisuCancel.size().height-gap);
+   lisuCancel.size(lms.width/3-2*gap, lms.height/8);
+   lisuCancel.position(gap, lms.height-lisuCancel.size().height-gap);
 
    lisuOk = select("#lisuOk");
-   lisuOk.size(lms.width/4-2*gap, lms.height/8);
-   lisuOk.position(lms.width/2+2*gap+lisuCancel.size().width, lms.height-lisuOk.size().height-gap);
+   lisuOk.size(2*lms.width/3-2*gap, lms.height/8);
+   lisuOk.position(2*gap+lisuCancel.size().width, lms.height-lisuOk.size().height-gap);
 
    modalcover = select("#modalCover");
    modalcover.size(w, h);
@@ -1015,7 +1018,7 @@ function createLogIn(){
 
 
    modalcover.mousePressed(()=>{
-      lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height);
+      lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height*2);
       modalcover.style("opacity", 0);
       modalcover.style("z-index", -1);
    });

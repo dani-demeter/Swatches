@@ -34,6 +34,7 @@
    --rgbhslp: -100%;
    --leftGradient: var(--eerieblack);
    --rightGradient: var(--richblack);
+   --modalOutline: var(--ghostwhite);
 }
 @font-face {
     font-family: 'montserrat';
@@ -668,8 +669,13 @@ input[type=range].slider::-ms-thumb {
    border: 2px solid var(--ghostwhite);
    color: var(--ghostwhite);
    /* text-align: center; */
-   box-shadow: 0 0 20px 10px var(--gold);
+   /* box-shadow: 0 0 20px 10px var(--modalOutline); */
+   /* animation: cycleHues 10s; */
 }
+
+/* @keyframes cycleHues {
+   10%{var(--modalOutline)}
+} */
 
 #lisuTitle{
    display: table;
@@ -698,6 +704,7 @@ input[type=range].slider::-ms-thumb {
    color: var(--ghostwhite);
    outline: none;
    text-indent: 35px;
+   font-family: montserrat;
 }
 
 #lisuIn1:focus, #lisuIn2:focus{
@@ -731,11 +738,19 @@ input[type=range].slider::-ms-thumb {
        -moz-user-select: none; /* Firefox */
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none;
+   transition: box-shadow 0.1s ease;
 }
+
+#lisuOk:hover{
+   box-shadow: 0 0 6px 3px var(--ghostwhite);
+}
+
 #lisuCancel{
-   border: 1px solid var(--ghostwhite);
-   border-radius: 5px;
+   /* border: 1px solid var(--ghostwhite); */
+   /* border-radius: 5px; */
    cursor: pointer;
+   background: url('resources/images/x-square.svg') no-repeat;
+   background-size: contain;
 }
 
 

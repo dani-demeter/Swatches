@@ -74,7 +74,7 @@ var sigupButton;
 
 var modalcover;
 var lisumodal;
-var lisumodalWP = 0.2;
+var lisumodalWP = 0.25;
 // var lisumodalHP = 0.6;
 var lisuTitle;
 var lisuIn1Label;
@@ -981,36 +981,36 @@ function createLogIn(){
 
    lisuTitle = select("#lisuTitle");
    lisuTitle.size(lms.width*3/4, lms.height/8-2*gap);
-   lisuTitle.position(lms.width/8, gap);
+   lisuTitle.position(lms.width/8, lms.height/8+gap);
    lisuTitle.style('font-size', lisuTitle.size().width/10+"px");
 
    lisuIn1Label = select("#lisuInp1Label");
    lisuIn1Label.size(lms.width*3/4, lms.height/8-2*gap);
-   lisuIn1Label.position(lms.width/8, lms.height/8+gap);
+   lisuIn1Label.position(lms.width/8, 2*lms.height/8+gap);
    lisuIn1Label.style('font-size', lisuIn1Label.size().width/12+"px");
 
    lisuIn1 = select("#lisuIn1");
    lisuIn1.size(lms.width*3/4, lms.height/8-2*gap);
-   lisuIn1.position(lms.width/8, lms.height/4+gap);
+   lisuIn1.position(lms.width/8, 3*lms.height/8+gap);
    lisuIn1.style('font-size', lisuIn1.size().width/15+"px");
 
    lisuIn2Label = select("#lisuInp2Label");
    lisuIn2Label.size(lms.width*3/4, lms.height/8-2*gap);
-   lisuIn2Label.position(lms.width/8, 3*lms.height/8+gap);
+   lisuIn2Label.position(lms.width/8, 4*lms.height/8+gap);
    lisuIn2Label.style('font-size', lisuIn2Label.size().width/12+"px");
 
    lisuIn2 = select("#lisuIn2");
    lisuIn2.size(lms.width*3/4, lms.height/8-2*gap);
-   lisuIn2.position(lms.width/8, lms.height/2+gap);
+   lisuIn2.position(lms.width/8, 5*lms.height/8+gap);
    lisuIn2.style('font-size', lisuIn2.size().width/15+"px");
 
    lisuCancel = select("#lisuCancel");
-   lisuCancel.size(lms.width/3-2*gap, lms.height/8);
-   lisuCancel.position(gap, lms.height-lisuCancel.size().height-gap);
+   lisuCancel.size(lms.width/7-2*gap, lms.width/7-2*gap);
+   lisuCancel.position(lms.width-lisuCancel.size().width-gap, gap);
 
    lisuOk = select("#lisuOk");
-   lisuOk.size(2*lms.width/3-2*gap, lms.height/8);
-   lisuOk.position(2*gap+lisuCancel.size().width, lms.height-lisuOk.size().height-gap);
+   lisuOk.size(7*lms.width/8-2*gap, lms.height/10-2*gap);
+   lisuOk.position(lms.width/16+gap, 6.5*lms.height/8+gap);
 
    modalcover = select("#modalCover");
    modalcover.size(w, h);

@@ -74,12 +74,17 @@ var sigupButton;
 
 var modalcover;
 var lisumodal;
-var lisumodalWP = 0.3;
-var lisumodalHP = 0.3;
+var lisumodalWP = 0.2;
+// var lisumodalHP = 0.6;
+var lisuTitle;
+var lisuIn1Label;
 var lisuIn1;
+var lisuIn2Label;
 var lisuIn2;
 var lisuOk;
 var lisuCancel;
+
+var marble;
 
 function setup(){
    w = window.innerWidth;
@@ -970,17 +975,29 @@ function createLogIn(){
    loginButton.id("login");
 
    lisumodal = select("#lisuModal");
-   lisumodal.size(lisumodalWP*w, lisumodalHP*h);
+   lisumodal.size(lisumodalWP*w, 1.618*lisumodalWP*w);
    lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height-100);
    var lms = lisumodal.size();
 
+   lisuTitle = select("#lisuTitle");
+   lisuTitle.size(lms.width*3/4, lms.height/8-2*gap);
+   lisuTitle.position(lms.width/8, gap);
+
+   lisuIn1Label = select("#lisuInp1Label");
+   lisuIn1Label.size(lms.width*3/4, lms.height/8-2*gap);
+   lisuIn1Label.position(lms.width/8, lms.height/8+gap);
+
    lisuIn1 = select("#lisuIn1");
-   lisuIn1.size(lms.width*3/4, lms.height/4-2*gap);
+   lisuIn1.size(lms.width*3/4, lms.height/8-2*gap);
    lisuIn1.position(lms.width/8, lms.height/4+gap);
    lisuIn1.style('font-size', lisuIn1.size().width/15+"px");
 
+   lisuIn2Label = select("#lisuInp2Label");
+   lisuIn2Label.size(lms.width*3/4, lms.height/8-2*gap);
+   lisuIn2Label.position(lms.width/8, 3*lms.height/8+gap);
+
    lisuIn2 = select("#lisuIn2");
-   lisuIn2.size(lms.width*3/4, lms.height/4-2*gap);
+   lisuIn2.size(lms.width*3/4, lms.height/8-2*gap);
    lisuIn2.position(lms.width/8, lms.height/2+gap);
    lisuIn2.style('font-size', lisuIn2.size().width/15+"px");
 
@@ -1004,6 +1021,11 @@ function createLogIn(){
    });
 
    loginButton.mousePressed(loginPressed);
+
+   // marble = select("#marble");
+   // marble.position(-300, 0);
+   // marble.size(300, 300);
+   // lisumodal.child(marble);
 }
 
 function loginPressed(){

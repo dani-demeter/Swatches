@@ -665,17 +665,48 @@ input[type=range].slider::-ms-thumb {
    background-color: var(--eerieblack);
    transition: all 0.3s ease;
    border-radius: 10px;
-   border: 2px solid var(--ghostwhite);
+   border: 2px solid var(--metallicseaweed);
    color: var(--ghostwhite);
-   text-align: center;
+   /* text-align: center; */
+   box-shadow: 0 0 20px 10px var(--metallicseaweed);
 }
 
+#lisuTitle{
+   display: table;
+}
+
+#lisuTitleInner{
+   display: table-cell;
+   vertical-align: middle;
+}
+
+#lisuIn1{
+   background: url("resources/images/user.svg") no-repeat;
+}
+
+#lisuIn2{
+   background: url("resources/images/lock.svg") no-repeat;
+}
 #lisuIn1, #lisuIn2{
    border: 1px solid var(--ghostwhite);
    background-color: transparent;
+   background-position: 2% 50%;
+   /* background-size: contain; */
    border-radius: 5px;
-   padding: 0;
    color: var(--ghostwhite);
+   outline: none;
+   text-indent: 35px;
+}
+
+
+
+#lisuInp1Label, #lisuInp2Label{
+   display: table;
+}
+
+#lisuInp1LabelInner, #lisuInp2LabelInner{
+   display: table-cell;
+   vertical-align: bottom;
 }
 
 #lisuOk{
@@ -688,3 +719,22 @@ input[type=range].slider::-ms-thumb {
    border-radius: 5px;
    cursor: pointer;
 }
+
+
+/* #marble {
+  position: absolute;
+  top: calc(50% - 150px);
+  left: calc(50% - 150px);
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 50px #fff,
+    inset 20px 0 80px #f0f,
+    inset -20px 0 80px #0ff,
+    inset 20px 0 300px #f0f,
+    inset -20px 0 300px #0ff,
+    0 0 50px #fff,
+    -10px 0 80px #f0f,
+    10px 0 80px #0ff;
+} */

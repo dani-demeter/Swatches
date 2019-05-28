@@ -96,6 +96,7 @@ app.post('/login', function(req, res) {
    }
    if(ind!=-1){
       bcrypt.compare(req.body.pass, db[ind].pass, function(err, passres) {
+         console.log(passres);
          res.send({outcome: "exists", body: passres, status: "success"});
       });
    }else{

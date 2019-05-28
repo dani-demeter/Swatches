@@ -1036,23 +1036,23 @@ function createLogIn(){
 
 function lisuOK(){
    if(clickedLisu=="login"){
-      $.post("/login", {name: lisuIn1.html(), pass:lisuIn2.html()}, (data, status) => {
+      $.post("/login", {name: lisuIn1.value(), pass:lisuIn2.value()}, (data, status) => {
          if(data.status!=="success"){
             console.log(data.status);
          }else{
             if(data.outcome=="DNE"){ //user does not exist
                lisuTitle.html("User does not exist!");
             }else if(data.outcome=="exists"){
-               if(data.body){ //wrong password
+               if(data.body){
                   lisuTitle.html("You're in!");
-               }else{ //right pass
+               }else{
                   lisuTitle.html("Wrong password!");
                }
             }
          }
       });
    }else if(clickedLisu=="signup"){
-      $.post("/signup", {name: lisuIn1.html(), pass:lisuIn2.html()}, (data, status) => {
+      $.post("/signup", {name: lisuIn1.value(), pass:lisuIn2.value()}, (data, status) => {
          if(data.status!=="success"){
             console.log(data.status);
          }else{
@@ -1073,6 +1073,8 @@ function loginPressed(){
    select("#lisuOkInner").html("Log In");
    lisumodal.position((w-lisumodal.size().width)/2, (h-lisumodal.size().height)/2);
    clickedLisu="login";
+   lisuIn1.value("");
+   lisuIn2.value("");
 
    modalcover.style("z-index", 3);
    modalcover.style("opacity", 0.9);
@@ -1093,88 +1095,9 @@ function signupPressed(){
    select("#lisuOkInner").html("Sign up");
    lisumodal.position((w-lisumodal.size().width)/2, (h-lisumodal.size().height)/2);
    clickedLisu="signup";
+   lisuIn1.value("");
+   lisuIn2.value("");
 
    modalcover.style("z-index", 3);
    modalcover.style("opacity", 0.9);
 }
-
-// function loginPressed(){
-//    swal("What is your username?", {
-//       content: "input"
-//    })
-//    .then(name => {
-//       if(name){
-//          $.post("/checkusername", {name}, (data, status) => {
-//             if(data.status!=="success"){
-//                console.log(data.status);
-//             }else{
-//                if(data.body){//user exists
-//                   swal("What is your password?", {
-//                      content: {
-//                         element: "input",
-//                         attributes: {
-//                            placeholder: "Type your password",
-//                            type: "password",
-//                         },
-//                      }
-//                   })
-//                   .then(pass=>{
-//                      if(pass){
-//                         $.post("/login", {name, pass}, (data, status) => {
-//                            if(data.status!=="success"){
-//                               console.log(data.status);
-//                            }else{
-//                               console.log(data.body);
-//                            }
-//                         });
-//                      }
-//                   })
-//                }else{
-//                   console.log("user does not exist");
-//                }
-//             }
-//          });
-//       }
-//    });
-// }
-//
-// function signupPressed(){
-//    swal("What will be your username?", {
-//       content: "input"
-//    })
-//    .then(name=>{
-//       if(name){
-//          $.post("/checkusername", {name}, (data, status) => {
-//             if(data.status!=="success"){
-//                console.log(data.status);
-//             }else{
-//                if(data.body){//user exists
-//                   console.log("username already exists");
-//                }else{
-//                   swal("What will be your password?", {
-//                      content: {
-//                         element: "input",
-//                         attributes: {
-//                            placeholder: "Type your password",
-//                            type: "password",
-//                         },
-//                      }
-//                   })
-//                   .then(pass=>{
-//                      if(pass){
-//                         $.post("/signup", {name, pass}, (data, status) => {
-//                            if(data.status!=="success"){
-//                               console.log(data.status);
-//                            }else{
-//                               console.log(data.body);
-//                            }
-//                         });
-//                      }
-//                   })
-//                }
-//             }
-//          });
-//       }
-//    });
-//
-// }

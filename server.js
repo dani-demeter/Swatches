@@ -94,9 +94,13 @@ app.post('/login', function(req, res) {
          ind = i;
       }
    }
-   bcrypt.compare(req.body.pass, db[ind].pass, function(err, passres) {
-       res.send({body: passres, status: "success"});
-   });
+   if(ind!=-1){
+      bcrypt.compare(req.body.pass, db[ind].pass, function(err, passres) {
+         res.send({outcome: "exists", body: passres, status: "success"});
+      });
+   }else{
+      res.send({outcome: "DNE", body: 0, status: "success"});
+   }
 });
 
 app.post('/signup', function(req, res) {

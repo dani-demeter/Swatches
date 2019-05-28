@@ -84,6 +84,8 @@ var lisuIn2;
 var lisuOk;
 var lisuCancel;
 
+var clickedLisu = "li";
+
 var marble;
 
 function setup(){
@@ -1007,6 +1009,7 @@ function createLogIn(){
    lisuCancel = select("#lisuCancel");
    lisuCancel.size(lms.width/7-2*gap, lms.width/7-2*gap);
    lisuCancel.position(lms.width-lisuCancel.size().width-gap, gap);
+   lisuCancel.mousePressed(cancelPressed);
 
    lisuOk = select("#lisuOk");
    lisuOk.size(7*lms.width/8-2*gap, lms.height/10-2*gap);
@@ -1018,12 +1021,12 @@ function createLogIn(){
 
 
    modalcover.mousePressed(()=>{
-      lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height*2);
-      modalcover.style("opacity", 0);
-      modalcover.style("z-index", -1);
+      cancelPressed();
    });
 
    loginButton.mousePressed(loginPressed);
+
+   lisuOk.mousePressed(lisuOK);
 
    // marble = select("#marble");
    // marble.position(-300, 0);
@@ -1031,11 +1034,48 @@ function createLogIn(){
    // lisumodal.child(marble);
 }
 
+function lisuOK(){
+   if(clickedLisu=="login"){
+      $.post("/login", {name: lisuIn1.html(), pass:lisuIn2.html()}, (data, status) => {
+         if(data.status!=="success"){
+            console.log(data.status);
+         }else{
+            if(data.outcome=="DNE"){ //user does not exist
+               lisuTitle.html("User does not exist!");
+            }else if(data.outcome=="exists"){
+               if(data.body){ //wrong password
+                  lisuTitle.html("You're in!");
+               }else{ //right pass
+                  lisuTitle.html("Wrong password!");
+               }
+            }
+         }
+      });
+   }else if(clickedLisu=="signup"){
+      $.post("/signup", {name: lisuIn1.html(), pass:lisuIn2.html()}, (data, status) => {
+         if(data.status!=="success"){
+            console.log(data.status);
+         }else{
+            lisuTitle.html("You have signed up!");
+         }
+      });
+   }
+}
+
+function cancelPressed(){
+   lisumodal.position((w-lisumodal.size().width)/2, -lisumodal.size().height*2);
+   modalcover.style("opacity", 0);
+   modalcover.style("z-index", -1);
+}
+
 function loginPressed(){
+   lisuTitle.html("Welcome back!");
+   select("#lisuOkInner").html("Log In");
    lisumodal.position((w-lisumodal.size().width)/2, (h-lisumodal.size().height)/2);
+   clickedLisu="login";
 
    modalcover.style("z-index", 3);
-   modalcover.style("opacity", 0.75);
+   modalcover.style("opacity", 0.9);
 }
 
 function createSignup(){
@@ -1046,6 +1086,16 @@ function createSignup(){
    signupButton.id("signup");
 
    signupButton.mousePressed(signupPressed);
+}
+
+function signupPressed(){
+   lisuTitle.html("Join us!");
+   select("#lisuOkInner").html("Sign up");
+   lisumodal.position((w-lisumodal.size().width)/2, (h-lisumodal.size().height)/2);
+   clickedLisu="signup";
+
+   modalcover.style("z-index", 3);
+   modalcover.style("opacity", 0.9);
 }
 
 // function loginPressed(){
@@ -1088,43 +1138,43 @@ function createSignup(){
 //    });
 // }
 //
-function signupPressed(){
-   swal("What will be your username?", {
-      content: "input"
-   })
-   .then(name=>{
-      if(name){
-         $.post("/checkusername", {name}, (data, status) => {
-            if(data.status!=="success"){
-               console.log(data.status);
-            }else{
-               if(data.body){//user exists
-                  console.log("username already exists");
-               }else{
-                  swal("What will be your password?", {
-                     content: {
-                        element: "input",
-                        attributes: {
-                           placeholder: "Type your password",
-                           type: "password",
-                        },
-                     }
-                  })
-                  .then(pass=>{
-                     if(pass){
-                        $.post("/signup", {name, pass}, (data, status) => {
-                           if(data.status!=="success"){
-                              console.log(data.status);
-                           }else{
-                              console.log(data.body);
-                           }
-                        });
-                     }
-                  })
-               }
-            }
-         });
-      }
-   });
-
-}
+// function signupPressed(){
+//    swal("What will be your username?", {
+//       content: "input"
+//    })
+//    .then(name=>{
+//       if(name){
+//          $.post("/checkusername", {name}, (data, status) => {
+//             if(data.status!=="success"){
+//                console.log(data.status);
+//             }else{
+//                if(data.body){//user exists
+//                   console.log("username already exists");
+//                }else{
+//                   swal("What will be your password?", {
+//                      content: {
+//                         element: "input",
+//                         attributes: {
+//                            placeholder: "Type your password",
+//                            type: "password",
+//                         },
+//                      }
+//                   })
+//                   .then(pass=>{
+//                      if(pass){
+//                         $.post("/signup", {name, pass}, (data, status) => {
+//                            if(data.status!=="success"){
+//                               console.log(data.status);
+//                            }else{
+//                               console.log(data.body);
+//                            }
+//                         });
+//                      }
+//                   })
+//                }
+//             }
+//          });
+//       }
+//    });
+//
+// }

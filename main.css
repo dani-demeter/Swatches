@@ -666,7 +666,7 @@ input[type=range].slider::-ms-thumb {
    background-color: var(--eerieblack);
    transition: all 0.3s ease;
    border-radius: 10px;
-   border: 2px solid var(--ghostwhite);
+   border: 1px solid var(--ghostwhite);
    color: var(--ghostwhite);
    /* text-align: center; */
    /* box-shadow: 0 0 20px 10px var(--modalOutline); */

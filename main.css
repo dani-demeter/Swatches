@@ -568,7 +568,7 @@ input[type=range].slider::-ms-thumb {
    box-sizing: border-box;
    -moz-box-sizing: border-box;
    -webkit-box-sizing: border-box;
-   /* border-left: 2px solid var(--eerieblack); */
+   border-left: 2px solid var(--eerieblack);
    border-top: 1px solid var(--ghostwhite);
    border-right: 1px solid var(--ghostwhite);
    border-bottom: 1px solid var(--ghostwhite);

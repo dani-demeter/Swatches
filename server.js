@@ -105,9 +105,19 @@ app.post('/login', function(req, res) {
 });
 
 app.post('/signup', function(req, res) {
-   bcrypt.hash(req.body.pass, saltRounds, function(err, hash) {
-     db.push({name: req.body.name, pass: hash});
-     console.log(db);
-     res.send({body: "you have signed up", status: "success"});
-   });
+   var ind = -1;
+   for(var i = 0; i<db.length; i++){
+      if(db[i].name==req.body.name){
+         ind = i;
+      }
+   }
+   if(ind!=-1){ //user already exists
+      res.send({body: "user exists", status: "success"});
+   }else{//user does not exist
+      bcrypt.hash(req.body.pass, saltRounds, function(err, hash) {
+         db.push({name: req.body.name, pass: hash});
+         console.log(db);
+         res.send({body: "you have signed up", status: "success"});
+      });
+   }
 });

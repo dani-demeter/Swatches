@@ -89,6 +89,7 @@ var clickedLisu = "li";
 var marble;
 
 function setup(){
+   // deleteCookie("username"); //TODO DELETE WHEN LIVE
    w = window.innerWidth;
    h = window.innerHeight;
 
@@ -120,6 +121,7 @@ function setup(){
    createSlidersDiv();
    createNewColorDiv();
    createButtons();
+   checkLoggedIn();
 }
 
 function createArrows(){
@@ -145,6 +147,10 @@ function createArrows(){
    rightArrow.size(40,40);
    rightArrow.position(w-rightP*w-40, h-(botP*h-40)/2-40);
    rightArrow.mousePressed(pressRight);
+}
+
+function deleteCookie(name){
+  document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
 function pressLeft(){
@@ -972,7 +978,7 @@ function createMenuButton(){
 function createLogIn(){
    loginButton = createButton("Log In");
    loginButton.size(menuTab.size().width*2/3, 50);
-   loginButton.position(menuTab.size().width/6, (h/2)-50-25);
+   loginButton.position(menuTab.size().width/6, (h/4)-loginButton.size().height-25);
    loginButton.style('font-size', loginButton.size().width/8+"px");
    loginButton.id("login");
 
@@ -1045,6 +1051,11 @@ function lisuOK(){
             }else if(data.outcome=="exists"){
                if(data.body){
                   lisuTitle.html("You're in!");
+                  document.cookie = `username=${lisuIn1.value()}`;
+                  setTimeout(()=>{
+                     cancelPressed();
+                     checkLoggedIn();
+                  },1000);
                }else{
                   lisuTitle.html("Wrong password!");
                }
@@ -1056,10 +1067,49 @@ function lisuOK(){
          if(data.status!=="success"){
             console.log(data.status);
          }else{
-            lisuTitle.html("You have signed up!");
+            if(data.body=="you have signed up"){
+               lisuTitle.html("Success!");
+               document.cookie = `username=${lisuIn1.value()}`;
+               setTimeout(()=>{
+                  cancelPressed();
+                  checkLoggedIn();
+               },1000);
+            }else{
+               lisuTitle.html("Username taken.");
+            }
          }
       });
    }
+}
+
+function checkLoggedIn(){
+   var c = getCookie("username");
+   console.log(c);
+   if(c){
+      loginButton.position(loginButton.position().x, -loginButton.position().y);
+      signupButton.position(signupButton.position().x, -signupButton.position().y);
+   }
+}
+
+function getCookie(name) {
+    var dc = document.cookie;
+    var prefix = name + "=";
+    var begin = dc.indexOf("; " + prefix);
+    if (begin == -1) {
+        begin = dc.indexOf(prefix);
+        if (begin != 0) return null;
+    }
+    else
+    {
+        begin += 2;
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+        end = dc.length;
+        }
+    }
+    // because unescape has been deprecated, replaced with decodeURI
+    //return unescape(dc.substring(begin + prefix.length, end));
+    return decodeURI(dc.substring(begin + prefix.length, end));
 }
 
 function cancelPressed(){
@@ -1083,7 +1133,7 @@ function loginPressed(){
 function createSignup(){
    signupButton = createButton("Sign Up");
    signupButton.size(menuTab.size().width*2/3, 50);
-   signupButton.position(menuTab.size().width/6, (h/2)+25);
+   signupButton.position(menuTab.size().width/6, (h/4)+25);
    signupButton.style('font-size', signupButton.size().width/8+"px");
    signupButton.id("signup");
 

@@ -88,8 +88,16 @@ var clickedLisu = "li";
 
 var marble;
 
+var settingsLabel;
+var rowLabel;
+var rowMin;
+var rowPlus;
+var colMin;
+var colPlus;
+var colLabel;
+
 function setup(){
-   // deleteCookie("username"); //TODO DELETE WHEN LIVE
+   deleteCookie("username"); //TODO DELETE WHEN LIVE
    w = window.innerWidth;
    h = window.innerHeight;
 
@@ -596,12 +604,16 @@ function checkForPages(){
       needPages = true;
       // page = 0;
       leftArrow.style('opacity', 1);
+      leftArrow.style('z-index', 1);
       rightArrow.style('opacity', 1);
+      rightArrow.style('z-index', 1);
    }else{
       needPages = false;
       page = 0;
       leftArrow.style('opacity', 0);
+      leftArrow.style('z-index', -1);
       rightArrow.style('opacity', 0);
+      rightArrow.style('z-index', -1);
    }
 }
 
@@ -949,13 +961,15 @@ function createMenu(){
 
    createSignup();
    menuTab.child(signupButton);
+
+   createSettings();
 }
 
 function createMenuButton(){
    menuButton = select(".menubuttonwrapper");
-   var x = (2*gap+originalleftP*w)/3;
+   var x = (2*gap+originalleftP*w)/3-gap;
    menuButton.size(x, x*1.5);
-   menuButton.position(menuTab.size().width-2, (h/2)-x*0.75);
+   menuButton.position(menuTab.size().width-1, (h/2)-x*0.75);
    menuButton.style('opacity', 1);
 
    menuButton.mousePressed(()=>{
@@ -1152,4 +1166,74 @@ function signupPressed(){
 
    modalcover.style("z-index", 3);
    modalcover.style("opacity", 0.9);
+}
+
+function createSettings(){
+   // var settingsLabel;
+   // var rowLabel;
+   // var rowMin;
+   // var rowPlus;
+   // var colMin;
+   // var colPlus;
+   // var colLabel;
+   var pw = menuTab.size().width;
+
+   settingsLabel = select('#settingsLabel');
+   settingsLabel.size(pw*2/3, 50);
+   settingsLabel.position(pw/6, (h/2));
+   settingsLabel.style("font-size", settingsLabel.size().width/8+"px");
+   menuTab.child(settingsLabel);
+
+   rowLabel = select('#rowLabel');
+   rowLabel.size(pw/2, 30);
+   rowLabel.position(pw/4, (h*4/6));
+   rowLabel.style("font-size", settingsLabel.size().width/8+"px");
+   menuTab.child(rowLabel);
+
+   rowMin = createButton('');
+   rowMin.size(pw/8, rowLabel.size().height);
+   rowMin.position(rowLabel.position().x-rowMin.size().width, rowLabel.position().y);
+   rowMin.id("rowMin");
+   menuTab.child(rowMin);
+
+   rowPlus = createButton('');
+   rowPlus.size(pw/8, rowLabel.size().height);
+   rowPlus.position(rowLabel.position().x+rowLabel.size().width, rowLabel.position().y);
+   rowPlus.id("rowPlus");
+   menuTab.child(rowPlus);
+
+   colLabel = select('#colLabel');
+   colLabel.size(pw/2, 30);
+   colLabel.position(pw/4, (h*5/6));
+   colLabel.style("font-size", settingsLabel.size().width/8+"px");
+   menuTab.child(colLabel);
+
+   colMin = createButton('');
+   colMin.size(pw/8, colLabel.size().height);
+   colMin.position(colLabel.position().x-colMin.size().width, colLabel.position().y);
+   colMin.id("colMin");
+   menuTab.child(colMin);
+
+   colPlus = createButton('');
+   colPlus.size(pw/8, colLabel.size().height);
+   colPlus.position(colLabel.position().x+colLabel.size().width, colLabel.position().y);
+   colPlus.id("colPlus");
+   menuTab.child(colPlus);
+
+   rowPlus.mousePressed(()=>{
+      gy = Math.min(Math.max(gy+1, 1), 6);
+      redrawSquares();
+   });
+   rowMin.mousePressed(()=>{
+      gy = Math.min(Math.max(gy-1, 1), 6);
+      redrawSquares();
+   });
+   colPlus.mousePressed(()=>{
+      gx = Math.min(Math.max(gx+1, 1), 6);
+      redrawSquares();
+   });
+   colMin.mousePressed(()=>{
+      gx = Math.min(Math.max(gx-1, 1), 6);
+      redrawSquares();
+   });
 }

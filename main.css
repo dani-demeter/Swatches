@@ -118,7 +118,7 @@ body{
 
 .selectedSquareTab{
    /* background-color: var(--eerieblack); */
-   border-left: 2px solid var(--ghostwhite);
+   border-left: 1px solid var(--ghostwhite);
    transition: all 0.3s ease-in-out;
    text-align: center;
    background: -moz-linear-gradient(left, var(--leftGradient), var(--rightGradient) 100%);
@@ -605,7 +605,7 @@ input[type=range].slider::-ms-thumb {
    box-sizing: border-box;
    -moz-box-sizing: border-box;
    -webkit-box-sizing: border-box;
-   border-right: 2px solid var(--ghostwhite);
+   border-right: 1px solid var(--ghostwhite);
 }
 
 #login, #signup{
@@ -753,3 +753,55 @@ input[type=range].slider::-ms-thumb {
     -10px 0 80px #f0f,
     10px 0 80px #0ff;
 } */
+
+#settingsLabel{
+   display: table;
+   border-bottom: 1px solid var(--ghostwhite);
+   padding-bottom: 5px;
+}
+#settingsLabelInner{
+   text-align: center;
+   color: var(--ghostwhite);
+   display: table-cell;
+   vertical-align: bottom;
+}
+
+#rowLabel{
+   display: table;
+   cursor: default;
+}
+#rowLabelInner{
+   border: 1px solid var(--ghostwhite);
+   text-align: center;
+   color: var(--ghostwhite);
+   display: table-cell;
+   vertical-align: middle;
+}
+
+#colLabel{
+   display: table;
+   cursor: default;
+}
+#colLabelInner{
+   border: 1px solid var(--ghostwhite);
+   text-align: center;
+   color: var(--ghostwhite);
+   display: table-cell;
+   vertical-align: middle;
+}
+
+#rowMin, #colMin{
+   background: url('resources/images/minus.svg');
+   background-size: contain;
+   border: none;
+   outline: none;
+   cursor: pointer;
+}
+
+#rowPlus, #colPlus{
+   background: url('resources/images/plus.svg');
+   background-size: contain;
+   border: none;
+   outline: none;
+   cursor: pointer;
+}

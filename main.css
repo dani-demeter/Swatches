@@ -421,49 +421,29 @@ input[type=range].slider::-ms-thumb {
    background-size: contain;
 } */
 
-.rightwrapper{
+#rightwrapper, #leftwrapper{
    z-index: 1;
    text-align: center;
    cursor: pointer;
    display: table;
    transition: all 300ms ease-in-out;
+k}
 
-}
-
-.rightsmallwrapper{
+.rightsmallwrapper, .leftsmallwrapper{
    display: table-cell;
    vertical-align: middle;
 }
 
-#rightsvg{
-   height: 100%;
-   width: 100%;
+#rightsvg, #leftsvg{
+   /* height: 100%; */
+   /* width: 100%; */
 }
 
-.leftwrapper{
-   z-index: 1;
-   text-align: center;
-   cursor: pointer;
-   display: table;
-   transition: all 300ms ease-in-out;
-
-}
-
-.leftsmallwrapper{
-   display: table-cell;
-   vertical-align: middle;
-}
-
-#leftsvg{
-   height: 100%;
-   width: 100%;
-}
-
-.rightwrapper:hover .rightArrowAnim{
+#rightwrapper:hover .rightArrowAnim{
    animation: showRight 1000ms ease-in-out infinite;
 }
 
-.leftwrapper:hover .leftArrowAnim{
+#leftwrapper:hover .leftArrowAnim{
    animation: showLeft 1000ms ease-in-out infinite;
 }
 

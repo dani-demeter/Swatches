@@ -131,10 +131,11 @@ function createArrows(){
    // leftArrow.id("leftArrow");
    // leftArrow.mousePressed(pressLeft);
 
-   leftArrow = select(".leftwrapper");
+   leftArrow = select("#leftwrapper");
    leftArrow.size(40,40);
-   leftArrow.position(leftP*w, h-(botP*h-40)/2-40);
+   leftArrow.position(leftP*w, h-(botP*h-40)/2);
    leftArrow.mousePressed(pressLeft);
+   select("#leftsvg").size(leftArrow.size().width, leftArrow.size().height);
 
 
    // rightArrow = createDiv('');
@@ -143,10 +144,11 @@ function createArrows(){
    // rightArrow.id("rightArrow");
    // rightArrow.mousePressed(pressRight);
 
-   rightArrow = select(".rightwrapper");
+   rightArrow = select("#rightwrapper");
    rightArrow.size(40,40);
-   rightArrow.position(w-rightP*w-40, h-(botP*h-40)/2-40);
+   rightArrow.position(w-rightP*w-40, h-(botP*h-40)/2);
    rightArrow.mousePressed(pressRight);
+   select("#rightsvg").size(rightArrow.size().width, rightArrow.size().height);
 }
 
 function deleteCookie(name){

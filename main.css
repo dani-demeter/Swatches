@@ -565,9 +565,6 @@ input[type=range].slider::-ms-thumb {
    background-color: var(--eerieblack);
    border-top-right-radius: 50%;
    border-bottom-right-radius: 50%;
-   box-sizing: border-box;
-   -moz-box-sizing: border-box;
-   -webkit-box-sizing: border-box;
    border-left: 2px solid var(--eerieblack);
    border-top: 1px solid var(--ghostwhite);
    border-right: 1px solid var(--ghostwhite);

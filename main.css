@@ -35,6 +35,10 @@
    --leftGradient: var(--eerieblack);
    --rightGradient: var(--richblack);
    --modalOutline: var(--ghostwhite);
+   --rowMinCol: rgba(249, 253, 255, 0.25);
+   --rowPlusCol: rgba(249, 253, 255, 0.25);
+   --colMinCol: rgba(249, 253, 255, 0.25);
+   --colPlusCol: rgba(249, 253, 255, 0.25);
 }
 @font-face {
     font-family: 'montserrat';
@@ -78,9 +82,9 @@ body{
 }
 
 .colorSquare:hover{
-   box-sizing: border-box;
+   /* box-sizing: border-box;
     -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
+    -webkit-box-sizing: border-box; */
    /* background-color: rgba(9,8,33, 0.5); */
 }
 
@@ -103,7 +107,7 @@ body{
 .colorSquare:hover > .colorSquareText{
    /* color: var(--ghostwhite); */
    opacity: 1.0;
-   background-color: rgba(9,8,33, 0.5);
+   /* background-color: rgba(9,8,33, 0.5); */
 }
 
 
@@ -113,7 +117,8 @@ body{
 .selectedSquare > .colorSquareText{
    /* color: var(--ghostwhite); */
    opacity: 1.0;
-   background-color: rgba(9,8,33, 0.5);
+   /* background-color: rgba(9,8,33, 0.5); */
+   text-decoration: underline;
 }
 
 .selectedSquareTab{
@@ -645,7 +650,7 @@ input[type=range].slider::-ms-thumb {
 
 #lisuModal{
    z-index: 4;
-   background-color: var(--eerieblack);
+   background-color: var(--richblack);
    transition: all 0.3s ease;
    border-radius: 10px;
    border: 1px solid var(--ghostwhite);
@@ -653,6 +658,15 @@ input[type=range].slider::-ms-thumb {
    /* text-align: center; */
    /* box-shadow: 0 0 20px 10px var(--modalOutline); */
    /* animation: cycleHues 10s; */
+   box-shadow:
+     inset 0 0 50px #fff,
+     inset 20px 0 80px #f0f,
+     inset -20px 0 80px #0ff,
+     inset 20px 0 300px #f0f,
+     inset -20px 0 300px #0ff,
+     0 0 50px #fff,
+     -10px 0 80px #f0f,
+     10px 0 80px #0ff;
 }
 
 /* @keyframes cycleHues {
@@ -790,12 +804,26 @@ input[type=range].slider::-ms-thumb {
    vertical-align: middle;
 }
 
-#rowMin, #colMin{
+/* #colMin{
    background: url('resources/images/minus.svg');
    background-size: contain;
    border: none;
    outline: none;
    cursor: pointer;
+   border-top-left-radius: 50%;
+   border-bottom-left-radius: 50%;
+} */
+
+#rowMin, #colMin {
+  /* z-index: 1; */
+  background: url('resources/images/minus.svg');
+  background-size: contain;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+  overflow: hidden;
 }
 
 #rowPlus, #colPlus{
@@ -804,4 +832,64 @@ input[type=range].slider::-ms-thumb {
    border: none;
    outline: none;
    cursor: pointer;
+   border-top-right-radius: 50%;
+   border-bottom-right-radius: 50%;
+   overflow: hidden;
+}
+
+#rowMin::before, #colMin::before, #rowPlus::before, #colPlus::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* background-color: rgba(249, 253, 255, 0.5); */
+  transform: scaleX(0);
+  transition: transform 0.25s ease-in-out;
+}
+
+#rowMin::before{
+   background-color: var(--rowMinCol);
+}
+
+#colMin::before{
+   background-color: var(--colMinCol);
+}
+
+#rowPlus::before{
+   background-color: var(--rowPlusCol);
+}
+
+#colPlus::before{
+   background-color: var(--colPlusCol);
+}
+
+
+#rowMin::before, #colMin::before{
+   transform-origin: center right;
+}
+
+#rowPlus::before, #colPlus::before{
+   transform-origin: center left;
+}
+
+#rowMin:hover::before, #colMin:hover::before, #rowPlus:hover::before, #colPlus:hover::before {
+  transform: scaleX(1);
+}
+
+
+/* #rowMin:hover, #colMin:hover, #rowPlus:hover, #colPlus:hover{ */
+/* } */
+
+
+
+.swal-text{
+   color: var(--ghostwhite);
+}
+
+.swal-modal{
+   background: var(--richblack);
+   border: 1px solid var(--ghostwhite);
 }

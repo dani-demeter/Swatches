@@ -1006,3 +1006,27 @@ input[type=range].slider::-ms-thumb {
    display: table-cell;
    vertical-align: middle;
 }
+
+.swatchLabel{
+   color: var(--ghostwhite);
+   background-color: transparent;
+   display: table;
+   border: 1px solid var(--firebrick);
+   overflow: hidden;
+}
+
+.swatchLabelInner{
+   display: table-cell;
+   vertical-align: middle;
+}
+
+.deleteSwatch{
+   background: url('resources/images/trash-2.svg');
+   background-size: contain;
+   display: table;
+}
+
+.deleteSwatchInner{
+   display: table-cell;
+   vertical-align: middle;
+}

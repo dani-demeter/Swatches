@@ -6,7 +6,9 @@ var gy = 3;
 var myColors = [];
 var needPages = false;
 var page = 0;
-var mySwatches = []
+var mySwatches = [];
+var mySwatchesElts = [];
+const numSwatches2Show = 5;
 
 var gap = 4;
 var topP = 0.1;
@@ -1396,8 +1398,12 @@ function addAsNew(){
                   hex: myColors[i].hex
                });
             }
-            simpColors.name = name;
-            mySwatches.push(simpColors);
+            var newSwatch = {
+               name: name,
+               colors: simpColors
+            };
+            mySwatches.push(newSwatch);
+            createNewSwatch(newSwatch);
             $.post("/updateSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatches: mySwatches}, (data, status) => {
                if(data.status!=="success"){
                   console.log(data.status);
@@ -1410,6 +1416,33 @@ function addAsNew(){
    }else{
       console.log("you have to be logged in to do this");
    }
+}
+
+function createNewSwatch(swatch){
+   var swatchLabel = createDiv('');
+   swatchLabel.size(menuTab.size().width*4/5, -gap+(addNewSwatch.position().y-topP*h)/numSwatches2Show);
+   swatchLabel.position(menuTab.size().width/10, gap/2+topP*h);
+   swatchLabel.addClass('swatchLabel');
+   menuTab.child(swatchLabel);
+
+   var swatchLabelInner = createDiv(swatch.name);
+   swatchLabelInner.addClass('swatchLabelInner');
+   swatchLabel.child(swatchLabelInner);
+
+   var deleteSwatch = createDiv('');
+   deleteSwatch.size(swatchLabel.size().height, swatchLabel.size().height);
+   deleteSwatch.position(swatchLabel.size().width-deleteSwatch.size().width, 0);
+   deleteSwatch.addClass('deleteSwatch');
+   swatchLabel.child(deleteSwatch);
+
+   // var deleteSwatch = document.querySelector('#deleteSwatch').cloneNode( true );
+   // deleteSwatch.setAttribute( 'id', 'newDeleteSwatch');
+   // deleteSwatch = select("#newDeleteSwatch");
+   // deleteSwatch.size(swatchLabel.size().height, swatchLabel.size().height);
+   // deleteSwatch.position(swatchLabel.size().width-deleteSwatch.size().width, 0);
+   // deleteSwatch.removeAttribute('id');
+   // deleteSwatch.addClass('deleteSwatch');
+   // swatchLabel.child(deleteSwatch);
 }
 
 //delete, rename, duplicate, append

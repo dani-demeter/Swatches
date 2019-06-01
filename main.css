@@ -25,6 +25,7 @@
    --infrared: #EF476F;
    --caribbeangreen: #06D6A0;
    --jade: #00A86B;
+   --mint: #24FBCA;
    --slider1Left: #06D6A0;
    --slider1Right: #06D6A0;
    --slider2Left: #06D6A0;
@@ -56,18 +57,18 @@ body{
 
 
 #loadSVG {
-  width: 3.75em;
+  height: 10%;
   animation: 1.5s spin ease infinite;
 }
 
 #loadRing {
   fill: none;
-  stroke: hsla(341, 97%, 59%, 0.3);
+  stroke: rgba(36, 251, 202, 0.75);
   stroke-width: 2;
 }
 
 #loadBall {
-  fill: #fc2f70;
+  fill: var(--mint);
   stroke: none;
 }
 #loadCover{
@@ -163,7 +164,7 @@ body{
 }
 
 .selectedSquareTab{
-   /* background-color: var(--eerieblack); */
+   /* background-color: var(--spacecadet); */
    border-left: 1px solid var(--ghostwhite);
    transition: all 0.3s ease-in-out;
    text-align: center;
@@ -433,7 +434,7 @@ input[type=range].slider::-ms-thumb {
 }
 
 .tabButton:hover{
-   border-color: var(--firebrick);
+   border-color: var(--mint);
 }
 
 .swal-text{
@@ -694,7 +695,8 @@ input[type=range].slider::-ms-thumb {
 #lisuModal{
    z-index: 4;
    background-color: var(--richblack);
-   transition: all 0.3s ease;
+   transition: top 0.3s ease,
+         left 0.3s ease;
    border-radius: 10px;
    border: 1px solid var(--ghostwhite);
    color: var(--ghostwhite);
@@ -706,10 +708,10 @@ input[type=range].slider::-ms-thumb {
      inset 20px 0 80px #f0f,
      inset -20px 0 80px #0ff,
      inset 20px 0 300px #f0f,
-     inset -20px 0 300px #0ff;
-     /* 0 0 50px #fff; */
-     /*-10px 0 80px #f0f,
-     10px 0 80px #0ff; */
+     inset -20px 0 300px #0ff,
+     0 0 50px #fff,
+     -10px 0 80px #f0f,
+     10px 0 80px #0ff;
 }
 
 /* @keyframes cycleHues {
@@ -927,6 +929,7 @@ input[type=range].slider::-ms-thumb {
    color: var(--ghostwhite);
    text-align: center;
    border-bottom: 1px solid var(--ghostwhite);
+   cursor: default;
 }
 
 #logoutButtonInner{
@@ -965,4 +968,41 @@ input[type=range].slider::-ms-thumb {
 #logoutButton:hover::after{
   transition: transform 0.45s ease-in-out;
   transform: translateX(100%) rotate(35deg);
+}
+
+#addNewSwatch{
+   color: var(--ghostwhite);
+   text-align: center;
+   display: table;
+   border: 1px solid var(--ghostwhite);
+   border-radius: 10px;
+   cursor: pointer;
+   transition: top 0.4s ease,
+               left 0.4s ease;
+   z-index: 1;
+   outline: none;
+   overflow: hidden;
+}
+
+#addNewSwatch::before {
+  content: '';
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(36, 251, 202, 0.75);
+  transform-origin: center bottom;
+  transform: scaleY(0);
+  transition: transform 0.25s ease-in-out;
+}
+
+#addNewSwatch:hover::before {
+  transform: scaleY(1);
+}
+
+#addNewSwatchInner{
+   display: table-cell;
+   vertical-align: middle;
 }

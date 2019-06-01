@@ -86,7 +86,7 @@ var lisuIn2;
 var lisuOk;
 var lisuCancel;
 
-var clickedLisu = "li";
+var clickedLisu = "";
 
 var marble;
 
@@ -98,10 +98,11 @@ var colMin;
 var colPlus;
 var colLabel;
 
-var allowedCol = "rgba(249, 253, 255, 0.25)";
+var allowedCol = "rgba(36, 251, 202, 0.75)";
 var preventCol = "#E63952";
 
 var yourSwatchesLabel;
+var addNewSwatch;
 
 function setup(){
    deleteCookie("username"); //TODO DELETE WHEN LIVE
@@ -126,7 +127,24 @@ function setup(){
    AddNewColor("gunmetal", "2C363F");
    AddNewColor("seaweed", "44D1AF");
    AddNewColor("bleu", "003952");
-   // AddNewColor("cerulean", "007BA7");
+   AddNewColor("cerulean", "007BA7");
+   AddNewColor("eerie black", "1C1D20");
+   AddNewColor("grey", "C4C8D3");
+   AddNewColor("ball blue", "2AB7CA");
+   AddNewColor("steel blue", "4A7AB4");
+   AddNewColor("ceil", "8FB2CE");
+   AddNewColor("bubbles", "E5F8FF");
+   AddNewColor("ghostwhite", "F9FDFF");
+   AddNewColor("vermilion", "D64933");
+   AddNewColor("grape", "533A7B");
+   AddNewColor("firebrick", "BA1C1A");
+   AddNewColor("metallic seaweed", "028090");
+   AddNewColor("bdazzled blue", "26547C");
+   AddNewColor("orange yellow", "FFD166");
+   AddNewColor("infrared", "EF476F");
+   AddNewColor("caribbean green", "06D6A0");
+   AddNewColor("jade", "00A86B");
+   AddNewColor("mint", "24FBCA");
 
    finalizeAddNewButton();
    checkForPages();
@@ -144,7 +162,7 @@ function setup(){
 }
 
 function finishSetup(){
-   select("#loadCover").style('z-index', -10);;
+   select("#loadCover").style('z-index', -10);
 }
 
 function createArrows(){
@@ -1100,6 +1118,7 @@ function lisuOK(){
                if(data.body){
                   lisuTitle.html("You're in!");
                   document.cookie = `username=${lisuIn1.value()}`;
+                  document.cookie = `sessID=${data.sessID}`;
                   mySwatches = data.swatches;
                   checkLoggedIn();
                   setTimeout(()=>{
@@ -1119,6 +1138,7 @@ function lisuOK(){
             if(data.body=="you have signed up"){
                lisuTitle.html("Success!");
                document.cookie = `username=${lisuIn1.value()}`;
+               document.cookie = `sessID=${data.sessID}`;
                checkLoggedIn();
                setTimeout(()=>{
                   cancelPressed();
@@ -1132,18 +1152,19 @@ function lisuOK(){
 }
 
 function checkLoggedIn(){
-   var c = getCookie("username");
+   var c = getCookie("username") && getCookie("sessID");
    if(c){
       logMenuIn();
    }else{
       logMenuOut();
    }
+   return c;
 }
 
 function logMenuIn(){
    loginButton.position(loginButton.position().x, -Math.abs(loginButton.position().y));
    signupButton.position(signupButton.position().x, -Math.abs(signupButton.position().y));
-   logoutButton.position(logoutButton.position().x, logoutButton.position().y-h);
+   logoutButton.position(logoutButton.position().x, h-Math.abs(h-logoutButton.position().y));
 
    rowLabel.position(menuTab.size().width/4, (h*5/8));
    colLabel.position(menuTab.size().width/4, (h*6/8));
@@ -1151,6 +1172,8 @@ function logMenuIn(){
    rowPlus.position(rowPlus.position().x, (h*5/8));
    colMin.position(colMin.position().x, (h*6/8));
    colPlus.position(colPlus.position().x, (h*6/8));
+
+   addNewSwatch.position(addNewSwatch.position().x, Math.abs(addNewSwatch.position().y));
 
    yourSwatchesLabel.position(yourSwatchesLabel.position().x, Math.abs(yourSwatchesLabel.position().y));
    if(mySwatches.length!=0){
@@ -1161,7 +1184,7 @@ function logMenuIn(){
 function logMenuOut(){
    loginButton.position(loginButton.position().x, Math.abs(loginButton.position().y));
    signupButton.position(signupButton.position().x, Math.abs(signupButton.position().y));
-   logoutButton.position(logoutButton.position().x, logoutButton.position().y+h);
+   logoutButton.position(logoutButton.position().x, h+Math.abs(h-logoutButton.position().y));
 
    rowLabel.position(menuTab.size().width/4, (h*4/6));
    colLabel.position(menuTab.size().width/4, (h*5/6));
@@ -1170,28 +1193,25 @@ function logMenuOut(){
    colMin.position(colMin.position().x, (h*5/6));
    colPlus.position(colPlus.position().x, (h*5/6));
 
+   addNewSwatch.position(addNewSwatch.position().x, -Math.abs(addNewSwatch.position().y));
+
    yourSwatchesLabel.position(yourSwatchesLabel.position().x, -Math.abs(yourSwatchesLabel.position().y));
 }
 
-function getCookie(name) {
-    var dc = document.cookie;
-    var prefix = name + "=";
-    var begin = dc.indexOf("; " + prefix);
-    if (begin == -1) {
-        begin = dc.indexOf(prefix);
-        if (begin != 0) return null;
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i <ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
     }
-    else
-    {
-        begin += 2;
-        var end = document.cookie.indexOf(";", begin);
-        if (end == -1) {
-        end = dc.length;
-        }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
     }
-    // because unescape has been deprecated, replaced with decodeURI
-    //return unescape(dc.substring(begin + prefix.length, end));
-    return decodeURI(dc.substring(begin + prefix.length, end));
+  }
+  return "";
 }
 
 function cancelPressed(){
@@ -1236,6 +1256,11 @@ function signupPressed(){
 
 function createSettings(){
    var pw = menuTab.size().width;
+
+   root.style.setProperty('--rowPlusCol', allowedCol);
+   root.style.setProperty('--rowMinCol', allowedCol);
+   root.style.setProperty('--colPlusCol', allowedCol);
+   root.style.setProperty('--colMinCol', allowedCol);
 
    settingsLabel = select('#settingsLabel');
    settingsLabel.size(pw*2/3, 50);
@@ -1340,12 +1365,51 @@ function createLogout(){
 // }
 
 function createYourSwatches(){
+   var mtw = menuTab.size().width;
    yourSwatchesLabel = createDiv('No swatches');
-   yourSwatchesLabel.size(menuTab.size().width*2/3, 25);
-   yourSwatchesLabel.position(menuTab.size().width/6, -(topP*h-25));
+   yourSwatchesLabel.size(mtw*2/3, 25);
+   yourSwatchesLabel.position(mtw/6, -(topP*h-25));
    yourSwatchesLabel.style('font-size', yourSwatchesLabel.size().width/(yourSwatchesLabel.html().length)+"px");
    yourSwatchesLabel.id("yourSwatchesLabel");
    menuTab.child(yourSwatchesLabel);
+
+   addNewSwatch = select('#addNewSwatch');
+   addNewSwatch.size(mtw/2, 30);
+   addNewSwatch.position(mtw/4, -((h/2)-addNewSwatch.size().height));
+   addNewSwatch.id("addNewSwatch");
+   menuTab.child(addNewSwatch);
+
+   addNewSwatch.mousePressed(addAsNew);
+}
+
+function addAsNew(){
+   if(checkLoggedIn()){
+      swal("What should be the new swatch's name?", {
+         content: "input"
+      })
+      .then(name => {
+         if(name){
+            var simpColors = [];
+            for(var i=0; i<myColors.length; i++){
+               simpColors.push({
+                  name: myColors[i].name,
+                  hex: myColors[i].hex
+               });
+            }
+            simpColors.name = name;
+            mySwatches.push(simpColors);
+            $.post("/updateSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatches: mySwatches}, (data, status) => {
+               if(data.status!=="success"){
+                  console.log(data.status);
+               }else{
+                  mySwatches = data.body;
+               }
+            });
+         }
+      });
+   }else{
+      console.log("you have to be logged in to do this");
+   }
 }
 
 //delete, rename, duplicate, append

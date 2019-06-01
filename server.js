@@ -94,10 +94,10 @@ app.post('/login', function(req, res) {
          ind = i;
       }
    }
-   if(ind!=-1){
+   if(ind!=-1){//user exists
       bcrypt.compare(req.body.pass, db[ind].pass, function(err, passres) {
          console.log(passres);
-         res.send({outcome: "exists", body: passres, status: "success"});
+         res.send({outcome: "exists", body: passres, swatches: db[ind].swatches, status: "success"});
       });
    }else{
       res.send({outcome: "DNE", body: 0, status: "success"});
@@ -115,7 +115,7 @@ app.post('/signup', function(req, res) {
       res.send({body: "user exists", status: "success"});
    }else{//user does not exist
       bcrypt.hash(req.body.pass, saltRounds, function(err, hash) {
-         db.push({name: req.body.name, pass: hash});
+         db.push({name: req.body.name, pass: hash, swatches: []});
          console.log(db);
          res.send({body: "you have signed up", status: "success"});
       });

@@ -54,6 +54,47 @@ body{
    font-family: montserrat;
 }
 
+
+#loadSVG {
+  width: 3.75em;
+  animation: 1.5s spin ease infinite;
+}
+
+#loadRing {
+  fill: none;
+  stroke: hsla(341, 97%, 59%, 0.3);
+  stroke-width: 2;
+}
+
+#loadBall {
+  fill: #fc2f70;
+  stroke: none;
+}
+#loadCover{
+   width: 100%;
+   height: 100%;
+   z-index: 99;
+   top: 0;
+   left: 0;
+   position: fixed;
+   display: table;
+   background-color: var(--richblack);
+   text-align: center;
+}
+
+#loadCoverInner{
+   display: table-cell;
+   vertical-align: middle;
+}
+
+
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .colorSquare{
    box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -621,7 +662,9 @@ input[type=range].slider::-ms-thumb {
    cursor: pointer;
    outline: none;
    overflow: hidden;
-   transition: color 0.3s ease-in-out;
+   transition: color 0.3s ease-in-out,
+      top 0.4s ease,
+      left 0.4s ease;
 }
 
 #login::after, #signup::after {
@@ -663,10 +706,10 @@ input[type=range].slider::-ms-thumb {
      inset 20px 0 80px #f0f,
      inset -20px 0 80px #0ff,
      inset 20px 0 300px #f0f,
-     inset -20px 0 300px #0ff,
-     0 0 50px #fff,
-     -10px 0 80px #f0f,
-     10px 0 80px #0ff;
+     inset -20px 0 300px #0ff;
+     /* 0 0 50px #fff; */
+     /*-10px 0 80px #f0f,
+     10px 0 80px #0ff; */
 }
 
 /* @keyframes cycleHues {
@@ -780,23 +823,12 @@ input[type=range].slider::-ms-thumb {
    vertical-align: bottom;
 }
 
-#rowLabel{
+#rowLabel, #colLabel{
    display: table;
    cursor: default;
+   transition: all 0.4s ease;
 }
-#rowLabelInner{
-   border: 1px solid var(--ghostwhite);
-   text-align: center;
-   color: var(--ghostwhite);
-   display: table-cell;
-   vertical-align: middle;
-}
-
-#colLabel{
-   display: table;
-   cursor: default;
-}
-#colLabelInner{
+#rowLabelInner, #colLabelInner{
    border: 1px solid var(--ghostwhite);
    text-align: center;
    color: var(--ghostwhite);
@@ -824,6 +856,7 @@ input[type=range].slider::-ms-thumb {
   border-top-left-radius: 50%;
   border-bottom-left-radius: 50%;
   overflow: hidden;
+  transition: all 0.4s ease;
 }
 
 #rowPlus, #colPlus{
@@ -835,6 +868,8 @@ input[type=range].slider::-ms-thumb {
    border-top-right-radius: 50%;
    border-bottom-right-radius: 50%;
    overflow: hidden;
+   transition: all 0.4s ease;
+
 }
 
 #rowMin::before, #colMin::before, #rowPlus::before, #colPlus::before {
@@ -879,12 +914,6 @@ input[type=range].slider::-ms-thumb {
   transform: scaleX(1);
 }
 
-
-/* #rowMin:hover, #colMin:hover, #rowPlus:hover, #colPlus:hover{ */
-/* } */
-
-
-
 .swal-text{
    color: var(--ghostwhite);
 }
@@ -892,4 +921,48 @@ input[type=range].slider::-ms-thumb {
 .swal-modal{
    background: var(--richblack);
    border: 1px solid var(--ghostwhite);
+}
+
+#yourSwatchesLabel{
+   color: var(--ghostwhite);
+   text-align: center;
+   border-bottom: 1px solid var(--ghostwhite);
+}
+
+#logoutButtonInner{
+   display: table-cell;
+   vertical-align: middle;
+}
+
+
+#logoutButton{
+   background-color: transparent;
+   border: 1px solid var(--ghostwhite);
+   border-radius: 10px;
+   color: var(--ghostwhite);
+   cursor: pointer;
+   outline: none;
+   overflow: hidden;
+   transition: color 0.3s ease-in-out,
+      top 0.4s ease,
+      left 0.4s ease;
+   text-align: center;
+   display: table;
+}
+
+#logoutButton::after{
+  content: '';
+  z-index: -1;
+  background-color: hsla(0, 0%, 100%, 0.2);
+  position: absolute;
+  top: -50%;
+  bottom: -50%;
+  width: 1.25em;
+  transform: translateX(-1000%) rotate(35deg);
+}
+
+
+#logoutButton:hover::after{
+  transition: transform 0.45s ease-in-out;
+  transform: translateX(100%) rotate(35deg);
 }

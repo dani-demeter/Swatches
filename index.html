@@ -5,6 +5,16 @@
       <title>Swatches</title>
    </head>
    <body>
+      <link rel="stylesheet" href="main.css">
+
+      <div id="loadCover">
+         <div id="loadCoverInner">
+            <svg id="loadSVG" viewBox="0 0 50 50">
+               <circle id="loadRing" cx="25" cy="25" r="20"></circle>
+               <circle id="loadBall" cx="25" cy="5" r="3.5"></circle>
+            </svg>
+         </div>
+      </div>
       <script src="jquery.js"></script>
       <script src="resources/libraries/p5.js"></script>
       <script src="resources/libraries/p5.dom.js"></script>
@@ -48,6 +58,11 @@
             <svg id="menubuttonsvg" xmlns="http://www.w3.org/2000/svg" stroke="#F9FDFF" fill="#F9FDFF" viewBox="0 0 24 24"><g data-name="Layer 2"><g data-name="arrow-ios-forward"><rect width="24" height="24" transform="rotate(-90 12 12)" opacity="0"/><path d="M10 19a1 1 0 0 1-.64-.23 1 1 0 0 1-.13-1.41L13.71 12 9.39 6.63a1 1 0 0 1 .15-1.41 1 1 0 0 1 1.46.15l4.83 6a1 1 0 0 1 0 1.27l-5 6A1 1 0 0 1 10 19z"/></g></g></svg>
          </div>
       </div>
+      <div id="logoutButton">
+         <div id="logoutButtonInner">
+            Log Out
+         </div>
+      </div>
       <div id="settingsLabel">
          <div id="settingsLabelInner">
             Settings
@@ -79,6 +94,5 @@
          </div>
       </div>
       <script src="main.js"></script>
-      <link rel="stylesheet" href="main.css">
    </body>
 </html>

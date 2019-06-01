@@ -6,6 +6,7 @@ var gy = 3;
 var myColors = [];
 var needPages = false;
 var page = 0;
+var mySwatches = []
 
 var gap = 4;
 var topP = 0.1;
@@ -71,6 +72,7 @@ var menuOut = false;
 
 var loginButton;
 var sigupButton;
+var logoutButton;
 
 var modalcover;
 var lisumodal;
@@ -98,6 +100,8 @@ var colLabel;
 
 var allowedCol = "rgba(249, 253, 255, 0.25)";
 var preventCol = "#E63952";
+
+var yourSwatchesLabel;
 
 function setup(){
    deleteCookie("username"); //TODO DELETE WHEN LIVE
@@ -132,7 +136,15 @@ function setup(){
    createSlidersDiv();
    createNewColorDiv();
    createButtons();
+   createYourSwatches();
+
    checkLoggedIn();
+
+   finishSetup();
+}
+
+function finishSetup(){
+   select("#loadCover").style('z-index', -10);;
 }
 
 function createArrows(){
@@ -979,6 +991,9 @@ function createMenu(){
    createSignup();
    menuTab.child(signupButton);
 
+   createLogout();
+   menuTab.child(logoutButton);
+
    createSettings();
 }
 
@@ -1085,9 +1100,10 @@ function lisuOK(){
                if(data.body){
                   lisuTitle.html("You're in!");
                   document.cookie = `username=${lisuIn1.value()}`;
+                  mySwatches = data.swatches;
+                  checkLoggedIn();
                   setTimeout(()=>{
                      cancelPressed();
-                     checkLoggedIn();
                   },1000);
                }else{
                   lisuTitle.html("Wrong password!");
@@ -1103,9 +1119,9 @@ function lisuOK(){
             if(data.body=="you have signed up"){
                lisuTitle.html("Success!");
                document.cookie = `username=${lisuIn1.value()}`;
+               checkLoggedIn();
                setTimeout(()=>{
                   cancelPressed();
-                  checkLoggedIn();
                },1000);
             }else{
                lisuTitle.html("Username taken.");
@@ -1118,9 +1134,43 @@ function lisuOK(){
 function checkLoggedIn(){
    var c = getCookie("username");
    if(c){
-      loginButton.position(loginButton.position().x, -loginButton.position().y);
-      signupButton.position(signupButton.position().x, -signupButton.position().y);
+      logMenuIn();
+   }else{
+      logMenuOut();
    }
+}
+
+function logMenuIn(){
+   loginButton.position(loginButton.position().x, -Math.abs(loginButton.position().y));
+   signupButton.position(signupButton.position().x, -Math.abs(signupButton.position().y));
+   logoutButton.position(logoutButton.position().x, logoutButton.position().y-h);
+
+   rowLabel.position(menuTab.size().width/4, (h*5/8));
+   colLabel.position(menuTab.size().width/4, (h*6/8));
+   rowMin.position(rowMin.position().x, (h*5/8));
+   rowPlus.position(rowPlus.position().x, (h*5/8));
+   colMin.position(colMin.position().x, (h*6/8));
+   colPlus.position(colPlus.position().x, (h*6/8));
+
+   yourSwatchesLabel.position(yourSwatchesLabel.position().x, Math.abs(yourSwatchesLabel.position().y));
+   if(mySwatches.length!=0){
+      yourSwatchesLabel.html("Your Swatches");
+   }
+}
+
+function logMenuOut(){
+   loginButton.position(loginButton.position().x, Math.abs(loginButton.position().y));
+   signupButton.position(signupButton.position().x, Math.abs(signupButton.position().y));
+   logoutButton.position(logoutButton.position().x, logoutButton.position().y+h);
+
+   rowLabel.position(menuTab.size().width/4, (h*4/6));
+   colLabel.position(menuTab.size().width/4, (h*5/6));
+   rowMin.position(rowMin.position().x, (h*4/6));
+   rowPlus.position(rowPlus.position().x, (h*4/6));
+   colMin.position(colMin.position().x, (h*5/6));
+   colPlus.position(colPlus.position().x, (h*5/6));
+
+   yourSwatchesLabel.position(yourSwatchesLabel.position().x, -Math.abs(yourSwatchesLabel.position().y));
 }
 
 function getCookie(name) {
@@ -1185,13 +1235,6 @@ function signupPressed(){
 }
 
 function createSettings(){
-   // var settingsLabel;
-   // var rowLabel;
-   // var rowMin;
-   // var rowPlus;
-   // var colMin;
-   // var colPlus;
-   // var colLabel;
    var pw = menuTab.size().width;
 
    settingsLabel = select('#settingsLabel');
@@ -1202,7 +1245,7 @@ function createSettings(){
 
    rowLabel = select('#rowLabel');
    rowLabel.size(pw/2, 30);
-   rowLabel.position(pw/4, (h*4/6));
+   rowLabel.position(pw/4, (h*5/8));
    rowLabel.style("font-size", settingsLabel.size().width/8+"px");
    menuTab.child(rowLabel);
 
@@ -1220,7 +1263,7 @@ function createSettings(){
 
    colLabel = select('#colLabel');
    colLabel.size(pw/2, 30);
-   colLabel.position(pw/4, (h*5/6));
+   colLabel.position(pw/4, (h*6/8));
    colLabel.style("font-size", settingsLabel.size().width/8+"px");
    menuTab.child(colLabel);
 
@@ -1278,6 +1321,16 @@ function createSettings(){
    });
 }
 
+function createLogout(){
+   logoutButton = select("#logoutButton");
+   logoutButton.size(menuTab.size().width*2/3, 50);
+   logoutButton.position(menuTab.size().width/6, menuTab.size().height*7/8);
+
+   logoutButton.mousePressed(()=>{
+      logMenuOut();
+   });
+}
+
 // function keyPressed(){
 //    if(keyCode===Enter){
 //
@@ -1285,3 +1338,14 @@ function createSettings(){
 //
 //    }
 // }
+
+function createYourSwatches(){
+   yourSwatchesLabel = createDiv('No swatches');
+   yourSwatchesLabel.size(menuTab.size().width*2/3, 25);
+   yourSwatchesLabel.position(menuTab.size().width/6, -(topP*h-25));
+   yourSwatchesLabel.style('font-size', yourSwatchesLabel.size().width/(yourSwatchesLabel.html().length)+"px");
+   yourSwatchesLabel.id("yourSwatchesLabel");
+   menuTab.child(yourSwatchesLabel);
+}
+
+//delete, rename, duplicate, append

@@ -107,7 +107,7 @@ var yourSwatchesLabel;
 var addNewSwatch;
 
 function setup(){
-   deleteCookie("username"); //TODO DELETE WHEN LIVE
+   // deleteCookie("username"); //TODO DELETE WHEN LIVE
    w = window.innerWidth;
    h = window.innerHeight;
 
@@ -1180,6 +1180,9 @@ function logMenuIn(){
    yourSwatchesLabel.position(yourSwatchesLabel.position().x, Math.abs(yourSwatchesLabel.position().y));
    if(mySwatches.length!=0){
       yourSwatchesLabel.html("Your Swatches");
+      for(var i = 0; i<mySwatchesElts.length; i++){
+         mySwatchesElts[i].position(mySwatchesElts[i].position().x, -mySwatchesElts[i].position().y);
+      }
    }
 }
 
@@ -1198,6 +1201,9 @@ function logMenuOut(){
    addNewSwatch.position(addNewSwatch.position().x, -Math.abs(addNewSwatch.position().y));
 
    yourSwatchesLabel.position(yourSwatchesLabel.position().x, -Math.abs(yourSwatchesLabel.position().y));
+   for(var i = 0; i<mySwatchesElts.length; i++){
+      mySwatchesElts[i].position(mySwatchesElts[i].position().x, -mySwatchesElts[i].position().y);
+   }
 }
 
 function getCookie(cname) {
@@ -1314,6 +1320,10 @@ function createSettings(){
          root.style.setProperty('--rowPlusCol', preventCol);
          rowPlus.style('cursor', 'default');
       }
+      myColors.length>=(gx*gy)
+      if(page+1>Math.ceil(myColors.length/(gx*gy))){
+         page = Math.ceil(myColors.length/(gx*gy))-1;
+      }
       redrawSquares();
    });
    rowMin.mousePressed(()=>{
@@ -1419,6 +1429,7 @@ function addAsNew(){
 }
 
 function createNewSwatch(swatch){
+   var bw = 0.5;
    var swatchLabel = createDiv('');
    swatchLabel.size(menuTab.size().width*4/5, -gap+(addNewSwatch.position().y-topP*h)/numSwatches2Show);
    swatchLabel.position(menuTab.size().width/10, gap/2+topP*h);
@@ -1430,19 +1441,52 @@ function createNewSwatch(swatch){
    swatchLabel.child(swatchLabelInner);
 
    var deleteSwatch = createDiv('');
-   deleteSwatch.size(swatchLabel.size().height, swatchLabel.size().height);
-   deleteSwatch.position(swatchLabel.size().width-deleteSwatch.size().width, 0);
+   deleteSwatch.size(swatchLabelInner.size().height*bw, swatchLabelInner.size().height);
+   deleteSwatch.position(swatchLabelInner.size().width-deleteSwatch.size().width, 0);
    deleteSwatch.addClass('deleteSwatch');
-   swatchLabel.child(deleteSwatch);
+   swatchLabelInner.child(deleteSwatch);
 
-   // var deleteSwatch = document.querySelector('#deleteSwatch').cloneNode( true );
-   // deleteSwatch.setAttribute( 'id', 'newDeleteSwatch');
-   // deleteSwatch = select("#newDeleteSwatch");
-   // deleteSwatch.size(swatchLabel.size().height, swatchLabel.size().height);
-   // deleteSwatch.position(swatchLabel.size().width-deleteSwatch.size().width, 0);
-   // deleteSwatch.removeAttribute('id');
-   // deleteSwatch.addClass('deleteSwatch');
-   // swatchLabel.child(deleteSwatch);
+   var dw = deleteSwatch.size().width;
+
+   var deleteSwatchInner = createDiv('');
+   deleteSwatchInner.addClass('deleteSwatchInner');
+   deleteSwatchInner.size(dw, dw);
+   deleteSwatch.child(deleteSwatchInner);
+
+   var renameSwatch = createDiv('');
+   renameSwatch.size(swatchLabelInner.size().height*bw, swatchLabelInner.size().height);
+   renameSwatch.position(swatchLabelInner.size().width-renameSwatch.size().width-deleteSwatch.size().width, 0);
+   renameSwatch.addClass('renameSwatch');
+   swatchLabelInner.child(renameSwatch);
+
+   var renameSwatchInner = createDiv('');
+   renameSwatchInner.addClass('renameSwatchInner');
+   renameSwatchInner.size(dw, dw);
+   renameSwatch.child(renameSwatchInner);
+
+   var duplicateSwatch = createDiv('');
+   duplicateSwatch.size(swatchLabelInner.size().height*bw, swatchLabelInner.size().height);
+   duplicateSwatch.position(swatchLabelInner.size().width-duplicateSwatch.size().width-renameSwatch.size().width-deleteSwatch.size().width, 0);
+   duplicateSwatch.addClass('duplicateSwatch');
+   swatchLabelInner.child(duplicateSwatch);
+
+   var duplicateSwatchInner = createDiv('');
+   duplicateSwatchInner.addClass('duplicateSwatchInner');
+   duplicateSwatchInner.size(dw, dw);
+   duplicateSwatch.child(duplicateSwatchInner);
+
+   var appendSwatch = createDiv('');
+   appendSwatch.size(swatchLabelInner.size().height*bw, swatchLabelInner.size().height);
+   appendSwatch.position(swatchLabelInner.size().width-appendSwatch.size().width-duplicateSwatch.size().width-renameSwatch.size().width-deleteSwatch.size().width, 0);
+   appendSwatch.addClass('appendSwatch');
+   swatchLabelInner.child(appendSwatch);
+
+   var appendSwatchInner = createDiv('');
+   appendSwatchInner.addClass('appendSwatchInner');
+   appendSwatchInner.size(dw, dw);
+   appendSwatch.child(appendSwatchInner);
+
+   mySwatchesElts.push(swatchLabel);
 }
 
 //delete, rename, duplicate, append

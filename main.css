@@ -850,7 +850,8 @@ input[type=range].slider::-ms-thumb {
 
 #rowMin, #colMin {
   /* z-index: 1; */
-  background: url('resources/images/minus.svg');
+  background: url('resources/images/minus.svg') no-repeat;
+  background-position: center;
   background-size: contain;
   border: none;
   outline: none;
@@ -862,7 +863,8 @@ input[type=range].slider::-ms-thumb {
 }
 
 #rowPlus, #colPlus{
-   background: url('resources/images/plus.svg');
+   background: url('resources/images/plus.svg') no-repeat;
+   background-position: center;
    background-size: contain;
    border: none;
    outline: none;
@@ -1011,7 +1013,6 @@ input[type=range].slider::-ms-thumb {
    color: var(--ghostwhite);
    background-color: transparent;
    display: table;
-   border: 1px solid var(--firebrick);
    overflow: hidden;
 }
 
@@ -1020,13 +1021,69 @@ input[type=range].slider::-ms-thumb {
    vertical-align: middle;
 }
 
-.deleteSwatch{
-   background: url('resources/images/trash-2.svg');
-   background-size: contain;
+.deleteSwatch, .renameSwatch, .duplicateSwatch, .appendSwatch{
    display: table;
+   text-align: center;
 }
 
 .deleteSwatchInner{
+   background: url('resources/images/trash-2.svg') no-repeat;
    display: table-cell;
    vertical-align: middle;
+   text-align: center;
+   background-size: 80%;
+   background-position: center;
+}
+.renameSwatchInner
+{
+   background: url('resources/images/edit-3.svg') no-repeat;
+   display: table-cell;
+   vertical-align: middle;
+   text-align: center;
+   background-size: 80%;
+   background-position: center;
+}
+.duplicateSwatchInner{
+   background: url('resources/images/copy.svg') no-repeat;
+   display: table-cell;
+   vertical-align: middle;
+   text-align: center;
+   background-size: 80%;
+   background-position: center;
+}
+.appendSwatchInner{
+   background: url('resources/images/plus-square.svg') no-repeat;
+   display: table-cell;
+   vertical-align: middle;
+   text-align: center;
+   background-size: 80%;
+   background-position: center;
+}
+
+.deleteSwatchInner:hover, .renameSwatchInner:hover, .duplicateSwatchInner:hover, .appendSwatchInner:hover{
+   animation: hoverSwatchIcon 1s infinite;
+   cursor: pointer;
+}
+
+@keyframes hoverSwatchIcon {
+   10%{
+      /* background-size: 82%; */
+      background-position: 50% 25%;
+   }
+   45%{
+      /* background-size: 82%; */
+      background-position: 70% 20%;
+   }
+   50%{
+      /* background-size: 82%; */
+      background-position: 30% 20%;
+   }
+   55%{
+      /* background-size: 82%; */
+      background-position: 70% 20%;
+   }
+   90%{
+      /* background-size: 82%; */
+      background-position: 50% 25%;
+   }
 }

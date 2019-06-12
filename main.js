@@ -199,28 +199,20 @@ function deleteCookie(name){
 }
 
 function pressLeft(){
-   console.log(page);
    if(page!=0){
-      console.log("left not end");
       page = page-1;
    }else{
-      console.log("left end");
       page = Math.floor(myColors.length/(gx*gy));
    }
-   console.log(page);
    redrawSquares();
 }
 
 function pressRight(){
-   console.log(page);
    if(page!=Math.floor(myColors.length/(gx*gy))){
-      console.log("right not end");
       page = page+1;
    }else{
-      console.log("right end");
       page = 0;
    }
-   console.log(page);
    redrawSquares();
 }
 
@@ -1181,7 +1173,7 @@ function logMenuIn(){
    if(mySwatches.length!=0){
       yourSwatchesLabel.html("Your Swatches");
       for(var i = 0; i<mySwatchesElts.length; i++){
-         mySwatchesElts[i].position(mySwatchesElts[i].position().x, -mySwatchesElts[i].position().y);
+         mySwatchesElts[i].position(mySwatchesElts[i].position().x, Math.abs(mySwatchesElts[i].position().y));
       }
    }
 }
@@ -1368,13 +1360,21 @@ function createLogout(){
    });
 }
 
-// function keyPressed(){
-//    if(keyCode===Enter){
-//
-//    }else if(keyCode===Escape){
-//
-//    }
-// }
+function keyPressed(){
+   if(keyCode===LEFT_ARROW){
+      if(needPages){
+         pressLeft();
+      }
+   }else if(keyCode===RIGHT_ARROW){
+      if(needPages){
+         pressRight();
+      }
+   }else if(keyCode===Enter){
+
+   }else if(keyCode===Escape){
+
+   }
+}
 
 function createYourSwatches(){
    var mtw = menuTab.size().width;
@@ -1401,6 +1401,7 @@ function addAsNew(){
       })
       .then(name => {
          if(name){
+            yourSwatchesLabel.html("Your Swatches");
             var simpColors = [];
             for(var i=0; i<myColors.length; i++){
                simpColors.push({
@@ -1432,7 +1433,7 @@ function createNewSwatch(swatch){
    var bw = 0.5;
    var swatchLabel = createDiv('');
    swatchLabel.size(menuTab.size().width*4/5, -gap+(addNewSwatch.position().y-topP*h)/numSwatches2Show);
-   swatchLabel.position(menuTab.size().width/10, gap/2+topP*h);
+   swatchLabel.position(menuTab.size().width/10, gap/2+topP*h+mySwatchesElts.length*swatchLabel.size().height);
    swatchLabel.addClass('swatchLabel');
    menuTab.child(swatchLabel);
 

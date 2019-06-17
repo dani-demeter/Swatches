@@ -1026,6 +1026,21 @@ input[type=range].slider::-ms-thumb {
    text-align: center;
 }
 
+.swatchText{
+   display: table;
+}
+
+.swatchTextInner{
+   display: table-cell;
+   vertical-align: middle;
+   color: var(--ghostwhite);
+}
+
+.swatchTextInner:hover{
+   color: var(--mint);
+   cursor: pointer;
+}
+
 .deleteSwatchInner{
    background: url('resources/images/trash-2.svg') no-repeat;
    display: table-cell;
@@ -1068,22 +1083,22 @@ input[type=range].slider::-ms-thumb {
 @keyframes hoverSwatchIcon {
    10%{
       /* background-size: 82%; */
-      background-position: 50% 25%;
+      background-position: 50% 35%;
    }
    45%{
       /* background-size: 82%; */
-      background-position: 70% 20%;
+      background-position: 70% 30%;
    }
    50%{
       /* background-size: 82%; */
-      background-position: 30% 20%;
+      background-position: 30% 30%;
    }
    55%{
       /* background-size: 82%; */
-      background-position: 70% 20%;
+      background-position: 70% 30%;
    }
    90%{
       /* background-size: 82%; */
-      background-position: 50% 25%;
+      background-position: 50% 35%;
    }
 }

@@ -107,7 +107,7 @@ var yourSwatchesLabel;
 var addNewSwatch;
 
 function setup(){
-   // deleteCookie("username"); //TODO DELETE WHEN LIVE
+   deleteCookie("username"); //TODO DELETE WHEN LIVE
    w = window.innerWidth;
    h = window.innerHeight;
 
@@ -468,35 +468,39 @@ function createButtons(){
       })
       .then(value => {
          if(value=="OK"){
-            if(myColors.length!=1){
-               myColors[selectedSquare].square.removeClass('selectedSquare');
-               myColors[selectedSquare].square.remove();
-               myColors.splice(selectedSquare, 1);
-               for(var i = 0; i<myColors.length; i++){
-                  myColors[i].ind = i;
-                  myColors[i].square.ind = i;
-               }
-               if(selectedSquare!=0){
-                  selectedSquare -= 1;
-               }
-               selectColor(selectedSquare);
-               myColors[selectedSquare].square.addClass('selectedSquare');
-            }else{
-               rightP = originalrightP;
-               myColors[selectedSquare].square.removeClass('selectedSquare');
-               selectedSquareTab.position(w, 0);
-               myColors[selectedSquare].square.remove();
-               myColors.splice(selectedSquare, 1);
-               for(var i = 0; i<myColors.length; i++){
-                  myColors[i].ind = i;
-                  myColors[i].square.ind = i;
-               }
-               selectedSquare = -1;
-            }
-            redrawSquares();
+            removeColor();
          }
       });
    });
+}
+
+function removeColor(){
+   if(myColors.length!=1){
+      myColors[selectedSquare].square.removeClass('selectedSquare');
+      myColors[selectedSquare].square.remove();
+      myColors.splice(selectedSquare, 1);
+      for(var i = 0; i<myColors.length; i++){
+         myColors[i].ind = i;
+         myColors[i].square.ind = i;
+      }
+      if(selectedSquare!=0){
+         selectedSquare -= 1;
+      }
+      selectColor(selectedSquare);
+      myColors[selectedSquare].square.addClass('selectedSquare');
+   }else{
+      rightP = originalrightP;
+      myColors[selectedSquare].square.removeClass('selectedSquare');
+      selectedSquareTab.position(w, 0);
+      myColors[selectedSquare].square.remove();
+      myColors.splice(selectedSquare, 1);
+      for(var i = 0; i<myColors.length; i++){
+         myColors[i].ind = i;
+         myColors[i].square.ind = i;
+      }
+      selectedSquare = -1;
+   }
+   redrawSquares();
 }
 
 function createNewColorDiv(){
@@ -1148,11 +1152,22 @@ function lisuOK(){
 function checkLoggedIn(){
    var c = getCookie("username") && getCookie("sessID");
    if(c){
+      getMySwatches();
       logMenuIn();
    }else{
       logMenuOut();
    }
    return c;
+}
+
+function getMySwatches(){
+   $.post("/pullSwatches", {username: getCookie("username"), sessID: getCookie("sessID")}, (data, status) => {
+      if(data.status!=="success"){
+         console.log(data.status);
+      }else{
+         mySwatches = data.body;
+      }
+   });
 }
 
 function logMenuIn(){
@@ -1172,8 +1187,10 @@ function logMenuIn(){
    yourSwatchesLabel.position(yourSwatchesLabel.position().x, Math.abs(yourSwatchesLabel.position().y));
    if(mySwatches.length!=0){
       yourSwatchesLabel.html("Your Swatches");
-      for(var i = 0; i<mySwatchesElts.length; i++){
-         mySwatchesElts[i].position(mySwatchesElts[i].position().x, Math.abs(mySwatchesElts[i].position().y));
+      mySwatchesElts = [];
+      for(var i = 0; i<mySwatches.length; i++){
+         // mySwatchesElts[i].position(mySwatchesElts[i].position().x, Math.abs(mySwatchesElts[i].position().y));
+         createNewSwatch(mySwatches[i]);
       }
    }
 }
@@ -1369,10 +1386,6 @@ function keyPressed(){
       if(needPages){
          pressRight();
       }
-   }else if(keyCode===Enter){
-
-   }else if(keyCode===Escape){
-
    }
 }
 
@@ -1415,7 +1428,7 @@ function addAsNew(){
             };
             mySwatches.push(newSwatch);
             createNewSwatch(newSwatch);
-            $.post("/updateSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatches: mySwatches}, (data, status) => {
+            $.post("/pushSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatches: mySwatches}, (data, status) => {
                if(data.status!=="success"){
                   console.log(data.status);
                }else{
@@ -1432,12 +1445,12 @@ function addAsNew(){
 function createNewSwatch(swatch){
    var bw = 0.5;
    var swatchLabel = createDiv('');
-   swatchLabel.size(menuTab.size().width*4/5, -gap+(addNewSwatch.position().y-topP*h)/numSwatches2Show);
+   swatchLabel.size(menuTab.size().width*4/5, -gap+(Math.abs(addNewSwatch.position().y)-topP*h)/numSwatches2Show);
    swatchLabel.position(menuTab.size().width/10, gap/2+topP*h+mySwatchesElts.length*swatchLabel.size().height);
    swatchLabel.addClass('swatchLabel');
    menuTab.child(swatchLabel);
 
-   var swatchLabelInner = createDiv(swatch.name);
+   var swatchLabelInner = createDiv('');
    swatchLabelInner.addClass('swatchLabelInner');
    swatchLabel.child(swatchLabelInner);
 
@@ -1486,6 +1499,48 @@ function createNewSwatch(swatch){
    appendSwatchInner.addClass('appendSwatchInner');
    appendSwatchInner.size(dw, dw);
    appendSwatch.child(appendSwatchInner);
+
+   var swatchText = createDiv('');
+   swatchText.size(swatchLabelInner.size().width-4*swatchLabelInner.size().height*bw, swatchLabelInner.size().height);
+   swatchText.position(0, 0);
+   swatchText.addClass('swatchText');
+   swatchLabelInner.child(swatchText);
+
+   var swatchTextInner = createDiv(swatch.name);
+   swatchTextInner.size(swatchLabelInner.size().width-4*swatchLabelInner.size().height*bw, swatchLabelInner.size().height/2);
+   swatchTextInner.position(0, swatchLabelInner.size().height/4);
+   swatchTextInner.addClass('swatchTextInner');
+   swatchText.child(swatchTextInner);
+
+   let swatchIndex = mySwatchesElts.length;
+
+   swatchTextInner.mousePressed(()=>{
+      if(mySwatches[swatchIndex].colors.length>myColors.length){
+         while(mySwatches[swatchIndex].colors.length>myColors.length){
+            AddNewColor(mySwatches[swatchIndex].colors[myColors.length].name, mySwatches[swatchIndex].colors[myColors.length].hex);
+         }
+      }else{
+         while(mySwatches[swatchIndex].colors.length<myColors.length){
+            selectedSquare = myColors.length-1;
+            removeColor();
+         }
+      }
+      for(var i = 0; i<mySwatches[swatchIndex].colors.length; i++){
+         myColors[i].hex = mySwatches[swatchIndex].colors[i].hex;
+         myColors[i].name = mySwatches[swatchIndex].colors[i].name;
+         var c = color("#"+myColors[i].hex);
+         myColors[i].r = red(c);
+         myColors[i].g = green(c);
+         myColors[i].b = blue(c);
+         var fs = getFontSize(name);
+         myColors[i].text.style('font-size', fs + "px");
+         myColors[i].text.style('color', invertColor(myColors[i].hex));
+         myColors[i].square.style('background-color', c);
+         myColors[i].text.html(mySwatches[swatchIndex].colors[i].name);
+      }
+      selectColor(Math.min(Math.max(parseInt(selectedSquare), 0), myColors.length-1));
+      redrawSquares();
+   });
 
    mySwatchesElts.push(swatchLabel);
 }

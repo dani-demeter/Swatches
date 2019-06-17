@@ -128,7 +128,7 @@ app.post('/signup', function(req, res) {
    }
 });
 
-app.post('/updateSwatches', function(req, res) {
+app.post('/pushSwatches', function(req, res) {
    var ind = -1;
    for(var i = 0; i<db.length; i++){
       if(db[i].name==req.body.username && db[i].sessID==req.body.sessID){
@@ -137,6 +137,20 @@ app.post('/updateSwatches', function(req, res) {
    }
    if(ind!=-1){ //user already exists
       db[ind].swatches = req.body.swatches;
+      res.send({body: db[ind].swatches, status: "success"});
+   }else{//user does not exist
+      res.send({body: "invalid credentials", status: "fail"});
+   }
+});
+
+app.post('/pullSwatches', function(req, res) {
+   var ind = -1;
+   for(var i = 0; i<db.length; i++){
+      if(db[i].name==req.body.username && db[i].sessID==req.body.sessID){
+         ind = i;
+      }
+   }
+   if(ind!=-1){ //user already exists
       res.send({body: db[ind].swatches, status: "success"});
    }else{//user does not exist
       res.send({body: "invalid credentials", status: "fail"});

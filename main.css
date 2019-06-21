@@ -1024,6 +1024,8 @@ input[type=range].slider::-ms-thumb {
 .deleteSwatch, .renameSwatch, .duplicateSwatch, .appendSwatch{
    display: table;
    text-align: center;
+   transition: top 0.3s,
+               left 0.3s;
 }
 
 .swatchText{

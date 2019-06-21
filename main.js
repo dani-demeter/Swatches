@@ -107,7 +107,7 @@ var yourSwatchesLabel;
 var addNewSwatch;
 
 function setup(){
-   deleteCookie("username"); //TODO DELETE WHEN LIVE
+   // deleteCookie("username"); //TODO DELETE WHEN LIVE
    w = window.innerWidth;
    h = window.innerHeight;
 
@@ -1106,7 +1106,7 @@ function createLogIn(){
 
 function lisuOK(){
    if(clickedLisu=="login"){
-      $.post("/login", {name: lisuIn1.value(), pass:lisuIn2.value()}, (data, status) => {
+      $.post("/login", {username: lisuIn1.value(), pass:lisuIn2.value()}, (data, status) => {
          if(data.status!=="success"){
             console.log(data.status);
          }else{
@@ -1118,7 +1118,7 @@ function lisuOK(){
                   document.cookie = `username=${lisuIn1.value()}`;
                   document.cookie = `sessID=${data.sessID}`;
                   mySwatches = data.swatches;
-                  checkLoggedIn();
+                  logMenuIn();
                   setTimeout(()=>{
                      cancelPressed();
                   },1000);
@@ -1129,7 +1129,7 @@ function lisuOK(){
          }
       });
    }else if(clickedLisu=="signup"){
-      $.post("/signup", {name: lisuIn1.value(), pass:lisuIn2.value()}, (data, status) => {
+      $.post("/signup", {username: lisuIn1.value(), pass:lisuIn2.value()}, (data, status) => {
          if(data.status!=="success"){
             console.log(data.status);
          }else{
@@ -1137,7 +1137,10 @@ function lisuOK(){
                lisuTitle.html("Success!");
                document.cookie = `username=${lisuIn1.value()}`;
                document.cookie = `sessID=${data.sessID}`;
-               checkLoggedIn();
+               // checkLoggedIn();
+               // myswatches = data.swatches;
+               // getMySwatches();
+               logMenuIn();
                setTimeout(()=>{
                   cancelPressed();
                },1000);
@@ -1152,8 +1155,17 @@ function lisuOK(){
 function checkLoggedIn(){
    var c = getCookie("username") && getCookie("sessID");
    if(c){
-      getMySwatches();
-      logMenuIn();
+      $.post("/newSessID", {username: getCookie("username"), sessID:getCookie("sessID")}, (data, status) => {
+         if(data.status!=="success"){
+            console.log(data.status);
+            console.log("yOU ARE BEING LOGGED OUT");
+            logMenuOut();
+         }else{
+            document.cookie = `sessID=${data.sessID}`;
+            mySwatches = data.swatches;
+            logMenuIn();
+         }
+      });
    }else{
       logMenuOut();
    }
@@ -1162,6 +1174,16 @@ function checkLoggedIn(){
 
 function getMySwatches(){
    $.post("/pullSwatches", {username: getCookie("username"), sessID: getCookie("sessID")}, (data, status) => {
+      if(data.status!=="success"){
+         console.log(data.outcome);
+      }else{
+         mySwatches = data.body;
+      }
+   });
+}
+
+function updateServerSwatches(){
+   $.post("/pushSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatches: mySwatches}, (data, status) => {
       if(data.status!=="success"){
          console.log(data.status);
       }else{
@@ -1187,11 +1209,26 @@ function logMenuIn(){
    yourSwatchesLabel.position(yourSwatchesLabel.position().x, Math.abs(yourSwatchesLabel.position().y));
    if(mySwatches.length!=0){
       yourSwatchesLabel.html("Your Swatches");
-      mySwatchesElts = [];
-      for(var i = 0; i<mySwatches.length; i++){
-         // mySwatchesElts[i].position(mySwatchesElts[i].position().x, Math.abs(mySwatchesElts[i].position().y));
-         createNewSwatch(mySwatches[i]);
+      if(mySwatchesElts.length!=mySwatches.length){
+         var i = 0;
+         while(mySwatchesElts.length<mySwatches.length){
+            createNewSwatch(mySwatches[i]);
+            i++;
+         }
+         while(mySwatchesElts.length>mySwatches.length){
+            mySwatchesElts[0].remove();
+            mySwatchesElts.splice(0, 1);
+            var i=0;
+            while(i<mySwatches.length){
+               mySwatchesElts[i].position(menuTab.size().width/10, gap/2+topP*h+i*mySwatchesElts[i].size().height);
+               i++;
+            }
+         }
       }
+      for(var i = 0; i<mySwatchesElts.length; i++){
+         mySwatchesElts[i].position(mySwatchesElts[i].position().x, Math.abs(mySwatchesElts[i].position().y));
+      }
+      console.log("they're the same length");
    }
 }
 
@@ -1213,6 +1250,9 @@ function logMenuOut(){
    for(var i = 0; i<mySwatchesElts.length; i++){
       mySwatchesElts[i].position(mySwatchesElts[i].position().x, -mySwatchesElts[i].position().y);
    }
+
+   deleteCookie("username");
+   deleteCookie("sessID");
 }
 
 function getCookie(cname) {
@@ -1228,7 +1268,7 @@ function getCookie(cname) {
       return c.substring(name.length, c.length);
     }
   }
-  return "";
+  return false;
 }
 
 function cancelPressed(){
@@ -1407,39 +1447,46 @@ function createYourSwatches(){
    addNewSwatch.mousePressed(addAsNew);
 }
 
+function checkCredentials(){
+   $.post("/checkCredentials", {username: getCookie("username"), sessID: getCookie("sessID")}, (data, status) => {
+      console.log("credentials check status is ", data.status);
+      if(data.status!=="success"){
+         return false;
+      }else{
+         return true;
+      }
+   });
+}
+
 function addAsNew(){
-   if(checkLoggedIn()){
-      swal("What should be the new swatch's name?", {
-         content: "input"
-      })
-      .then(name => {
-         if(name){
-            yourSwatchesLabel.html("Your Swatches");
-            var simpColors = [];
-            for(var i=0; i<myColors.length; i++){
-               simpColors.push({
-                  name: myColors[i].name,
-                  hex: myColors[i].hex
-               });
-            }
-            var newSwatch = {
-               name: name,
-               colors: simpColors
-            };
-            mySwatches.push(newSwatch);
-            createNewSwatch(newSwatch);
-            $.post("/pushSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatches: mySwatches}, (data, status) => {
-               if(data.status!=="success"){
-                  console.log(data.status);
-               }else{
-                  mySwatches = data.body;
-               }
+   swal("What should be the new swatch's name?", {
+      content: "input"
+   })
+   .then(name => {
+      if(name){
+         yourSwatchesLabel.html("Your Swatches");
+         var simpColors = [];
+         for(var i=0; i<myColors.length; i++){
+            simpColors.push({
+               name: myColors[i].name,
+               hex: myColors[i].hex
             });
          }
-      });
-   }else{
-      console.log("you have to be logged in to do this");
-   }
+         var newSwatch = {
+            name: name,
+            colors: simpColors
+         };
+         mySwatches.push(newSwatch);
+         createNewSwatch(newSwatch);
+         $.post("/pushSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatches: mySwatches}, (data, status) => {
+            if(data.status!=="success"){
+               console.log(data.status);
+            }else{
+               mySwatches = data.body;
+            }
+         });
+      }
+   });
 }
 
 function createNewSwatch(swatch){
@@ -1512,22 +1559,24 @@ function createNewSwatch(swatch){
    swatchTextInner.addClass('swatchTextInner');
    swatchText.child(swatchTextInner);
 
-   let swatchIndex = mySwatchesElts.length;
+   // let swatchIndex = mySwatchesElts.length;
+   let myElt = swatchLabel;
+   myElt.swatchIndex = mySwatchesElts.length;
 
    swatchTextInner.mousePressed(()=>{
-      if(mySwatches[swatchIndex].colors.length>myColors.length){
-         while(mySwatches[swatchIndex].colors.length>myColors.length){
-            AddNewColor(mySwatches[swatchIndex].colors[myColors.length].name, mySwatches[swatchIndex].colors[myColors.length].hex);
+      if(mySwatches[myElt.swatchIndex].colors.length>myColors.length){
+         while(mySwatches[myElt.swatchIndex].colors.length>myColors.length){
+            AddNewColor(mySwatches[myElt.swatchIndex].colors[myColors.length].name, mySwatches[myElt.swatchIndex].colors[myColors.length].hex);
          }
       }else{
-         while(mySwatches[swatchIndex].colors.length<myColors.length){
+         while(mySwatches[myElt.swatchIndex].colors.length<myColors.length){
             selectedSquare = myColors.length-1;
             removeColor();
          }
       }
-      for(var i = 0; i<mySwatches[swatchIndex].colors.length; i++){
-         myColors[i].hex = mySwatches[swatchIndex].colors[i].hex;
-         myColors[i].name = mySwatches[swatchIndex].colors[i].name;
+      for(var i = 0; i<mySwatches[myElt.swatchIndex].colors.length; i++){
+         myColors[i].hex = mySwatches[myElt.swatchIndex].colors[i].hex;
+         myColors[i].name = mySwatches[myElt.swatchIndex].colors[i].name;
          var c = color("#"+myColors[i].hex);
          myColors[i].r = red(c);
          myColors[i].g = green(c);
@@ -1536,13 +1585,38 @@ function createNewSwatch(swatch){
          myColors[i].text.style('font-size', fs + "px");
          myColors[i].text.style('color', invertColor(myColors[i].hex));
          myColors[i].square.style('background-color', c);
-         myColors[i].text.html(mySwatches[swatchIndex].colors[i].name);
+         myColors[i].text.html(mySwatches[myElt.swatchIndex].colors[i].name);
       }
       selectColor(Math.min(Math.max(parseInt(selectedSquare), 0), myColors.length-1));
       redrawSquares();
    });
 
+   deleteSwatch.mousePressed(()=>{
+      swal("Are you sure you want to delete this swatch?", {
+         dangerMode: true,
+         buttons: {
+            cancel: "Cancel",
+            confirm: {value: "OK", text: "Yes"}
+         }
+      })
+      .then(value => {
+         if(value=="OK"){
+            mySwatches.splice(myElt.swatchIndex, 1);
+            mySwatchesElts[myElt.swatchIndex].remove();
+            mySwatchesElts.splice(myElt.swatchIndex, 1);
+            var i = myElt.swatchIndex;
+            while(i<mySwatches.length){
+               mySwatchesElts[i].position(menuTab.size().width/10, gap/2+topP*h+i*mySwatchesElts[i].size().height);
+               mySwatchesElts[i].swatchIndex = i;
+               i++;
+            }
+            updateServerSwatches();
+         }
+      });
+   });
+
    mySwatchesElts.push(swatchLabel);
+   updateServerSwatches();
 }
 
 //delete, rename, duplicate, append

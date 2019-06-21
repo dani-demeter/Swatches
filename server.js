@@ -75,7 +75,7 @@ app.post('/checkusername', function(req, res) {
    console.log(req.body);
    var usernameexists = false;
    for(var i = 0; i<db.length; i++){
-      if(db[i].name==req.body.name){
+      if(db[i].username==req.body.username){
          usernameexists = true;
       }
    }
@@ -86,7 +86,7 @@ app.post('/login', function(req, res) {
    console.log(req.body);
    var ind = -1;
    for(var i = 0; i<db.length; i++){
-      if(db[i].name==req.body.name){
+      if(db[i].username==req.body.username){
          ind = i;
       }
    }
@@ -112,7 +112,7 @@ function getNewSessionID(){
 app.post('/signup', function(req, res) {
    var ind = -1;
    for(var i = 0; i<db.length; i++){
-      if(db[i].name==req.body.name){
+      if(db[i].username==req.body.username){
          ind = i;
       }
    }
@@ -121,38 +121,99 @@ app.post('/signup', function(req, res) {
    }else{//user does not exist
       bcrypt.hash(req.body.pass, saltRounds, function(err, hash) {
          var newSessID = getNewSessionID();
-         db.push({name: req.body.name, pass: hash, sessID: newSessID, swatches: []});
+         db.push({username: req.body.username, pass: hash, sessID: newSessID, swatches: []});
          console.log(db);
          res.send({body: "you have signed up", sessID: newSessID, status: "success"});
       });
    }
 });
 
-app.post('/pushSwatches', function(req, res) {
+app.post('/newSessID', function(req, res) {
    var ind = -1;
    for(var i = 0; i<db.length; i++){
-      if(db[i].name==req.body.username && db[i].sessID==req.body.sessID){
+      if(db[i].name==req.body.name){
          ind = i;
       }
    }
-   if(ind!=-1){ //user already exists
-      db[ind].swatches = req.body.swatches;
-      res.send({body: db[ind].swatches, status: "success"});
+   if(ind!=-1){ //user exists
+      if(db[ind].sessID==req.body.sessID){ //sessID checks out
+         var newSessID = getNewSessionID();
+         db[ind].sessID = newSessID;;
+         res.send({sessID: newSessID, status: "success", swatches: db[ind].swatches});
+      }else{ //sessID does not check out
+         res.send({status: "fail", outcome: "bad sess id"});
+      }
    }else{//user does not exist
-      res.send({body: "invalid credentials", status: "fail"});
+      res.send({status: "fail", outcome: "username DNE"});
    }
 });
 
-app.post('/pullSwatches', function(req, res) {
+app.post('/pushSwatches', function(req, res) {
+   var user = getUser(req.body.username, req.body.sessID);
+   if(user.ind!=-1){
+      if(user.sessID=="success"){
+         db[user.ind].swatches = req.body.swatches;
+         res.send({body: db[user.ind].swatches, status: "success"});
+      }else{
+         console.log("tried to push swatches with bad sess id");
+      }
+   }else{
+      console.log("tried to push swatches with nonexistent username");
+   }
+});
+
+app.post('/checkCredentials', function(req, res) {
+   console.log("request to check credentials");
    var ind = -1;
    for(var i = 0; i<db.length; i++){
-      if(db[i].name==req.body.username && db[i].sessID==req.body.sessID){
+      console.log("comparing", db[i].username, req.body.username)
+      if(db[i].username==req.body.username){
          ind = i;
       }
    }
-   if(ind!=-1){ //user already exists
-      res.send({body: db[ind].swatches, status: "success"});
+   if(ind!=-1){ //user exists
+      if(db[ind].sessID==req.body.sessID){ //sessID checks out
+         console.log("good sess id");
+         res.send({status: "success"});
+      }else{ //sessID does not check out
+         console.log("bad sess id", db[ind].sessID, req.body.sessID);
+         res.send({status: "fail", outcome: "bad sess id"});
+      }
    }else{//user does not exist
-      res.send({body: "invalid credentials", status: "fail"});
+      console.log("user does not exist", req.body.username);
+      res.send({status: "fail", outcome: "username DNE"});
    }
 });
+
+
+
+app.post('/pullSwatches', function(req, res) {
+   var user = getUser(req.body.username, req.body.sessID);
+   if(user.ind!=-1){
+      if(user.sessID=="success"){
+         res.send({body: db[user.ind].swatches, status: "success"});
+      }else{
+         res.send({outcome: "invalid sess ID", status: "fail"});
+      }
+   }else{
+      res.send({outcome: "invalid username", status: "fail"});
+   }
+});
+
+function getUser(username, sessID){
+   var ind = -1;
+   for(var i = 0; i<db.length; i++){
+      if(db[i].username==username){
+         ind = i;
+      }
+   }
+   if(ind!=-1){ //user exists
+      if(db[ind].sessID==sessID){ //sessID checks out
+         return {ind: ind, sessID: "success"};
+      }else{ //sessID does not check out
+         return {ind: ind, sessID: "fail"};
+      }
+   }else{//user does not exist
+      return {ind: ind};
+   }
+}

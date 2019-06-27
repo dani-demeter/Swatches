@@ -16,8 +16,8 @@
          </div>
       </div>
       <script src="jquery.js"></script>
-      <script src="resources/libraries/p5.js"></script>
-      <script src="resources/libraries/p5.dom.js"></script>
+      <script src="resources/libraries/p5.min.js"></script>
+      <script src="resources/libraries/p5.dom.min.js"></script>
       <script src="resources/libraries/sweetalert.min.js"></script>
 
       <div id="modalCover">
@@ -94,6 +94,16 @@
       <div id="leftwrapper">
          <div class="leftsmallwrapper">
             <svg id = "leftsvg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F9FDFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline class="leftArrowAnim" points="12 8 8 12 12 16"></polyline><line class="leftArrowAnim" x1="16" y1="12" x2="8" y2="12"></line></svg>
+         </div>
+      </div>
+      <div id="upSwatches" class="pointerCursor">
+         <div id="upSwatchesInner">
+            <svg id="upSwatchessvg" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#F9FDFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up-circle"><circle id="upSwatchesCircle" class="allowedCircle" cx="12" cy="12" r="10"></circle><polyline class="upSwatcheslines showUp" points="16 12 12 8 8 12"></polyline><line class="upSwatcheslines showUp" x1="12" y1="16" x2="12" y2="8"></line></svg>
+         </div>
+      </div>
+      <div id="downSwatches" class="pointerCursor">
+         <div id="downSwatchesInner">
+            <svg id="downSwatchessvg" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#F9FDFF" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down-circle"><circle id="downSwatchesCircle" class="allowedCircle" cx="12" cy="12" r="10"></circle><polyline class="downSwatcheslines showDown" points="8 12 12 16 16 12"></polyline><line class="downSwatcheslines showDown" x1="12" y1="8" x2="12" y2="16"></line></svg>
          </div>
       </div>
       <script src="main.js"></script>

@@ -152,7 +152,11 @@ app.post('/pushSwatches', function(req, res) {
    var user = getUser(req.body.username, req.body.sessID);
    if(user.ind!=-1){
       if(user.sessID=="success"){
-         db[user.ind].swatches = req.body.swatches;
+         if(req.body.swatchesLength==0){
+            db[user.ind].swatches = [];
+         }else{
+            db[user.ind].swatches = req.body.swatches;
+         }
          res.send({body: db[user.ind].swatches, status: "success"});
       }else{
          console.log("tried to push swatches with bad sess id");

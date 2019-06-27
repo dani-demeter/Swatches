@@ -67,6 +67,10 @@ var rightArrow;
 var leftArrow;
 
 var addNewButton;
+var downSwatches;
+var upSwatches;
+var swatchesHead = 0;
+var swatchLabels;
 
 var menuButton;
 var menuTab;
@@ -90,8 +94,6 @@ var lisuCancel;
 
 var clickedLisu = "";
 
-var marble;
-
 var settingsLabel;
 var rowLabel;
 var rowMin;
@@ -105,6 +107,8 @@ var preventCol = "#E63952";
 
 var yourSwatchesLabel;
 var addNewSwatch;
+
+var swalOpen = false;
 
 function setup(){
    // deleteCookie("username"); //TODO DELETE WHEN LIVE
@@ -368,6 +372,7 @@ function createButtons(){
    removeButton.size((pw-4*vertgap)/3, buttonHeightP*h);
    selectedSquareTab.child(removeButton);
    removeButton.addClass("tabButton");
+   removeButton.id("removeButton");
 
    saveAsButton.style('font-size', saveAsButton.size().width/6+"px");
    replaceButton.style('font-size', replaceButton.size().width/6+"px");
@@ -376,10 +381,12 @@ function createButtons(){
 
    saveAsButton.mousePressed(()=>{
       if(newColorText2.html()!=currColorText2.html()){
-         swal("What should be the new color's name?", {
+         swalOpen = true;
+         swal("What should the new color's name be?", {
             content: "input"
          })
          .then(name => {
+            swalOpen = false;
             if(name){
                AddNewColor(name,newColorText3.html());
                myColors[selectedSquare].square.removeClass('selectedSquare');
@@ -395,10 +402,12 @@ function createButtons(){
 
    replaceButton.mousePressed(()=>{
       if(newColorText2.html()!=currColorText2.html()){ //replace
-         swal("What should be the new color's name?", {
+         swalOpen = true;
+         swal("What should the new color's name be?", {
             content: "input"
          })
          .then(name => {
+            swalOpen = false;
             if(name){
                myColors[selectedSquare].name = name;
                var c = color(newColorText3.html());
@@ -432,10 +441,12 @@ function createButtons(){
             }
          });
       }else{//rename
-         swal("What should be the new name?", {
+         swalOpen = true;
+         swal("What should the new name be?", {
             content: "input"
          })
          .then(name => {
+            swalOpen = false;
             if(name){
                myColors[selectedSquare].name = name;
                myColors[selectedSquare].text.html(name);
@@ -459,6 +470,7 @@ function createButtons(){
    });
 
    removeButton.mousePressed(()=>{
+      swalOpen = true;
       swal("Are you sure you want to remove this color from your palette?", {
          dangerMode: true,
          buttons: {
@@ -467,6 +479,7 @@ function createButtons(){
          }
       })
       .then(value => {
+         swalOpen = false;
          if(value=="OK"){
             removeColor();
          }
@@ -1020,23 +1033,25 @@ function createMenuButton(){
    menuButton.position(menuTab.size().width-1, (h/2)-x*0.75);
    menuButton.style('opacity', 1);
 
-   menuButton.mousePressed(()=>{
-      menuOut = !menuOut;
-      if(menuOut){
-         select("#menubuttonsvg").style('transform', 'rotate(180deg)');
-         menuButton.addClass("menubuttonwrapperout");
-         menuButton.removeClass("menubuttonwrapperin");
-         menuTab.position(0,0);
-         leftP = squishedleftP;
-      }else{
-         select("#menubuttonsvg").style('transform', 'rotate(0deg)');
-         menuButton.removeClass("menubuttonwrapperout");
-         menuButton.addClass("menubuttonwrapperin");
-         menuTab.position(-menuTab.size().width, 0);
-         leftP = originalleftP;
-      }
-      redrawSquares();
-   });
+   menuButton.mousePressed(menuButtonPressed);
+}
+
+function menuButtonPressed(){
+   menuOut = !menuOut;
+   if(menuOut){
+      select("#menubuttonsvg").style('transform', 'rotate(180deg)');
+      menuButton.addClass("menubuttonwrapperout");
+      menuButton.removeClass("menubuttonwrapperin");
+      menuTab.position(0,0);
+      leftP = squishedleftP;
+   }else{
+      select("#menubuttonsvg").style('transform', 'rotate(0deg)');
+      menuButton.removeClass("menubuttonwrapperout");
+      menuButton.addClass("menubuttonwrapperin");
+      menuTab.position(-menuTab.size().width, 0);
+      leftP = originalleftP;
+   }
+   redrawSquares();
 }
 
 function createLogIn(){
@@ -1106,49 +1121,53 @@ function createLogIn(){
 
 function lisuOK(){
    if(clickedLisu=="login"){
-      $.post("/login", {username: lisuIn1.value(), pass:lisuIn2.value()}, (data, status) => {
-         if(data.status!=="success"){
-            console.log(data.status);
-         }else{
-            if(data.outcome=="DNE"){ //user does not exist
-               lisuTitle.html("User does not exist!");
-            }else if(data.outcome=="exists"){
-               if(data.body){
-                  lisuTitle.html("You're in!");
+      if(lisuIn1.value().length>0 && lisuIn2.value().length>0){
+         $.post("/login", {username: lisuIn1.value(), pass:lisuIn2.value()}, (data, status) => {
+            if(data.status!=="success"){
+               console.log(data.status);
+            }else{
+               if(data.outcome=="DNE"){ //user does not exist
+                  lisuTitle.html("User does not exist!");
+               }else if(data.outcome=="exists"){
+                  if(data.body){
+                     lisuTitle.html("You're in!");
+                     document.cookie = `username=${lisuIn1.value()}`;
+                     document.cookie = `sessID=${data.sessID}`;
+                     mySwatches = data.swatches;
+                     logMenuIn();
+                     setTimeout(()=>{
+                        cancelPressed();
+                     },600);
+                  }else{
+                     lisuTitle.html("Wrong password!");
+                  }
+               }
+            }
+         });
+      }
+   }else if(clickedLisu=="signup"){
+      if(lisuIn1.value().length>0 && lisuIn2.value().length>0){
+         $.post("/signup", {username: lisuIn1.value(), pass:lisuIn2.value()}, (data, status) => {
+            if(data.status!=="success"){
+               console.log(data.status);
+            }else{
+               if(data.body=="you have signed up"){
+                  lisuTitle.html("Success!");
                   document.cookie = `username=${lisuIn1.value()}`;
                   document.cookie = `sessID=${data.sessID}`;
-                  mySwatches = data.swatches;
+                  // checkLoggedIn();
+                  // myswatches = data.swatches;
+                  // getMySwatches();
                   logMenuIn();
                   setTimeout(()=>{
                      cancelPressed();
-                  },1000);
+                  },600);
                }else{
-                  lisuTitle.html("Wrong password!");
+                  lisuTitle.html("Username taken.");
                }
             }
-         }
-      });
-   }else if(clickedLisu=="signup"){
-      $.post("/signup", {username: lisuIn1.value(), pass:lisuIn2.value()}, (data, status) => {
-         if(data.status!=="success"){
-            console.log(data.status);
-         }else{
-            if(data.body=="you have signed up"){
-               lisuTitle.html("Success!");
-               document.cookie = `username=${lisuIn1.value()}`;
-               document.cookie = `sessID=${data.sessID}`;
-               // checkLoggedIn();
-               // myswatches = data.swatches;
-               // getMySwatches();
-               logMenuIn();
-               setTimeout(()=>{
-                  cancelPressed();
-               },1000);
-            }else{
-               lisuTitle.html("Username taken.");
-            }
-         }
-      });
+         });
+      }
    }
 }
 
@@ -1183,7 +1202,7 @@ function getMySwatches(){
 }
 
 function updateServerSwatches(){
-   $.post("/pushSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatches: mySwatches}, (data, status) => {
+   $.post("/pushSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatchesLength: mySwatches.length, swatches: mySwatches}, (data, status) => {
       if(data.status!=="success"){
          console.log(data.status);
       }else{
@@ -1205,6 +1224,11 @@ function logMenuIn(){
    colPlus.position(colPlus.position().x, (h*6/8));
 
    addNewSwatch.position(addNewSwatch.position().x, Math.abs(addNewSwatch.position().y));
+   swatchLabels.position(swatchLabels.position().x, topP*h);
+   if(mySwatches.length>numSwatches2Show){
+      downSwatches.position(downSwatches.position().x, Math.abs(downSwatches.position().y));
+      upSwatches.position(upSwatches.position().x, Math.abs(upSwatches.position().y));
+   }
 
    yourSwatchesLabel.position(yourSwatchesLabel.position().x, Math.abs(yourSwatchesLabel.position().y));
    if(mySwatches.length!=0){
@@ -1225,10 +1249,17 @@ function logMenuIn(){
             }
          }
       }
-      for(var i = 0; i<mySwatchesElts.length; i++){
-         mySwatchesElts[i].position(mySwatchesElts[i].position().x, Math.abs(mySwatchesElts[i].position().y));
+      swatchesHead = mySwatchesElts.length-1;
+      for(var i = mySwatchesElts.length-1; i>swatchesHead; i--){
+         mySwatchesElts[i].position(mySwatchesElts[i].position().x, -mySwatchesElts[i].size().height-100);
       }
-      console.log("they're the same length");
+      for(var i = swatchesHead; i>=0; i--){
+         if(i<=swatchesHead-numSwatches2Show){
+            mySwatchesElts[i].position(mySwatchesElts[i].position().x, swatchLabels.size().height+100);
+         }else{
+            mySwatchesElts[i].position(menuTab.size().width/10, gap/2+(swatchesHead-i)*(mySwatchesElts[i].size().height+gap));
+         }
+      }
    }
 }
 
@@ -1245,8 +1276,11 @@ function logMenuOut(){
    colPlus.position(colPlus.position().x, (h*5/6));
 
    addNewSwatch.position(addNewSwatch.position().x, -Math.abs(addNewSwatch.position().y));
+   downSwatches.position(downSwatches.position().x, -Math.abs(downSwatches.position().y));
+   upSwatches.position(upSwatches.position().x, -Math.abs(upSwatches.position().y));
 
    yourSwatchesLabel.position(yourSwatchesLabel.position().x, -Math.abs(yourSwatchesLabel.position().y));
+   swatchLabels.position(swatchLabels.position().x, -swatchLabels.size().height);
    for(var i = 0; i<mySwatchesElts.length; i++){
       mySwatchesElts[i].position(mySwatchesElts[i].position().x, -mySwatchesElts[i].position().y);
    }
@@ -1361,50 +1395,58 @@ function createSettings(){
    colPlus.id("colPlus");
    menuTab.child(colPlus);
 
-   rowPlus.mousePressed(()=>{
-      gy = Math.min(Math.max(gy+1, 1), 6);
-      root.style.setProperty('--rowMinCol', allowedCol);
-      rowMin.style('cursor', 'pointer');
-      if(gy==6){
-         root.style.setProperty('--rowPlusCol', preventCol);
-         rowPlus.style('cursor', 'default');
-      }
-      myColors.length>=(gx*gy)
-      if(page+1>Math.ceil(myColors.length/(gx*gy))){
-         page = Math.ceil(myColors.length/(gx*gy))-1;
-      }
-      redrawSquares();
-   });
-   rowMin.mousePressed(()=>{
-      gy = Math.min(Math.max(gy-1, 1), 6);
-      root.style.setProperty('--rowPlusCol', allowedCol);
-      rowPlus.style('cursor', 'pointer');
-      if(gy==1){
-         root.style.setProperty('--rowMinCol', preventCol);
-         rowMin.style('cursor', 'default');
-      }
-      redrawSquares();
-   });
-   colPlus.mousePressed(()=>{
-      gx = Math.min(Math.max(gx+1, 1), 6);
-      root.style.setProperty('--colMinCol', allowedCol);
-      colMin.style('cursor', 'pointer');
-      if(gx==6){
-         root.style.setProperty('--colPlusCol', preventCol);
-         colPlus.style('cursor', 'default');
-      }
-      redrawSquares();
-   });
-   colMin.mousePressed(()=>{
-      gx = Math.min(Math.max(gx-1, 1), 6);
-      root.style.setProperty('--colPlusCol', allowedCol);
-      colPlus.style('cursor', 'pointer');
-      if(gx==1){
-         root.style.setProperty('--colMinCol', preventCol);
-         colMin.style('cursor', 'default');
-      }
-      redrawSquares();
-   });
+   rowPlus.mousePressed(rowplusPressed);
+   rowMin.mousePressed(rowminPressed);
+   colPlus.mousePressed(colplusPressed);
+   colMin.mousePressed(colminPressed);
+}
+
+function rowminPressed(){
+   gy = Math.min(Math.max(gy-1, 1), 6);
+   root.style.setProperty('--rowPlusCol', allowedCol);
+   rowPlus.style('cursor', 'pointer');
+   if(gy==1){
+      root.style.setProperty('--rowMinCol', preventCol);
+      rowMin.style('cursor', 'default');
+   }
+   redrawSquares();
+}
+
+function rowplusPressed(){
+   gy = Math.min(Math.max(gy+1, 1), 6);
+   root.style.setProperty('--rowMinCol', allowedCol);
+   rowMin.style('cursor', 'pointer');
+   if(gy==6){
+      root.style.setProperty('--rowPlusCol', preventCol);
+      rowPlus.style('cursor', 'default');
+   }
+   myColors.length>=(gx*gy)
+   if(page+1>Math.ceil(myColors.length/(gx*gy))){
+      page = Math.ceil(myColors.length/(gx*gy))-1;
+   }
+   redrawSquares();
+}
+
+function colplusPressed(){
+   gx = Math.min(Math.max(gx+1, 1), 6);
+   root.style.setProperty('--colMinCol', allowedCol);
+   colMin.style('cursor', 'pointer');
+   if(gx==6){
+      root.style.setProperty('--colPlusCol', preventCol);
+      colPlus.style('cursor', 'default');
+   }
+   redrawSquares();
+}
+
+function colminPressed(){
+   gx = Math.min(Math.max(gx-1, 1), 6);
+   root.style.setProperty('--colPlusCol', allowedCol);
+   colPlus.style('cursor', 'pointer');
+   if(gx==1){
+      root.style.setProperty('--colMinCol', preventCol);
+      colMin.style('cursor', 'default');
+   }
+   redrawSquares();
 }
 
 function createLogout(){
@@ -1419,12 +1461,36 @@ function createLogout(){
 
 function keyPressed(){
    if(keyCode===LEFT_ARROW){
-      if(needPages){
+      if(lisumodal.position().y<0 && needPages && !swalOpen){
          pressLeft();
       }
    }else if(keyCode===RIGHT_ARROW){
-      if(needPages){
+      if(lisumodal.position().y<0 && needPages && !swalOpen){
          pressRight();
+      }
+   }else if(keyCode===191){//slash
+      if(lisumodal.position().y<0 && !swalOpen){
+         menuButtonPressed();
+      }
+   }else if(keyCode===189){//-
+      if(lisumodal.position().y<0 && !swalOpen){
+         rowminPressed();
+      }
+   }else if(keyCode===187){//=
+      if(lisumodal.position().y<0 && !swalOpen){
+         rowplusPressed();
+      }
+   }else if(keyCode===219){//[
+      if(lisumodal.position().y<0 && !swalOpen){
+         colminPressed();
+      }
+   }else if(keyCode===221){//]
+      if(lisumodal.position().y<0 && !swalOpen){
+         colplusPressed();
+      }
+   }else if(keyCode===27){//escape
+      if(lisumodal.position().y>0){
+         cancelPressed();
       }
    }
 }
@@ -1443,26 +1509,103 @@ function createYourSwatches(){
    addNewSwatch.position(mtw/4, -((h/2)-addNewSwatch.size().height));
    addNewSwatch.id("addNewSwatch");
    menuTab.child(addNewSwatch);
-
    addNewSwatch.mousePressed(addAsNew);
-}
 
-function checkCredentials(){
-   $.post("/checkCredentials", {username: getCookie("username"), sessID: getCookie("sessID")}, (data, status) => {
-      console.log("credentials check status is ", data.status);
-      if(data.status!=="success"){
-         return false;
-      }else{
-         return true;
+   swatchLabels = createDiv('');
+   swatchLabels.size(mtw, Math.abs(addNewSwatch.position().y)-topP*h);
+   swatchLabels.position(0, -swatchLabels.size().height);
+   swatchLabels.id("swatchLabels");
+   menuTab.child(swatchLabels);
+
+   downSwatches = select('#downSwatches');
+   downSwatches.size(mtw/6, 30);
+   downSwatches.position(19*mtw/24, addNewSwatch.position().y);
+   menuTab.child(downSwatches);
+   downSwatches.mousePressed(()=>{
+      if(swatchesHead>=numSwatches2Show){
+         swatchesHead-=1;
+         for(var i = mySwatchesElts.length-1; i>swatchesHead; i--){
+            mySwatchesElts[i].position(mySwatchesElts[i].position().x, -mySwatchesElts[i].size().height-100);
+         }
+         for(var i = swatchesHead; i>=0; i--){
+            if(i<=swatchesHead-numSwatches2Show){
+               mySwatchesElts[i].position(mySwatchesElts[i].position().x, swatchLabels.size().height+100);
+            }else{
+               mySwatchesElts[i].position(menuTab.size().width/10, gap/2+(swatchesHead-i)*(mySwatchesElts[i].size().height+gap));
+            }
+         }
+      }
+      if(select("#upSwatchesCircle").hasClass("deniedCircle")){
+         select("#upSwatches").toggleClass("pointerCursor");
+         select("#upSwatchesCircle").toggleClass("deniedCircle");
+         select("#upSwatchesCircle").toggleClass("allowedCircle");
+         var lines = selectAll(".upSwatcheslines");
+         for(var i = 0; i<lines.length; i++){
+            lines[i].toggleClass("showUp");
+         }
+      }
+      if(swatchesHead==numSwatches2Show-1){
+         if(select("#downSwatchesCircle").hasClass("allowedCircle")){
+            select("#downSwatches").toggleClass("pointerCursor");
+            select("#downSwatchesCircle").toggleClass("deniedCircle");
+            select("#downSwatchesCircle").toggleClass("allowedCircle");
+            var lines = selectAll(".downSwatcheslines");
+            for(var i = 0; i<lines.length; i++){
+               lines[i].toggleClass("showDown");
+            }
+         }
       }
    });
+
+   upSwatches = select('#upSwatches');
+   upSwatches.size(mtw/6, 30);
+   upSwatches.position(mtw/24, addNewSwatch.position().y);
+   menuTab.child(upSwatches);
+   upSwatches.mousePressed(()=>{
+      if(swatchesHead<mySwatchesElts.length-1){
+         swatchesHead+=1;
+         for(var i = mySwatchesElts.length-1; i>swatchesHead; i--){
+            mySwatchesElts[i].position(mySwatchesElts[i].position().x, -mySwatchesElts[i].size().height-100);
+         }
+         for(var i = swatchesHead; i>=0; i--){
+            if(i<=swatchesHead-numSwatches2Show){
+               mySwatchesElts[i].position(mySwatchesElts[i].position().x, swatchLabels.size().height+100);
+            }else{
+               mySwatchesElts[i].position(menuTab.size().width/10, gap/2+(swatchesHead-i)*(mySwatchesElts[i].size().height+gap));
+            }
+         }
+      }
+      if(select("#downSwatchesCircle").hasClass("deniedCircle")){
+         select("#downSwatches").toggleClass("pointerCursor");
+         select("#downSwatchesCircle").toggleClass("deniedCircle");
+         select("#downSwatchesCircle").toggleClass("allowedCircle");
+         var lines = selectAll(".downSwatcheslines");
+         for(var i = 0; i<lines.length; i++){
+            lines[i].toggleClass("showDown");
+         }
+      }
+      if(swatchesHead==mySwatchesElts.length-1){
+         if(select("#upSwatchesCircle").hasClass("allowedCircle")){
+            select("#upSwatches").toggleClass("pointerCursor");
+            select("#upSwatchesCircle").toggleClass("deniedCircle");
+            select("#upSwatchesCircle").toggleClass("allowedCircle");
+            var lines = selectAll(".upSwatcheslines");
+            for(var i = 0; i<lines.length; i++){
+               lines[i].toggleClass("showUp");
+            }
+         }
+      }
+   });
+
 }
 
 function addAsNew(){
-   swal("What should be the new swatch's name?", {
+   swalOpen = true;
+   swal("What should the new swatch's name be?", {
       content: "input"
    })
    .then(name => {
+      swalOpen = false;
       if(name){
          yourSwatchesLabel.html("Your Swatches");
          var simpColors = [];
@@ -1478,6 +1621,10 @@ function addAsNew(){
          };
          mySwatches.push(newSwatch);
          createNewSwatch(newSwatch);
+         if(mySwatches.length>numSwatches2Show){
+            downSwatches.position(downSwatches.position().x, Math.abs(downSwatches.position().y));
+            upSwatches.position(upSwatches.position().x, Math.abs(upSwatches.position().y));
+         }
          $.post("/pushSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatches: mySwatches}, (data, status) => {
             if(data.status!=="success"){
                console.log(data.status);
@@ -1493,9 +1640,10 @@ function createNewSwatch(swatch){
    var bw = 0.5;
    var swatchLabel = createDiv('');
    swatchLabel.size(menuTab.size().width*4/5, -gap+(Math.abs(addNewSwatch.position().y)-topP*h)/numSwatches2Show);
-   swatchLabel.position(menuTab.size().width/10, gap/2+topP*h+mySwatchesElts.length*swatchLabel.size().height);
+   // swatchLabel.position(menuTab.size().width/10, gap/2+topP*h+(mySwatchesElts.length%numSwatches2Show)*(swatchLabel.size().height+gap));
+   swatchLabel.position(menuTab.size().width/10, gap/2);
    swatchLabel.addClass('swatchLabel');
-   menuTab.child(swatchLabel);
+   swatchLabels.child(swatchLabel);
 
    var swatchLabelInner = createDiv('');
    swatchLabelInner.addClass('swatchLabelInner');
@@ -1592,6 +1740,7 @@ function createNewSwatch(swatch){
    });
 
    deleteSwatch.mousePressed(()=>{
+      swalOpen = true;
       swal("Are you sure you want to delete this swatch?", {
          dangerMode: true,
          buttons: {
@@ -1600,22 +1749,149 @@ function createNewSwatch(swatch){
          }
       })
       .then(value => {
+         swalOpen = false;
          if(value=="OK"){
+            var myswatchesempty = (mySwatches.length==1);
             mySwatches.splice(myElt.swatchIndex, 1);
             mySwatchesElts[myElt.swatchIndex].remove();
             mySwatchesElts.splice(myElt.swatchIndex, 1);
             var i = myElt.swatchIndex;
             while(i<mySwatches.length){
-               mySwatchesElts[i].position(menuTab.size().width/10, gap/2+topP*h+i*mySwatchesElts[i].size().height);
+               // mySwatchesElts[i].position(menuTab.size().width/10, gap/2+topP*h+i*mySwatchesElts[i].size().height);
                mySwatchesElts[i].swatchIndex = i;
                i++;
+            }
+            if(swatchesHead>mySwatchesElts.length-1){
+               swatchesHead = mySwatchesElts.length-1;
+            }else if(swatchesHead<numSwatches2Show){
+               swatchesHead = numSwatches2Show;
+            }
+            for(var i = mySwatchesElts.length-1; i>swatchesHead; i--){
+               mySwatchesElts[i].position(mySwatchesElts[i].position().x, -mySwatchesElts[i].size().height-100);
+            }
+            for(var i = swatchesHead; i>=0; i--){
+               if(i<=swatchesHead-numSwatches2Show){
+                  mySwatchesElts[i].position(mySwatchesElts[i].position().x, swatchLabels.size().height+100);
+               }else{
+                  mySwatchesElts[i].position(menuTab.size().width/10, gap/2+(swatchesHead-i)*(mySwatchesElts[i].size().height+gap));
+               }
+            }
+            if(mySwatches.length<=numSwatches2Show){
+               downSwatches.position(downSwatches.position().x, -Math.abs(downSwatches.position().y));
+               upSwatches.position(upSwatches.position().x, -Math.abs(upSwatches.position().y));
+            }
+            if(myswatchesempty){
+               console.log("swatches is empty");
+               yourSwatchesLabel.html("No Swatches");
+               mySwatches = [];
+               mySwatchesElts = [];
             }
             updateServerSwatches();
          }
       });
    });
 
+   renameSwatch.mousePressed(()=>{
+      swalOpen = true;
+      swal("To what should the swatch be renamed?", {
+         content: "input"
+      })
+      .then(name => {
+         swalOpen = false;
+         if(name){
+            var elts = document.querySelectorAll('.swatchTextInner');
+            for (i = 0; i<elts.length; i++) {
+               console.log(elts[i].innerHTML, mySwatches[myElt.swatchIndex].name, elts[i].innerHTML==mySwatches[myElt.swatchIndex].name);
+               if(elts[i].innerHTML==mySwatches[myElt.swatchIndex].name){
+                  elts[i].innerHTML = name;
+                  break;
+               }
+            }
+            mySwatches[myElt.swatchIndex].name=name;
+         }
+      });
+   });
+
+   duplicateSwatch.mousePressed(()=>{
+      swalOpen = true;
+      swal("What should the duplicate swatch's name be?", {
+         content: "input"
+      })
+      .then(name => {
+         swalOpen = false;
+         if(name){
+            var simpColors = [];
+            for(var i=0; i<mySwatches[myElt.swatchIndex].colors.length; i++){
+               simpColors.push({
+                  name: mySwatches[myElt.swatchIndex].colors[i].name,
+                  hex: mySwatches[myElt.swatchIndex].colors[i].hex
+               });
+            }
+            var newSwatch = {
+               name: name,
+               colors: simpColors
+            };
+            mySwatches.push(newSwatch);
+            createNewSwatch(newSwatch);
+            if(mySwatches.length>numSwatches2Show){
+               downSwatches.position(downSwatches.position().x, Math.abs(downSwatches.position().y));
+               upSwatches.position(upSwatches.position().x, Math.abs(upSwatches.position().y));
+            }
+            $.post("/pushSwatches", {username: getCookie("username"), sessID: getCookie("sessID"), swatches: mySwatches}, (data, status) => {
+               if(data.status!=="success"){
+                  console.log(data.status);
+               }else{
+                  mySwatches = data.body;
+               }
+            });
+         }
+      });
+   });
+
+   appendSwatch.mousePressed(()=>{
+      var swatchColors = mySwatches[myElt.swatchIndex].colors;
+      var counter = 0;
+      for(var i = 0; i<myColors.length; i++){
+         var colorInSwatch = false;
+         for(var j = 0; j<swatchColors.length; j++){
+            if(myColors[i].hex == swatchColors[j].hex){
+               colorInSwatch = true;
+               break;
+            }
+         }
+         if(!colorInSwatch){
+            counter++;
+            mySwatches[myElt.swatchIndex].colors.push({
+               name: myColors[i].name,
+               hex: myColors[i].hex,
+            });
+         }
+      }
+      if(counter==0){
+         swal('Did not have any colors to append.');
+      }else{
+         swal(`Appended ${counter} colors.`);
+      }
+   });
+
    mySwatchesElts.push(swatchLabel);
+   swatchesHead = mySwatchesElts.length-1;
+   for(var i = swatchesHead-1; i>=0; i--){
+      if(i<=mySwatchesElts.length-1-numSwatches2Show){
+         mySwatchesElts[i].position(mySwatchesElts[i].position().x, swatchLabels.size().height+100);
+      }else{
+         mySwatchesElts[i].position(menuTab.size().width/10, gap/2+(swatchesHead-i)*(mySwatchesElts[i].size().height+gap));
+      }
+   }
+   if(select("#upSwatchesCircle").hasClass("allowedCircle")){
+      select("#upSwatches").toggleClass("pointerCursor");
+      select("#upSwatchesCircle").toggleClass("deniedCircle");
+      select("#upSwatchesCircle").toggleClass("allowedCircle");
+      var lines = selectAll(".upSwatcheslines");
+      for(var i = 0; i<lines.length; i++){
+         lines[i].toggleClass("showUp");
+      }
+   }
    updateServerSwatches();
 }
 

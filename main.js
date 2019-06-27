@@ -1492,6 +1492,10 @@ function keyPressed(){
       if(lisumodal.position().y>0){
          cancelPressed();
       }
+   }else if(keyCode===13){//enter
+      if(lisumodal.position().y>0){
+         lisuOK();
+      }
    }
 }
 
